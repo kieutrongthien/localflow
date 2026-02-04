@@ -98,6 +98,22 @@
           </tbody>
         </table>
       </div>
+
+      <div class="card" v-if="projectPath">
+        <h2>Backup & Restore</h2>
+        <div class="backup-row">
+          <button class="secondary" @click="createBackup">Tạo backup</button>
+          <button class="secondary" @click="loadBackups">Tải danh sách</button>
+        </div>
+        <ul class="backup-list" v-if="backups.length > 0">
+          <li v-for="b in backups" :key="b.id">
+            <span>{{ new Date(b.createdAt).toLocaleString() }}</span>
+            <button class="small" @click="restoreBackup(b.id)">Khôi phục</button>
+          </li>
+        </ul>
+        <p v-else class="muted">Chưa có backup nào.</p>
+        <p class="status" v-if="backupStatus">{{ backupStatus }}</p>
+      </div>
     </section>
   </main>
 </template>
@@ -117,6 +133,8 @@ const status = ref('')
 const metadataStatus = ref('')
 const planningItems = ref<PlanningItem[]>([])
 const planningTotals = reactive({ epic: 0, story: 0, task: 0, all: 0 })
+const backups = ref<Array<{ id: string; createdAt: number }>>([])
+const backupStatus = ref('')
 
 const metadata = reactive({
   name: '',
@@ -194,6 +212,26 @@ const loadPlanningIndex = async () => {
   if (!projectPath.value) return
   const result = await window.localflow.getPlanningIndex({ projectPath: projectPath.value })
   applyPlanningIndex(result)
+}
+
+const loadBackups = async () => {
+  if (!projectPath.value) return
+  const result = await window.localflow.listBackups({ projectPath: projectPath.value })
+  backups.value = result.entries
+}
+
+const createBackup = async () => {
+  if (!projectPath.value) return
+  const res = await window.localflow.createBackup({ projectPath: projectPath.value })
+  backupStatus.value = `Đã tạo backup ${res.id}`
+  await loadBackups()
+}
+
+const restoreBackup = async (id: string) => {
+  if (!projectPath.value) return
+  const res = await window.localflow.restoreBackup({ projectPath: projectPath.value, id })
+  backupStatus.value = res.success ? 'Khôi phục thành công' : 'Khôi phục thất bại'
+  await loadPlanningIndex()
 }
 
 const validateMetadata = () => {
@@ -377,6 +415,23 @@ textarea {
   margin: 0;
   font-size: 0.85rem;
   color: #a3a3a3;
+}
+
+.backup-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.backup-list {
+  list-style: none;
+  padding: 0;
+}
+
+.backup-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
 }
 
 .totals-row {

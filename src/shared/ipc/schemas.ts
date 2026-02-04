@@ -7,7 +7,10 @@ export const IPC_CHANNELS = {
   WRITE_PLANNING_README: 'planning:write-readme',
   GET_PROJECT_METADATA: 'project:get-metadata',
   SAVE_PROJECT_METADATA: 'project:save-metadata',
-  PLANNING_INDEX: 'planning:index'
+  PLANNING_INDEX: 'planning:index',
+  BACKUP_LIST: 'backup:list',
+  BACKUP_CREATE: 'backup:create',
+  BACKUP_RESTORE: 'backup:restore'
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]
@@ -33,7 +36,10 @@ const schemaMap = {
   }),
   [IPC_CHANNELS.GET_PROJECT_METADATA]: metadataPayload,
   [IPC_CHANNELS.SAVE_PROJECT_METADATA]: metadataSavePayload,
-  [IPC_CHANNELS.PLANNING_INDEX]: metadataPayload
+  [IPC_CHANNELS.PLANNING_INDEX]: metadataPayload,
+  [IPC_CHANNELS.BACKUP_LIST]: metadataPayload,
+  [IPC_CHANNELS.BACKUP_CREATE]: metadataPayload,
+  [IPC_CHANNELS.BACKUP_RESTORE]: metadataPayload.extend({ id: z.string().min(1) })
 } as const satisfies Record<IpcChannel, z.ZodTypeAny>
 
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]

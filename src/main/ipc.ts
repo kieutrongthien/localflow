@@ -10,6 +10,7 @@ import {
 } from '../shared/ipc/schemas'
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
+import { listBackups, createBackup, restoreBackup } from './backup'
 import { IPC_EVENTS } from '../shared/preload/api'
 import { watchPlanningForWindow } from './planning/watcher'
 import {
@@ -176,5 +177,25 @@ export const bootIpc = () => {
 
   registerIpcHandler(IPC_CHANNELS.PLANNING_INDEX, async (_event, payload) => {
     return buildPlanningIndex(payload.projectPath)
+  })
+
+  registerIpcHandler(IPC_CHANNELS.BACKUP_LIST, async (_event, payload) => {
+    const planningPath = resolvePlanningDir(payload.projectPath)
+    const entries = await listBackups(payload.projectPath)
+    return { entries, planningPath }
+  })
+
+  registerIpcHandler(IPC_CHANNELS.BACKUP_CREATE, async (_event, payload) => {
+    const planningPath = resolvePlanningDir(payload.projectPath)
+    const dbPath = path.join(payload.projectPath, 'localflow.sqlite')
+    const result = await createBackup(payload.projectPath, planningPath, dbPath)
+    return result
+  })
+
+  registerIpcHandler(IPC_CHANNELS.BACKUP_RESTORE, async (_event, payload) => {
+    const planningPath = resolvePlanningDir(payload.projectPath)
+    const dbPath = path.join(payload.projectPath, 'localflow.sqlite')
+    const result = await restoreBackup(payload.projectPath, payload.id, planningPath, dbPath)
+    return result
   })
 }

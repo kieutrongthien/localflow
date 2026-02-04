@@ -11,7 +11,10 @@ describe('IPC whitelist + validator', () => {
         IPC_CHANNELS.WRITE_PLANNING_README,
         IPC_CHANNELS.GET_PROJECT_METADATA,
         IPC_CHANNELS.SAVE_PROJECT_METADATA,
-        IPC_CHANNELS.PLANNING_INDEX
+        IPC_CHANNELS.PLANNING_INDEX,
+        IPC_CHANNELS.BACKUP_LIST,
+        IPC_CHANNELS.BACKUP_CREATE,
+        IPC_CHANNELS.BACKUP_RESTORE
       ])
     )
   })
@@ -73,5 +76,14 @@ describe('IPC whitelist + validator', () => {
       validateIpcPayload(IPC_CHANNELS.PLANNING_INDEX, { projectPath: '/tmp/demo' })
     ).not.toThrow()
     expect(() => validateIpcPayload(IPC_CHANNELS.PLANNING_INDEX, {})).toThrow()
+  })
+
+  it('validates backup payloads', () => {
+    expect(() => validateIpcPayload(IPC_CHANNELS.BACKUP_LIST, { projectPath: '/tmp/demo' })).not.toThrow()
+    expect(() => validateIpcPayload(IPC_CHANNELS.BACKUP_CREATE, { projectPath: '/tmp/demo' })).not.toThrow()
+    expect(() =>
+      validateIpcPayload(IPC_CHANNELS.BACKUP_RESTORE, { projectPath: '/tmp/demo', id: '2026-02-05-12-00' })
+    ).not.toThrow()
+    expect(() => validateIpcPayload(IPC_CHANNELS.BACKUP_RESTORE, { projectPath: '/tmp/demo' })).toThrow()
   })
 })

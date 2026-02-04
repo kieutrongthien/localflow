@@ -51,6 +51,13 @@ export type PlanningIndexPayload = {
   projectPath: string
 }
 
+export type BackupListPayload = { projectPath: string }
+export type BackupListResult = { entries: { id: string; createdAt: number }[]; planningPath: string }
+export type BackupCreatePayload = { projectPath: string }
+export type BackupCreateResult = { id: string }
+export type BackupRestorePayload = { projectPath: string; id: string }
+export type BackupRestoreResult = { success: boolean }
+
 export interface LocalflowBridge {
   ping(): string
   getVersion(): Promise<string>
@@ -60,6 +67,9 @@ export interface LocalflowBridge {
   getProjectMetadata(payload: ProjectMetadataPayload): Promise<ProjectMetadataResult>
   saveProjectMetadata(payload: SaveProjectMetadataPayload): Promise<SaveProjectMetadataResult>
   getPlanningIndex(payload: PlanningIndexPayload): Promise<PlanningIndexResult>
+  listBackups(payload: BackupListPayload): Promise<BackupListResult>
+  createBackup(payload: BackupCreatePayload): Promise<BackupCreateResult>
+  restoreBackup(payload: BackupRestorePayload): Promise<BackupRestoreResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 
