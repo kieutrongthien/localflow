@@ -46,45 +46,45 @@
           <button class="px-4 py-2 rounded-full bg-gradient-to-r from-brand to-brand-secondary text-slate-900" @click="saveReadme">Lưu README.md</button>
         </div>
 
-        <textarea v-model="readme" rows="6" :disabled="!projectPath" placeholder="# README.md" />
-        <p class="status" v-if="status">{{ status }}</p>
+        <textarea class="w-full rounded-xl px-3 py-2 bg-white/10 border border-white/10 min-h-[120px] font-mono" v-model="readme" rows="6" :disabled="!projectPath" placeholder="# README.md" />
+        <p class="text-emerald-400 text-sm" v-if="status">{{ status }}</p>
       </div>
 
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Metadata dự án</h2>
-        <div class="form-grid">
-          <label>
-            <span>Tên dự án *</span>
-            <input class="input" type="text" v-model="metadata.name" placeholder="LocalFlow" />
-            <small class="error" v-if="errors.name">{{ errors.name }}</small>
+        <div class="grid gap-4 md:grid-cols-2">
+          <label class="flex flex-col gap-1">
+            <span class="text-sm">Tên dự án *</span>
+            <input class="w-full rounded-lg px-3 py-2 bg-white/10 border border-white/10" type="text" v-model="metadata.name" placeholder="LocalFlow" />
+            <small class="text-red-400 text-xs" v-if="errors.name">{{ errors.name }}</small>
           </label>
 
-          <label>
-            <span>Mô tả *</span>
-            <textarea class="input" rows="3" v-model="metadata.description" placeholder="Mô tả dự án" />
-            <small class="error" v-if="errors.description">{{ errors.description }}</small>
+          <label class="md:col-span-2 flex flex-col gap-1">
+            <span class="text-sm">Mô tả *</span>
+            <textarea class="w-full rounded-lg px-3 py-2 bg-white/10 border border-white/10" rows="3" v-model="metadata.description" placeholder="Mô tả dự án" />
+            <small class="text-red-400 text-xs" v-if="errors.description">{{ errors.description }}</small>
           </label>
 
-          <label>
-            <span>Team (nhập tên, cách nhau bằng dấu phẩy)</span>
-            <input class="input" type="text" v-model="metadata.teamInput" placeholder="Bieber, Colin" />
+          <label class="md:col-span-2 flex flex-col gap-1">
+            <span class="text-sm">Team (nhập tên, cách nhau bằng dấu phẩy)</span>
+            <input class="w-full rounded-lg px-3 py-2 bg-white/10 border border-white/10" type="text" v-model="metadata.teamInput" placeholder="Bieber, Colin" />
           </label>
 
-          <label>
-            <span>Ngày bắt đầu *</span>
-            <input class="input" type="date" v-model="metadata.startDate" />
-            <small class="error" v-if="errors.startDate">{{ errors.startDate }}</small>
+          <label class="flex flex-col gap-1">
+            <span class="text-sm">Ngày bắt đầu *</span>
+            <input class="w-full rounded-lg px-3 py-2 bg-white/10 border border-white/10" type="date" v-model="metadata.startDate" />
+            <small class="text-red-400 text-xs" v-if="errors.startDate">{{ errors.startDate }}</small>
           </label>
 
-          <label>
-            <span>Ngày kết thúc *</span>
-            <input class="input" type="date" v-model="metadata.endDate" />
-            <small class="error" v-if="errors.endDate">{{ errors.endDate }}</small>
+          <label class="flex flex-col gap-1">
+            <span class="text-sm">Ngày kết thúc *</span>
+            <input class="w-full rounded-lg px-3 py-2 bg-white/10 border border-white/10" type="date" v-model="metadata.endDate" />
+            <small class="text-red-400 text-xs" v-if="errors.endDate">{{ errors.endDate }}</small>
           </label>
         </div>
 
         <button class="px-4 py-2 rounded-full bg-gradient-to-r from-brand to-brand-secondary text-slate-900 self-start mt-2" @click="saveMetadata">Lưu metadata</button>
-        <p class="text-brand text-sm" v-if="metadataStatus">{{ metadataStatus }}</p>
+        <p class="text-emerald-400 text-sm" v-if="metadataStatus">{{ metadataStatus }}</p>
       </div>
 
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
@@ -98,19 +98,19 @@
 
         <p v-if="planningItems.length === 0" class="text-zinc-400 text-sm">Chưa tìm thấy file backlog trong .planning.</p>
 
-        <table v-else class="w-full text-sm">
+        <table v-else class="w-full text-sm border-collapse">
           <thead>
             <tr>
-              <th class="text-left font-semibold text-zinc-400">Loại</th>
-              <th class="text-left font-semibold text-zinc-400">ID</th>
-              <th class="text-left font-semibold text-zinc-400">Tiêu đề</th>
-              <th class="text-left font-semibold text-zinc-400">Trạng thái</th>
-              <th class="text-left font-semibold text-zinc-400">Priority</th>
-              <th class="text-left font-semibold text-zinc-400">Points</th>
+              <th class="text-left font-semibold text-zinc-400 pb-2">Loại</th>
+              <th class="text-left font-semibold text-zinc-400 pb-2">ID</th>
+              <th class="text-left font-semibold text-zinc-400 pb-2">Tiêu đề</th>
+              <th class="text-left font-semibold text-zinc-400 pb-2">Trạng thái</th>
+              <th class="text-left font-semibold text-zinc-400 pb-2">Priority</th>
+              <th class="text-left font-semibold text-zinc-400 pb-2">Points</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in planningItems" :key="item.path">
+            <tr class="border-t border-white/5" v-for="item in planningItems" :key="item.path">
               <td><span class="px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 capitalize text-xs">{{ item.type }}</span></td>
               <td>{{ item.id }}</td>
               <td class="max-w-[320px] truncate">{{ item.title }}</td>
@@ -361,256 +361,5 @@ const toggleTheme = async () => {
 </script>
 
 <style scoped>
-
-.layout {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
-  color: #f5f5f5;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.sidebar {
-  border-right: 1px solid rgba(255,255,255,0.08);
-  padding: 1rem;
-  background: rgba(255,255,255,0.03);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-weight: 700;
-}
-
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.nav-item {
-  width: 100%;
-  text-align: left;
-  background: rgba(255,255,255,0.06);
-}
-
-.nav-item.active {
-  background: linear-gradient(120deg, #34d399, #22d3ee);
-  color: #0f172a;
-}
-
-.content {
-  padding: 2rem;
-}
-
-.content-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.content section {
-  width: min(960px, 100%);
-  text-align: left;
-  padding: 2.5rem;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
-}
-
-.content section > h1,
-.content section > p,
-.content section > code {
-  text-align: center;
-}
-
-.logo {
-  display: block;
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1.5rem;
-}
-
-code {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-}
-
-.card {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-button {
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(120deg, #34d399, #22d3ee);
-  color: #0f172a;
-  font-weight: 600;
-}
-
-button.primary {
-  align-self: flex-start;
-  margin-top: 0.5rem;
-}
-
-textarea,
-input.input,
-textarea.input {
-  width: 100%;
-  border-radius: 12px;
-  padding: 0.9rem 1rem;
-  border: none;
-  min-height: 48px;
-  font-size: 1rem;
-  font-family: 'Inter', system-ui, sans-serif;
-}
-
-textarea {
-  min-height: 120px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.stack {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.status {
-  color: #34d399;
-  font-size: 0.9rem;
-}
-
-.status-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.85rem;
-  color: #a3a3a3;
-}
-
-.backup-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.backup-list {
-  list-style: none;
-  padding: 0;
-}
-
-.backup-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.4rem 0;
-}
-
-.totals-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  font-size: 0.9rem;
-  color: #cbd5f5;
-}
-
-.muted {
-  color: #9ca3af;
-  font-size: 0.9rem;
-}
-
-.backlog-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-.backlog-table th,
-.backlog-table td {
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.backlog-table th {
-  text-align: left;
-  font-weight: 600;
-  color: #9ca3af;
-}
-
-.backlog-table .title {
-  max-width: 320px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.badge {
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  background: rgba(52, 211, 153, 0.2);
-  color: #34d399;
-  text-transform: capitalize;
-  font-size: 0.8rem;
-}
-
-.form-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.95rem;
-}
-
-.error {
-  color: #f87171;
-  font-size: 0.8rem;
-}
-
-@media (max-width: 960px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-  .sidebar {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .form-grid label:nth-child(2) {
-    grid-column: span 2;
-  }
-
-  .form-grid label:nth-child(3) {
-    grid-column: span 2;
-  }
-}
+/* migrated most styles to Tailwind utility classes */
 </style>
