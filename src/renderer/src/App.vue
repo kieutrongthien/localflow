@@ -26,12 +26,49 @@
         <textarea v-model="readme" rows="6" :disabled="!projectPath" placeholder="# README.md" />
         <p class="status" v-if="status">{{ status }}</p>
       </div>
+
+      <div class="card" v-if="projectPath">
+        <h2>Metadata dự án</h2>
+        <div class="form-grid">
+          <label>
+            <span>Tên dự án *</span>
+            <input class="input" type="text" v-model="metadata.name" placeholder="LocalFlow" />
+            <small class="error" v-if="errors.name">{{ errors.name }}</small>
+          </label>
+
+          <label>
+            <span>Mô tả *</span>
+            <textarea class="input" rows="3" v-model="metadata.description" placeholder="Mô tả dự án" />
+            <small class="error" v-if="errors.description">{{ errors.description }}</small>
+          </label>
+
+          <label>
+            <span>Team (nhập tên, cách nhau bằng dấu phẩy)</span>
+            <input class="input" type="text" v-model="metadata.teamInput" placeholder="Bieber, Colin" />
+          </label>
+
+          <label>
+            <span>Ngày bắt đầu *</span>
+            <input class="input" type="date" v-model="metadata.startDate" />
+            <small class="error" v-if="errors.startDate">{{ errors.startDate }}</small>
+          </label>
+
+          <label>
+            <span>Ngày kết thúc *</span>
+            <input class="input" type="date" v-model="metadata.endDate" />
+            <small class="error" v-if="errors.endDate">{{ errors.endDate }}</small>
+          </label>
+        </div>
+
+        <button class="primary" @click="saveMetadata">Lưu metadata</button>
+        <p class="status" v-if="metadataStatus">{{ metadataStatus }}</p>
+      </div>
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 const pingValue = ref('...')
 const version = ref('...')
@@ -41,17 +78,90 @@ const planningCreated = ref(false)
 const readmeCreated = ref(false)
 const readme = ref('')
 const status = ref('')
+const metadataStatus = ref('')
+
+const metadata = reactive({
+  name: '',
+  description: '',
+  teamInput: '',
+  startDate: '',
+  endDate: ''
+})
+
+const errors = reactive<Record<string, string>>({})
 
 onMounted(async () => {
   pingValue.value = window.localflow?.ping() ?? 'unavailable'
   version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
 })
 
+const resetMetadata = () => {
+  metadata.name = ''
+  metadata.description = ''
+  metadata.teamInput = ''
+  metadata.startDate = ''
+  metadata.endDate = ''
+  metadataStatus.value = ''
+  Object.keys(errors).forEach((key) => delete errors[key])
+}
+
+const applyMetadata = (data: {
+  name: string
+  description: string
+  team: string[]
+  startDate: string
+  endDate: string
+}) => {
+  metadata.name = data.name
+  metadata.description = data.description
+  metadata.teamInput = data.team.join(', ')
+  metadata.startDate = data.startDate
+  metadata.endDate = data.endDate
+}
+
 const loadReadme = async () => {
   if (!projectPath.value) return
   const { content } = await window.localflow.readPlanningReadme({ projectPath: projectPath.value })
   readme.value = content
   status.value = 'Đã load README'
+}
+
+const loadMetadata = async () => {
+  if (!projectPath.value) return
+  const data = await window.localflow.getProjectMetadata({ projectPath: projectPath.value })
+  applyMetadata(data)
+}
+
+const validateMetadata = () => {
+  Object.keys(errors).forEach((key) => delete errors[key])
+  let isValid = true
+
+  if (!metadata.name.trim()) {
+    errors.name = 'Tên dự án bắt buộc'
+    isValid = false
+  }
+
+  if (!metadata.description.trim()) {
+    errors.description = 'Mô tả bắt buộc'
+    isValid = false
+  }
+
+  if (!metadata.startDate) {
+    errors.startDate = 'Chọn ngày bắt đầu'
+    isValid = false
+  }
+
+  if (!metadata.endDate) {
+    errors.endDate = 'Chọn ngày kết thúc'
+    isValid = false
+  }
+
+  if (metadata.startDate && metadata.endDate && metadata.startDate > metadata.endDate) {
+    errors.endDate = 'Ngày kết thúc phải sau ngày bắt đầu'
+    isValid = false
+  }
+
+  return isValid
 }
 
 const handleSelect = async () => {
@@ -63,10 +173,11 @@ const handleSelect = async () => {
 
   if (result.path) {
     status.value = 'Thư mục đã sẵn sàng'
-    await loadReadme()
+    await Promise.all([loadReadme(), loadMetadata()])
   } else {
     status.value = 'Chưa chọn thư mục'
     readme.value = ''
+    resetMetadata()
   }
 }
 
@@ -75,31 +186,61 @@ const saveReadme = async () => {
   await window.localflow.writePlanningReadme({ projectPath: projectPath.value, content: readme.value })
   status.value = 'Đã lưu README'
 }
+
+const saveMetadata = async () => {
+  if (!projectPath.value) return
+  if (!validateMetadata()) return
+
+  const team = metadata.teamInput
+    .split(',')
+    .map((member) => member.trim())
+    .filter(Boolean)
+
+  await window.localflow.saveProjectMetadata({
+    projectPath: projectPath.value,
+    name: metadata.name.trim(),
+    description: metadata.description.trim(),
+    team,
+    startDate: metadata.startDate,
+    endDate: metadata.endDate
+  })
+
+  metadataStatus.value = 'Đã lưu metadata'
+}
 </script>
 
 <style scoped>
 .app-shell {
-  height: 100vh;
+  min-height: 100vh;
   display: grid;
   place-items: center;
   background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
   color: #f5f5f5;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 3rem 1rem;
 }
 
 section {
-  text-align: center;
-  padding: 3rem;
+  width: min(960px, 100%);
+  text-align: left;
+  padding: 2.5rem;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
 }
 
+section > h1,
+section > p,
+section > code {
+  text-align: center;
+}
+
 .logo {
+  display: block;
   width: 64px;
   height: 64px;
-  margin-bottom: 1.5rem;
+  margin: 0 auto 1.5rem;
 }
 
 code {
@@ -132,11 +273,24 @@ button {
   font-weight: 600;
 }
 
-textarea {
+button.primary {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+textarea,
+input.input,
+textarea.input {
   width: 100%;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 0.9rem 1rem;
   border: none;
+  min-height: 48px;
+  font-size: 1rem;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+textarea {
   min-height: 120px;
   font-family: 'JetBrains Mono', monospace;
 }
@@ -144,6 +298,7 @@ textarea {
 .stack {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .status {
@@ -157,5 +312,39 @@ textarea {
   margin: 0;
   font-size: 0.85rem;
   color: #a3a3a3;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.error {
+  color: #f87171;
+  font-size: 0.8rem;
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .form-grid label:nth-child(2) {
+    grid-column: span 2;
+  }
+
+  .form-grid label:nth-child(3) {
+    grid-column: span 2;
+  }
 }
 </style>

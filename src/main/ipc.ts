@@ -1,9 +1,20 @@
 import { app, BrowserWindow, dialog, ipcMain, IpcMainInvokeEvent } from 'electron'
 import { access, readFile, writeFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
-import { IPC_CHANNELS, type IpcChannel, type PayloadFor, validateIpcPayload } from '../shared/ipc/schemas'
+import {
+  IPC_CHANNELS,
+  type IpcChannel,
+  type PayloadFor,
+  validateIpcPayload,
+  type SaveProjectMetadataPayload
+} from '../shared/ipc/schemas'
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
-import { upsertProjectPath } from './storage/projectsStore'
+import {
+  getProjectMetadata,
+  saveProjectMetadata,
+  setActiveProjectPath,
+  upsertProjectPath
+} from './storage/projectsStore'
 
 export type Handler<T extends IpcChannel> = (
   event: IpcMainInvokeEvent,
@@ -81,6 +92,8 @@ export const bootIpc = () => {
     const ensureResult = await ensurePlanningStructure(projectPath)
     upsertProjectPath(projectPath)
 
+    setActiveProjectPath(projectPath)
+
     return {
       path: projectPath,
       planningPath: ensureResult.planningDir,
@@ -109,6 +122,38 @@ export const bootIpc = () => {
     const targetPath = resolvePlanningReadme(payload.projectPath)
     await mkdir(path.dirname(targetPath), { recursive: true })
     await writeFile(targetPath, payload.content, 'utf-8')
+    return { success: true }
+  })
+
+  registerIpcHandler(IPC_CHANNELS.GET_PROJECT_METADATA, async (_event, payload) => {
+    const metadata = getProjectMetadata(payload.projectPath)
+
+    if (!metadata) {
+      return {
+        projectPath: payload.projectPath,
+        name: '',
+        description: '',
+        team: [],
+        startDate: '',
+        endDate: ''
+      }
+    }
+
+    return metadata
+  })
+
+  registerIpcHandler(IPC_CHANNELS.SAVE_PROJECT_METADATA, async (_event, payload) => {
+    const data: SaveProjectMetadataPayload = payload
+
+    saveProjectMetadata({
+      ...data,
+      team: data.team,
+      updatedAt: Date.now()
+    })
+
+    upsertProjectPath(data.projectPath)
+    setActiveProjectPath(data.projectPath)
+
     return { success: true }
   })
 }

@@ -22,12 +22,33 @@ export type WritePlanningReadmeResult = {
   success: boolean
 }
 
+export type ProjectMetadataPayload = {
+  projectPath: string
+}
+
+export type ProjectMetadataResult = {
+  projectPath: string
+  name: string
+  description: string
+  team: string[]
+  startDate: string
+  endDate: string
+}
+
+export type SaveProjectMetadataPayload = ProjectMetadataResult
+
+export type SaveProjectMetadataResult = {
+  success: boolean
+}
+
 export interface LocalflowBridge {
   ping(): string
   getVersion(): Promise<string>
   selectProjectRoot(): Promise<SelectProjectRootResult>
   readPlanningReadme(payload: ReadPlanningReadmePayload): Promise<ReadPlanningReadmeResult>
   writePlanningReadme(payload: WritePlanningReadmePayload): Promise<WritePlanningReadmeResult>
+  getProjectMetadata(payload: ProjectMetadataPayload): Promise<ProjectMetadataResult>
+  saveProjectMetadata(payload: SaveProjectMetadataPayload): Promise<SaveProjectMetadataResult>
 }
 
 declare global {

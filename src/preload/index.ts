@@ -2,7 +2,9 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { IPC_CHANNELS, allowedChannels, type IpcChannel, type PayloadFor } from '../shared/ipc/schemas'
 import type {
   LocalflowBridge,
+  ProjectMetadataPayload,
   ReadPlanningReadmePayload,
+  SaveProjectMetadataPayload,
   WritePlanningReadmePayload
 } from '../shared/preload/api'
 
@@ -21,7 +23,11 @@ const api: LocalflowBridge = {
   readPlanningReadme: (payload: ReadPlanningReadmePayload) =>
     invokeSafe(IPC_CHANNELS.READ_PLANNING_README, payload),
   writePlanningReadme: (payload: WritePlanningReadmePayload) =>
-    invokeSafe(IPC_CHANNELS.WRITE_PLANNING_README, payload)
+    invokeSafe(IPC_CHANNELS.WRITE_PLANNING_README, payload),
+  getProjectMetadata: (payload: ProjectMetadataPayload) =>
+    invokeSafe(IPC_CHANNELS.GET_PROJECT_METADATA, payload),
+  saveProjectMetadata: (payload: SaveProjectMetadataPayload) =>
+    invokeSafe(IPC_CHANNELS.SAVE_PROJECT_METADATA, payload)
 }
 
 contextBridge.exposeInMainWorld('localflow', api)

@@ -2,21 +2,23 @@
 
 **Created:** 2026-02-05  
 **Story:** 008  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Tạo form nhập tên, mô tả, team, ngày bắt đầu/kết thúc; validate và lưu vào DB.
 
 ## Subtasks
-- [ ] UI form (Vue + Tailwind)
-- [ ] Validation + error UX
-- [ ] Lưu bảng projects + settings
+- [x] UI form (Vue + Tailwind) với wizard metadata
+- [x] Validation + error UX (client-side + zod IPC)
+- [x] Lưu bảng projects + settings (better-sqlite3 + settings table)
 
 ## Blockers
 None
 
 ## Notes
-Render trang tổng quan sau khi lưu
+- Thêm project metadata handler (get/save) + lưu SQLite (project_metadata, settings.activeProjectPath)
+- Preload bridge expose API typed; renderer wizard form validate + lưu team/start/end
+- Sau khi lưu dùng status hiển thị, npm test + npm run build pass
