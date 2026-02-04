@@ -1,0 +1,14 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@renderer/*": ["src/renderer/src/*"]
+    },
+    "types": ["node"]
+  },
+  "include": ["electron.vite.config.ts", "src/**/*", "env.d.ts"],
+  "exclude": ["dist", "node_modules"]
+}
