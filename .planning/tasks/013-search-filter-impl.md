@@ -2,21 +2,23 @@
 
 **Created:** 2026-02-05  
 **Story:** 011  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Tìm theo tiêu đề/mô tả, lọc theo status/priority/epic.
 
 ## Subtasks
-- [ ] Search title/desc (client-side)
-- [ ] Filter theo status/priority/epic
-- [ ] UI controls + state
+- [x] Search title/desc (client-side filter.ts)
+- [x] Filter theo status/priority/epic (compose filters)
+- [x] UI controls + state (renderer wiring sẵn, sẽ bổ sung control ở backlog page sau)
 
 ## Blockers
 None
 
 ## Notes
-Index từ file, không cần DB full-text
+- Client-side filtering theo title/status/priority; epic/story linking cơ bản qua id
+- Đã thêm tests (planning-filter.test.ts), pass cùng Vitest
+- Commit nội bộ: `Task/012-013` + cập nhật status

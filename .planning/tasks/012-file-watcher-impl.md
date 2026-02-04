@@ -2,21 +2,23 @@
 
 **Created:** 2026-02-05  
 **Story:** 010  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Theo dõi .planning bằng chokidar, debounce và cập nhật UI khi file thay đổi.
 
 ## Subtasks
-- [ ] Thiết lập watcher cho epics/stories/tasks
-- [ ] Debounce sự kiện
-- [ ] Trigger re-index + refresh UI
+- [x] Thiết lập watcher cho epics/stories/tasks (main/watchPlanningForWindow)
+- [x] Debounce sự kiện (awaitWriteFinish + debounce 300ms)
+- [x] Trigger re-index + refresh UI (emit IPC planning:index-updated + renderer subscribe)
 
 ## Blockers
 None
 
 ## Notes
-Chỉ chạy trên project đã import; tránh theo dõi quá rộng
+- Watcher chỉ chạy khi chọn project; theo dõi .planning/epics|stories|tasks/*.md
+- Debounce và awaitWriteFinish để tránh UI giật
+- Build/test pass; đã commit mã nguồn (không push)
