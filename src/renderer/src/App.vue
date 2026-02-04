@@ -11,13 +11,19 @@
         <h2>Thao tác README</h2>
         <button @click="handleSelect">Chọn thư mục dự án</button>
         <p v-if="projectPath">Đã chọn: {{ projectPath }}</p>
+        <p v-if="planningPath">.planning: {{ planningPath }}</p>
+
+        <ul class="status-list" v-if="projectPath">
+          <li>Planning {{ planningCreated ? 'đã tạo' : 'tồn tại sẵn' }}</li>
+          <li>README {{ readmeCreated ? 'vừa tạo mới' : 'sẵn sàng' }}</li>
+        </ul>
 
         <div class="stack" v-if="projectPath">
           <button @click="loadReadme">Đọc README.md</button>
           <button @click="saveReadme">Lưu README.md</button>
         </div>
 
-        <textarea v-model="readme" rows="6" placeholder="# README.md" />
+        <textarea v-model="readme" rows="6" :disabled="!projectPath" placeholder="# README.md" />
         <p class="status" v-if="status">{{ status }}</p>
       </div>
     </section>
@@ -30,6 +36,9 @@ import { ref, onMounted } from 'vue'
 const pingValue = ref('...')
 const version = ref('...')
 const projectPath = ref<string | null>(null)
+const planningPath = ref<string | null>(null)
+const planningCreated = ref(false)
+const readmeCreated = ref(false)
 const readme = ref('')
 const status = ref('')
 
@@ -38,17 +47,27 @@ onMounted(async () => {
   version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
 })
 
-const handleSelect = async () => {
-  const result = await window.localflow.selectProjectRoot()
-  projectPath.value = result.path
-  status.value = result.path ? 'Đã chọn thư mục' : 'Chưa chọn thư mục'
-}
-
 const loadReadme = async () => {
   if (!projectPath.value) return
   const { content } = await window.localflow.readPlanningReadme({ projectPath: projectPath.value })
   readme.value = content
   status.value = 'Đã load README'
+}
+
+const handleSelect = async () => {
+  const result = await window.localflow.selectProjectRoot()
+  projectPath.value = result.path
+  planningPath.value = result.planningPath
+  planningCreated.value = result.planningCreated
+  readmeCreated.value = result.readmeCreated
+
+  if (result.path) {
+    status.value = 'Thư mục đã sẵn sàng'
+    await loadReadme()
+  } else {
+    status.value = 'Chưa chọn thư mục'
+    readme.value = ''
+  }
 }
 
 const saveReadme = async () => {
@@ -130,5 +149,13 @@ textarea {
 .status {
   color: #34d399;
   font-size: 0.9rem;
+}
+
+.status-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a3a3a3;
 }
 </style>

@@ -1,7 +1,8 @@
-import type { IPC_CHANNELS } from '../ipc/schemas'
-
 export type SelectProjectRootResult = {
   path: string | null
+  planningPath: string | null
+  planningCreated: boolean
+  readmeCreated: boolean
 }
 
 export type ReadPlanningReadmePayload = {

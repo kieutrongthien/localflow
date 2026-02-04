@@ -1,7 +1,9 @@
 import { app, BrowserWindow, dialog, ipcMain, IpcMainInvokeEvent } from 'electron'
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { access, readFile, writeFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
 import { IPC_CHANNELS, type IpcChannel, type PayloadFor, validateIpcPayload } from '../shared/ipc/schemas'
+import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
+import { upsertProjectPath } from './storage/projectsStore'
 
 export type Handler<T extends IpcChannel> = (
   event: IpcMainInvokeEvent,
@@ -13,8 +15,40 @@ const registered = new Set<IpcChannel>()
 const getWindowFromEvent = (event: IpcMainInvokeEvent) =>
   BrowserWindow.fromWebContents(event.sender)
 
+const resolvePlanningDir = (projectPath: string) =>
+  path.join(path.resolve(projectPath), '.planning')
+
 const resolvePlanningReadme = (projectPath: string) =>
-  path.join(path.resolve(projectPath), '.planning', 'README.md')
+  path.join(resolvePlanningDir(projectPath), 'README.md')
+
+const pathExists = async (target: string) => {
+  try {
+    await access(target)
+    return true
+  } catch {
+    return false
+  }
+}
+
+const ensurePlanningStructure = async (projectPath: string) => {
+  const planningDir = resolvePlanningDir(projectPath)
+  const readmePath = resolvePlanningReadme(projectPath)
+
+  let planningCreated = false
+  let readmeCreated = false
+
+  if (!(await pathExists(planningDir))) {
+    await mkdir(planningDir, { recursive: true })
+    planningCreated = true
+  }
+
+  if (!(await pathExists(readmePath))) {
+    await writeFile(readmePath, buildPlanningReadme(projectPath), 'utf-8')
+    readmeCreated = true
+  }
+
+  return { planningDir, planningCreated, readmeCreated }
+}
 
 export const registerIpcHandler = <T extends IpcChannel>(channel: T, handler: Handler<T>) => {
   if (registered.has(channel)) {
@@ -40,10 +74,19 @@ export const bootIpc = () => {
     })
 
     if (result.canceled || result.filePaths.length === 0) {
-      return { path: null }
+      return { path: null, planningPath: null, planningCreated: false, readmeCreated: false }
     }
 
-    return { path: result.filePaths[0] }
+    const projectPath = result.filePaths[0]
+    const ensureResult = await ensurePlanningStructure(projectPath)
+    upsertProjectPath(projectPath)
+
+    return {
+      path: projectPath,
+      planningPath: ensureResult.planningDir,
+      planningCreated: ensureResult.planningCreated,
+      readmeCreated: ensureResult.readmeCreated
+    }
   })
 
   registerIpcHandler(IPC_CHANNELS.READ_PLANNING_README, async (_event, payload) => {
