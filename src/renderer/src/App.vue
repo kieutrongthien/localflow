@@ -1,35 +1,36 @@
 <template>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">
-        <img src="./assets/logo.svg" alt="LocalFlow logo" class="logo" />
+  <div class="min-h-screen grid grid-cols-1 md:grid-cols-[260px_1fr] bg-[radial-gradient(circle_at_top,_#1a1a1a,_#0d0d0d)] text-zinc-100 font-[Inter]">
+    <aside class="hidden md:block border-r border-white/10 p-4 bg-white/5">
+      <div class="flex items-center gap-2 font-bold">
+        <img src="./assets/logo.svg" alt="LocalFlow logo" class="w-10 h-10" />
         <span>LocalFlow</span>
       </div>
-      <nav class="nav">
-        <button class="nav-item active">Overview</button>
-        <button class="nav-item">Backlog</button>
-        <button class="nav-item">Boards</button>
-        <button class="nav-item">Settings</button>
+      <nav class="flex flex-col gap-2 mt-4">
+        <button class="w-full text-left bg-gradient-to-r from-brand to-brand-secondary text-slate-900 rounded-lg px-3 py-2">Overview</button>
+        <button class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Backlog</button>
+        <button class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Boards</button>
+        <button class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Settings</button>
       </nav>
     </aside>
-    <main class="content">
-      <header class="content-header">
-        <div class="left">
-          <h1>Local-first backlog planner</h1>
+    <main class="p-8">
+      <header class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-xl font-semibold">Local-first backlog planner</h1>
         </div>
-        <div class="right">
-          <code>Ping: {{ pingValue }}</code>
-          <code>Version: {{ version }}</code>
+        <div class="flex items-center gap-2">
+          <code class="px-3 py-1 rounded-full bg-white/10">Ping: {{ pingValue }}</code>
+          <code class="px-3 py-1 rounded-full bg-white/10">Version: {{ version }}</code>
+          <button class="px-3 py-1 rounded-full bg-white/10" @click="toggleTheme">{{ themeLabel }}</button>
         </div>
       </header>
-      <section>
+      <section class="w-full max-w-3xl text-left p-10 rounded-2xl bg-white/5 border border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.35)]">
       <img src="./assets/logo.svg" alt="LocalFlow logo" class="logo" />
       <h1>LocalFlow</h1>
       <p>Local-first backlog planner. Electron + Vue scaffold đang sẵn sàng.</p>
       <code>Ping từ preload: {{ pingValue }}</code>
       <code>Version: {{ version }}</code>
 
-      <div class="card">
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3">
         <h2>Thao tác README</h2>
         <button @click="handleSelect">Chọn thư mục dự án</button>
         <p v-if="projectPath">Đã chọn: {{ projectPath }}</p>
@@ -40,16 +41,16 @@
           <li>README {{ readmeCreated ? 'vừa tạo mới' : 'sẵn sàng' }}</li>
         </ul>
 
-        <div class="stack" v-if="projectPath">
-          <button @click="loadReadme">Đọc README.md</button>
-          <button @click="saveReadme">Lưu README.md</button>
+        <div class="flex gap-2 flex-wrap" v-if="projectPath">
+          <button class="px-4 py-2 rounded-full bg-gradient-to-r from-brand to-brand-secondary text-slate-900" @click="loadReadme">Đọc README.md</button>
+          <button class="px-4 py-2 rounded-full bg-gradient-to-r from-brand to-brand-secondary text-slate-900" @click="saveReadme">Lưu README.md</button>
         </div>
 
         <textarea v-model="readme" rows="6" :disabled="!projectPath" placeholder="# README.md" />
         <p class="status" v-if="status">{{ status }}</p>
       </div>
 
-      <div class="card" v-if="projectPath">
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Metadata dự án</h2>
         <div class="form-grid">
           <label>
@@ -82,37 +83,37 @@
           </label>
         </div>
 
-        <button class="primary" @click="saveMetadata">Lưu metadata</button>
-        <p class="status" v-if="metadataStatus">{{ metadataStatus }}</p>
+        <button class="px-4 py-2 rounded-full bg-gradient-to-r from-brand to-brand-secondary text-slate-900 self-start mt-2" @click="saveMetadata">Lưu metadata</button>
+        <p class="text-brand text-sm" v-if="metadataStatus">{{ metadataStatus }}</p>
       </div>
 
-      <div class="card" v-if="projectPath">
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Backlog (.planning)</h2>
-        <div class="totals-row">
+        <div class="flex flex-wrap gap-4 text-blue-200 text-sm">
           <span>Epics: {{ planningTotals.epic }}</span>
           <span>Stories: {{ planningTotals.story }}</span>
           <span>Tasks: {{ planningTotals.task }}</span>
           <span>Tổng: {{ planningTotals.all }}</span>
         </div>
 
-        <p v-if="planningItems.length === 0" class="muted">Chưa tìm thấy file backlog trong .planning.</p>
+        <p v-if="planningItems.length === 0" class="text-zinc-400 text-sm">Chưa tìm thấy file backlog trong .planning.</p>
 
-        <table v-else class="backlog-table">
+        <table v-else class="w-full text-sm">
           <thead>
             <tr>
-              <th>Loại</th>
-              <th>ID</th>
-              <th>Tiêu đề</th>
-              <th>Trạng thái</th>
-              <th>Priority</th>
-              <th>Points</th>
+              <th class="text-left font-semibold text-zinc-400">Loại</th>
+              <th class="text-left font-semibold text-zinc-400">ID</th>
+              <th class="text-left font-semibold text-zinc-400">Tiêu đề</th>
+              <th class="text-left font-semibold text-zinc-400">Trạng thái</th>
+              <th class="text-left font-semibold text-zinc-400">Priority</th>
+              <th class="text-left font-semibold text-zinc-400">Points</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in planningItems" :key="item.path">
-              <td><span class="badge">{{ item.type }}</span></td>
+              <td><span class="px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 capitalize text-xs">{{ item.type }}</span></td>
               <td>{{ item.id }}</td>
-              <td class="title">{{ item.title }}</td>
+              <td class="max-w-[320px] truncate">{{ item.title }}</td>
               <td>{{ item.status || '—' }}</td>
               <td>{{ item.priority || '—' }}</td>
               <td>{{ item.points ?? '—' }}</td>
@@ -121,20 +122,20 @@
         </table>
       </div>
 
-      <div class="card" v-if="projectPath">
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Backup & Restore</h2>
-        <div class="backup-row">
-          <button class="secondary" @click="createBackup">Tạo backup</button>
-          <button class="secondary" @click="loadBackups">Tải danh sách</button>
+        <div class="flex gap-2">
+          <button class="px-4 py-2 rounded-full bg-white/10" @click="createBackup">Tạo backup</button>
+          <button class="px-4 py-2 rounded-full bg-white/10" @click="loadBackups">Tải danh sách</button>
         </div>
-        <ul class="backup-list" v-if="backups.length > 0">
-          <li v-for="b in backups" :key="b.id">
+        <ul class="list-none p-0" v-if="backups.length > 0">
+          <li class="flex items-center justify-between py-1" v-for="b in backups" :key="b.id">
             <span>{{ new Date(b.createdAt).toLocaleString() }}</span>
-            <button class="small" @click="restoreBackup(b.id)">Khôi phục</button>
+            <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="restoreBackup(b.id)">Khôi phục</button>
           </li>
         </ul>
-        <p v-else class="muted">Chưa có backup nào.</p>
-        <p class="status" v-if="backupStatus">{{ backupStatus }}</p>
+        <p v-else class="text-zinc-400 text-sm">Chưa có backup nào.</p>
+        <p class="text-brand text-sm" v-if="backupStatus">{{ backupStatus }}</p>
       </div>
       </section>
     </main>
@@ -147,6 +148,7 @@ import type { PlanningIndexResult, PlanningItem } from '../../shared/planning/ty
 
 const pingValue = ref('...')
 const version = ref('...')
+const themeLabel = ref('Dark mode')
 const projectPath = ref<string | null>(null)
 const planningPath = ref<string | null>(null)
 const planningCreated = ref(false)
@@ -180,6 +182,11 @@ onMounted(async () => {
   version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
 
   unsubscribePlanning = window.localflow.onPlanningIndexUpdated(applyPlanningIndex)
+
+  // Load theme preference
+  const { value } = await window.localflow.getSetting({ key: 'theme' })
+  const pref = value === 'light' ? 'light' : 'dark'
+  applyTheme(pref)
 })
 
 onBeforeUnmount(() => {
@@ -332,6 +339,24 @@ const saveMetadata = async () => {
   })
 
   metadataStatus.value = 'Đã lưu metadata'
+}
+
+const applyTheme = (mode: 'dark' | 'light') => {
+  const el = document.documentElement
+  if (mode === 'dark') {
+    el.classList.add('dark')
+    themeLabel.value = 'Light mode'
+  } else {
+    el.classList.remove('dark')
+    themeLabel.value = 'Dark mode'
+  }
+}
+
+const toggleTheme = async () => {
+  const isDark = document.documentElement.classList.contains('dark')
+  const next = isDark ? 'light' : 'dark'
+  applyTheme(next as 'dark' | 'light')
+  await window.localflow.setSetting({ key: 'theme', value: next })
 }
 </script>
 

@@ -11,7 +11,7 @@ import {
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
 import { listBackups, createBackup, restoreBackup } from './backup'
-import { getDatabasePath, logActivity } from './storage/projectsStore'
+import { getDatabasePath, logActivity, getSetting, setSettingValue } from './storage/projectsStore'
 import { IPC_EVENTS } from '../shared/preload/api'
 import { watchPlanningForWindow } from './planning/watcher'
 import {
@@ -203,5 +203,16 @@ export const bootIpc = () => {
     const result = await restoreBackup(payload.projectPath, payload.id, planningPath, dbPath)
     logActivity('backup.restore', { projectPath: payload.projectPath, id: payload.id })
     return result
+  })
+
+  registerIpcHandler(IPC_CHANNELS.SETTINGS_GET, async (_event, payload) => {
+    const value = getSetting(payload.key)
+    return { value }
+  })
+
+  registerIpcHandler(IPC_CHANNELS.SETTINGS_SET, async (_event, payload) => {
+    setSettingValue(payload.key, payload.value)
+    logActivity('settings.set', { key: payload.key })
+    return { success: true }
   })
 }

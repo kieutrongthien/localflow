@@ -58,6 +58,11 @@ export type BackupCreateResult = { id: string }
 export type BackupRestorePayload = { projectPath: string; id: string }
 export type BackupRestoreResult = { success: boolean }
 
+export type SettingsGetPayload = { key: string }
+export type SettingsGetResult = { value: string | null }
+export type SettingsSetPayload = { key: string; value: string }
+export type SettingsSetResult = { success: boolean }
+
 export interface LocalflowBridge {
   ping(): string
   getVersion(): Promise<string>
@@ -70,6 +75,8 @@ export interface LocalflowBridge {
   listBackups(payload: BackupListPayload): Promise<BackupListResult>
   createBackup(payload: BackupCreatePayload): Promise<BackupCreateResult>
   restoreBackup(payload: BackupRestorePayload): Promise<BackupRestoreResult>
+  getSetting(payload: SettingsGetPayload): Promise<SettingsGetResult>
+  setSetting(payload: SettingsSetPayload): Promise<SettingsSetResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 

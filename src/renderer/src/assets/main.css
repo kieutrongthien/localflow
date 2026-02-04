@@ -1,13 +1,6 @@
-:root {
-  color-scheme: dark;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body {
-  margin: 0;
-  background: #050505;
-}
-
-#app {
-  width: 100vw;
-  height: 100vh;
-}
+:root { color-scheme: dark; }
+html, body, #app { height: 100%; width: 100%; margin: 0; }

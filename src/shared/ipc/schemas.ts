@@ -10,7 +10,9 @@ export const IPC_CHANNELS = {
   PLANNING_INDEX: 'planning:index',
   BACKUP_LIST: 'backup:list',
   BACKUP_CREATE: 'backup:create',
-  BACKUP_RESTORE: 'backup:restore'
+  BACKUP_RESTORE: 'backup:restore',
+  SETTINGS_GET: 'settings:get',
+  SETTINGS_SET: 'settings:set'
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]
@@ -39,7 +41,9 @@ const schemaMap = {
   [IPC_CHANNELS.PLANNING_INDEX]: metadataPayload,
   [IPC_CHANNELS.BACKUP_LIST]: metadataPayload,
   [IPC_CHANNELS.BACKUP_CREATE]: metadataPayload,
-  [IPC_CHANNELS.BACKUP_RESTORE]: metadataPayload.extend({ id: z.string().min(1) })
+  [IPC_CHANNELS.BACKUP_RESTORE]: metadataPayload.extend({ id: z.string().min(1) }),
+  [IPC_CHANNELS.SETTINGS_GET]: z.object({ key: z.string().min(1) }),
+  [IPC_CHANNELS.SETTINGS_SET]: z.object({ key: z.string().min(1), value: z.string() })
 } as const satisfies Record<IpcChannel, z.ZodTypeAny>
 
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
@@ -60,3 +64,5 @@ export type PayloadFor<T extends IpcChannel> = z.infer<SchemaFor<T>>
 export type GetProjectMetadataPayload = z.infer<typeof metadataPayload>
 export type SaveProjectMetadataPayload = z.infer<typeof metadataSavePayload>
 export type PlanningIndexPayload = z.infer<typeof metadataPayload>
+export type SettingsGetPayload = z.infer<typeof schemaMap[typeof IPC_CHANNELS.SETTINGS_GET]>
+export type SettingsSetPayload = z.infer<typeof schemaMap[typeof IPC_CHANNELS.SETTINGS_SET]>

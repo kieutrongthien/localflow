@@ -39,6 +39,8 @@ const api: LocalflowBridge = {
     invokeSafe(IPC_CHANNELS.BACKUP_CREATE, payload),
   restoreBackup: (payload: { projectPath: string; id: string }) =>
     invokeSafe(IPC_CHANNELS.BACKUP_RESTORE, payload),
+  getSetting: (payload: { key: string }) => invokeSafe(IPC_CHANNELS.SETTINGS_GET, payload),
+  setSetting: (payload: { key: string; value: string }) => invokeSafe(IPC_CHANNELS.SETTINGS_SET, payload),
   onPlanningIndexUpdated: (callback: (payload: PlanningIndexResult) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, payload: PlanningIndexResult) => {
       callback(payload)

@@ -2,21 +2,21 @@
 
 **Created:** 2026-02-05  
 **Story:** 004  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Cấu hình theme Tailwind và nút chuyển Dark/Light; lưu preference.
 
 ## Subtasks
-- [ ] Cấu hình Tailwind (theme/colors)
-- [ ] Dark mode toggle
-- [ ] Lưu trạng thái vào settings
+- [x] Cấu hình Tailwind (theme/colors, postcss)
+- [x] Dark mode toggle (button header)
+- [x] Lưu trạng thái vào settings (settings:get/set qua IPC)
 
 ## Blockers
 None
 
 ## Notes
-Đồng bộ với layout và component}
+Đồng bộ với layout; áp dụng class `dark` ở documentElement, Tailwind darkMode: 'class'.

@@ -150,3 +150,11 @@ export const getDatabasePath = (): string => {
   ensureDatabase()
   return dbPathCache as string
 }
+
+export const getSetting = (key: string): string | null => {
+  const database = ensureDatabase()
+  const row = database.prepare(`SELECT value FROM settings WHERE key = ?`).get(key)
+  return row?.value ?? null
+}
+
+export const setSettingValue = (key: string, value: string) => setSetting(key, value)
