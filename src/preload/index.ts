@@ -1,0 +1,5 @@
+import { contextBridge } from 'electron'
+
+contextBridge.exposeInMainWorld('localflow', {
+  ping: () => 'pong'
+})

@@ -2,21 +2,23 @@
 
 **Created:** 2026-02-05  
 **Story:** 001  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Tạo khung dự án với Electron (Node 22), Vite, Vue 3; cấu hình script dev/build.
 
 ## Subtasks
-- [ ] Tạo project skeleton
-- [ ] Cấu hình Vite dev server + HMR
-- [ ] Kiểm tra chạy dev thành công
+- [x] Tạo project skeleton
+- [x] Cấu hình Vite dev server + HMR
+- [x] Kiểm tra chạy dev thành công (electron-vite build)
 
 ## Blockers
 None
 
 ## Notes
-Tham khảo electron-vite hoặc create-electron-vite
+- Thiết lập electron-vite với Electron 39 + Vite 6 + Vue 3, scripts dev/build/preview
+- Thêm preload bridge cơ bản và renderer Vue shell (logo, ping hiển thị)
+- npm run build thành công
