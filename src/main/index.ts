@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
+import { bootIpc } from './ipc'
 
 const createWindow = async () => {
   const mainWindow = new BrowserWindow({
@@ -26,6 +27,7 @@ const createWindow = async () => {
 ipcMain.handle('system:getVersion', () => app.getVersion())
 
 app.whenReady().then(() => {
+  bootIpc()
   createWindow()
 
   app.on('activate', () => {

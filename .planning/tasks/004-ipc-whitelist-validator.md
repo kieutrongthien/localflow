@@ -2,21 +2,23 @@
 
 **Created:** 2026-02-05  
 **Story:** 006  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Định nghĩa danh sách kênh IPC hợp lệ, validate payload bằng zod/ajv.
 
 ## Subtasks
-- [ ] Danh sách kênh IPC cho phép
-- [ ] Validator schema payload
-- [ ] Unit test IPC handlers
+- [x] Danh sách kênh IPC cho phép (IPC_CHANNELS + allowedChannels)
+- [x] Validator schema payload (zod schemas + validateIpcPayload)
+- [x] Unit test IPC handlers (vitest whitelist suite)
 
 ## Blockers
 None
 
 ## Notes
-Chỉ kênh phục vụ nội bộ/local, không expose network
+- Shared schema module (src/shared/ipc/schemas.ts) centralizes whitelist + payload validation via zod
+- Main process đăng ký handler qua registerIpcHandler/bootIpc; renderer chỉ invoke được khi channel nằm trong allowedChannels
+- Preload expose API tối giản; vitest đảm bảo payload sai bị chặn

@@ -9,6 +9,6 @@
     },
     "types": ["node"]
   },
-  "include": ["electron.vite.config.ts", "src/**/*", "env.d.ts"],
+  "include": ["electron.vite.config.ts", "src/**/*", "env.d.ts", "tests/**/*"],
   "exclude": ["dist", "node_modules"]
 }
