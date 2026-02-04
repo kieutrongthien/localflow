@@ -19,7 +19,7 @@ const createWindow = async () => {
   if (process.env.ELECTRON_RENDERER_URL) {
     await mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
   } else {
-    await mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
+    await mainWindow.loadFile(path.join(__dirname, '../../dist/renderer/index.html'))
   }
 }
 
