@@ -6,10 +6,10 @@
         <span>LocalFlow</span>
       </div>
       <nav class="flex flex-col gap-2 mt-4">
-        <button class="w-full text-left bg-gradient-to-r from-brand to-brand-secondary text-slate-900 rounded-lg px-3 py-2">Overview</button>
-        <button class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Backlog</button>
-        <button class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Boards</button>
-        <button class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Settings</button>
+        <RouterLink to="/" class="w-full text-left bg-gradient-to-r from-brand to-brand-secondary text-slate-900 rounded-lg px-3 py-2">Overview</RouterLink>
+        <RouterLink to="/backlog" class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Backlog</RouterLink>
+        <RouterLink to="/boards" class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Boards</RouterLink>
+        <RouterLink to="/settings" class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Settings</RouterLink>
       </nav>
     </aside>
     <main class="p-8">
@@ -204,11 +204,13 @@
         <p class="text-brand text-sm" v-if="backupStatus">{{ backupStatus }}</p>
       </div>
       </section>
+      <RouterView />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import type { PlanningIndexResult, PlanningItem } from '../../shared/planning/types'
 
