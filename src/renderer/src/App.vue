@@ -5,6 +5,7 @@
       <h1>LocalFlow</h1>
       <p>Local-first backlog planner. Electron + Vue scaffold đang sẵn sàng.</p>
       <code>Ping từ preload: {{ pingValue }}</code>
+      <code>Version: {{ version }}</code>
     </section>
   </main>
 </template>
@@ -13,9 +14,11 @@
 import { ref, onMounted } from 'vue'
 
 const pingValue = ref('...')
+const version = ref('...')
 
-onMounted(() => {
+onMounted(async () => {
   pingValue.value = window.localflow?.ping() ?? 'unavailable'
+  version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
 })
 </script>
 

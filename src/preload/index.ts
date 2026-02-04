@@ -1,5 +1,8 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 
-contextBridge.exposeInMainWorld('localflow', {
-  ping: () => 'pong'
-})
+const api = {
+  ping: () => 'pong',
+  getVersion: () => ipcRenderer.invoke('system:getVersion')
+} as const
+
+contextBridge.exposeInMainWorld('localflow', api)

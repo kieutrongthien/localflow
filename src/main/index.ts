@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
 
 const createWindow = async () => {
@@ -8,7 +8,11 @@ const createWindow = async () => {
     minWidth: 960,
     minHeight: 640,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js')
+      preload: path.join(__dirname, '../preload/index.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      sandbox: true
     }
   })
 
@@ -18,6 +22,8 @@ const createWindow = async () => {
     await mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
 }
+
+ipcMain.handle('system:getVersion', () => app.getVersion())
 
 app.whenReady().then(() => {
   createWindow()
