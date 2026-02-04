@@ -2,6 +2,7 @@
 const config = {
   appId: 'com.localflow.desktop',
   productName: 'LocalFlow',
+  artifactName: 'LocalFlow-${version}-${os}-${arch}.${ext}',
   directories: {
     output: 'release',
     buildResources: 'build'
@@ -24,6 +25,13 @@ const config = {
     },
     'package.json'
   ],
+  extraResources: [
+    {
+      from: 'build',
+      to: 'resources',
+      filter: ['**/*.png', '**/*.icns', '**/*.ico']
+    }
+  ],
   asar: true,
   extraMetadata: {
     main: 'dist/main/index.js'
@@ -33,9 +41,16 @@ const config = {
       {
         target: 'AppImage',
         arch: ['x64']
+      },
+      {
+        target: 'deb',
+        arch: ['x64']
       }
     ],
     category: 'Development',
+    maintainer: 'LocalFlow Team',
+    synopsis: 'Local-first backlog manager',
+    description: 'LocalFlow – quản lý backlog ngay trong máy tính của bạn',
     artifactName: 'LocalFlow-${version}-linux-${arch}.${ext}'
   },
   win: {
@@ -43,19 +58,43 @@ const config = {
       {
         target: 'nsis',
         arch: ['x64']
+      },
+      {
+        target: 'zip',
+        arch: ['x64']
       }
     ],
     artifactName: 'LocalFlow-${version}-win-${arch}.${ext}'
+  },
+  nsis: {
+    oneClick: false,
+    allowToChangeInstallationDirectory: true,
+    perMachine: false,
+    createDesktopShortcut: true,
+    createStartMenuShortcut: true,
+    uninstallDisplayName: 'LocalFlow'
   },
   mac: {
     target: [
       {
         target: 'dmg',
         arch: ['arm64', 'x64']
+      },
+      {
+        target: 'zip',
+        arch: ['arm64', 'x64']
       }
     ],
     category: 'public.app-category.developer-tools',
+    darkModeSupport: true,
     artifactName: 'LocalFlow-${version}-mac-${arch}.${ext}'
+  },
+  dmg: {
+    sign: false,
+    contents: [
+      { x: 130, y: 220 },
+      { x: 410, y: 220, type: 'link', path: '/Applications' }
+    ]
   },
   publish: {
     provider: 'generic',
