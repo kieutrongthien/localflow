@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, globalShortcut } from 'electron'
 import { disposePlanningWatcher } from './planning/watcher'
 import path from 'node:path'
 import { bootIpc } from './ipc'
@@ -18,7 +18,9 @@ const createWindow = async () => {
     }
   })
 
-  if (process.env.ELECTRON_RENDERER_URL) {
+  const isDev = !!process.env.ELECTRON_RENDERER_URL
+
+  if (isDev) {
     await mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
   } else {
     await mainWindow.loadFile(path.join(__dirname, '../../dist/renderer/index.html'))
@@ -26,6 +28,20 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     disposePlanningWatcher(mainWindow.id)
   })
+
+  // DevTools toggle shortcut only in development
+  if (isDev) {
+    const toggle = () => {
+      if (mainWindow.webContents.isDevToolsOpened()) {
+        mainWindow.webContents.closeDevTools()
+      } else {
+        mainWindow.webContents.openDevTools({ mode: 'detach' })
+      }
+    }
+    // Register common shortcuts
+    globalShortcut.register('CommandOrControl+Shift+I', toggle)
+    globalShortcut.register('F12', toggle)
+  }
 
 }
 
@@ -44,4 +60,9 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('will-quit', () => {
+  // Unregister all shortcuts
+  globalShortcut.unregisterAll()
 })
