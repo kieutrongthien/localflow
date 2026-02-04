@@ -1,7 +1,13 @@
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import matter from 'gray-matter'
-import type { PlanningIndexResult, PlanningItem, PlanningKind } from '../../shared/planning/types'
+import type {
+  PlanningIndexResult,
+  PlanningItem,
+  PlanningKind,
+  PlanningFrontmatter
+} from '../../shared/planning/types'
+import { planningSchema } from '../../shared/planning/schema'
 
 const PLANNING_DIRS: Array<{ kind: PlanningKind; folder: string }> = [
   { kind: 'epic', folder: 'epics' },
@@ -19,19 +25,17 @@ const parsePoints = (value: unknown): number | null => {
   return null
 }
 
-const parseLinks = (value: unknown): string[] | undefined => {
-  if (Array.isArray(value)) {
-    return value.map(String).filter(Boolean)
+const validateFrontmatter = (kind: PlanningKind, data: unknown): PlanningFrontmatter | null => {
+  try {
+    const parsed = planningSchema.parse(data)
+    if (parsed.type !== kind) {
+      throw new Error(`Frontmatter type mismatch: expected ${kind}, got ${parsed.type}`)
+    }
+    return parsed
+  } catch (error) {
+    console.warn('[planning:indexer] Invalid frontmatter', { kind, error })
+    return null
   }
-
-  if (typeof value === 'string' && value.trim().length > 0) {
-    return value
-      .split(',')
-      .map((link) => link.trim())
-      .filter(Boolean)
-  }
-
-  return undefined
 }
 
 const parsePlanningFile = async (filePath: string, kind: PlanningKind): Promise<PlanningItem | null> => {
@@ -46,11 +50,14 @@ const parsePlanningFile = async (filePath: string, kind: PlanningKind): Promise<
       id: id || filename,
       filename,
       type: kind,
-      title: (data.title as string) ?? content.split('\n')[0]?.replace('#', '').trim() ?? filename,
-      status: data.status as string | undefined,
-      priority: data.priority as string | undefined,
-      points: kind === 'task' || kind === 'story' ? parsePoints(data.points) : null,
-      links: parseLinks(data.links),
+      title: (validated.title || content.split('\n')[0]?.replace('#', '').trim() || filename).trim(),
+      status: validated.status,
+      priority: validated.priority,
+      points: kind === 'task' || kind === 'story' ? parsePoints(validated.points) : null,
+      links: validated.links,
+      tags: validated.tags,
+      owner: 'owner' in validated ? validated.owner : undefined,
+      assignee: 'assignee' in validated ? validated.assignee : undefined,
       path: filePath
     }
   } catch (error) {

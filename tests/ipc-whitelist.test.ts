@@ -10,7 +10,8 @@ describe('IPC whitelist + validator', () => {
         IPC_CHANNELS.READ_PLANNING_README,
         IPC_CHANNELS.WRITE_PLANNING_README,
         IPC_CHANNELS.GET_PROJECT_METADATA,
-        IPC_CHANNELS.SAVE_PROJECT_METADATA
+        IPC_CHANNELS.SAVE_PROJECT_METADATA,
+        IPC_CHANNELS.PLANNING_INDEX
       ])
     )
   })
@@ -65,5 +66,12 @@ describe('IPC whitelist + validator', () => {
         endDate: ''
       })
     ).toThrow()
+  })
+
+  it('validates planning index payload', () => {
+    expect(() =>
+      validateIpcPayload(IPC_CHANNELS.PLANNING_INDEX, { projectPath: '/tmp/demo' })
+    ).not.toThrow()
+    expect(() => validateIpcPayload(IPC_CHANNELS.PLANNING_INDEX, {})).toThrow()
   })
 })
