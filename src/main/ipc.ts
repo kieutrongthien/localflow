@@ -183,6 +183,18 @@ export const bootIpc = () => {
     return buildPlanningIndex(payload.projectPath)
   })
 
+  registerIpcHandler(IPC_CHANNELS.PLANNING_UPDATE_STATUS, async (_event, payload) => {
+    const { readFile, writeFile } = await import('node:fs/promises')
+    const matter = (await import('gray-matter')).default
+    const raw = await readFile(payload.path, 'utf-8')
+    const parsed = matter(raw)
+    parsed.data.status = payload.status
+    const updated = matter.stringify(parsed.content, parsed.data)
+    await writeFile(payload.path, updated, 'utf-8')
+    logActivity('planning.status.update', { path: payload.path, status: payload.status })
+    return { success: true }
+  })
+
   registerIpcHandler(IPC_CHANNELS.BACKUP_LIST, async (_event, payload) => {
     const planningPath = resolvePlanningDir(payload.projectPath)
     const entries = await listBackups(payload.projectPath)

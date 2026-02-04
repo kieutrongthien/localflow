@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 012  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 5h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Xây dựng board theo status, kéo-thả Stories để cập nhật; ghi về file frontmatter.
 
 ## Subtasks
-- [ ] Board cột theo status
-- [ ] Drag-drop (Vue)
-- [ ] Ghi trạng thái về file frontmatter
+- [x] Board cột theo status
+- [x] Drag-drop (HTML5, Vue)
+- [x] Ghi trạng thái về file frontmatter (IPC planning:update-status)
 
 ## Blockers
 None

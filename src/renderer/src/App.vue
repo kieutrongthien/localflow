@@ -122,6 +122,72 @@
         </table>
       </div>
 
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10" v-if="projectPath">
+        <h2 class="mb-3">Boards (Stories)</h2>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div
+            class="rounded-lg border border-white/10 p-3 min-h-[240px]"
+            @dragover.prevent
+            @drop="onDrop('todo', $event)"
+          >
+            <h3 class="text-sm text-zinc-400 mb-2">Todo</h3>
+            <div class="space-y-2">
+              <div
+                v-for="s in storiesByStatus.todo"
+                :key="s.path"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab"
+                draggable="true"
+                @dragstart="onDragStart(s)"
+              >
+                <div class="text-sm font-medium truncate">{{ s.title }}</div>
+                <div class="text-xs text-zinc-400">{{ s.id }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="rounded-lg border border-white/10 p-3 min-h-[240px]"
+            @dragover.prevent
+            @drop="onDrop('in_progress', $event)"
+          >
+            <h3 class="text-sm text-zinc-400 mb-2">In Progress</h3>
+            <div class="space-y-2">
+              <div
+                v-for="s in storiesByStatus.in_progress"
+                :key="s.path"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab"
+                draggable="true"
+                @dragstart="onDragStart(s)"
+              >
+                <div class="text-sm font-medium truncate">{{ s.title }}</div>
+                <div class="text-xs text-zinc-400">{{ s.id }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="rounded-lg border border-white/10 p-3 min-h-[240px]"
+            @dragover.prevent
+            @drop="onDrop('done', $event)"
+          >
+            <h3 class="text-sm text-zinc-400 mb-2">Done</h3>
+            <div class="space-y-2">
+              <div
+                v-for="s in storiesByStatus.done"
+                :key="s.path"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab"
+                draggable="true"
+                @dragstart="onDragStart(s)"
+              >
+                <div class="text-sm font-medium truncate">{{ s.title }}</div>
+                <div class="text-xs text-zinc-400">{{ s.id }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-emerald-400 text-sm mt-2" v-if="boardStatus">{{ boardStatus }}</p>
+      </div>
+
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Backup & Restore</h2>
         <div class="flex gap-2">
@@ -160,6 +226,14 @@ const planningItems = ref<PlanningItem[]>([])
 const planningTotals = reactive({ epic: 0, story: 0, task: 0, all: 0 })
 const backups = ref<Array<{ id: string; createdAt: number }>>([])
 const backupStatus = ref('')
+const boardStatus = ref('')
+const draggingPath = ref<string | null>(null)
+
+const storiesByStatus = reactive<{ todo: PlanningItem[]; in_progress: PlanningItem[]; done: PlanningItem[] }>({
+  todo: [],
+  in_progress: [],
+  done: []
+})
 
 const metadata = reactive({
   name: '',
@@ -175,6 +249,10 @@ let unsubscribePlanning: (() => void) | null = null
 const applyPlanningIndex = (payload: PlanningIndexResult) => {
   planningItems.value = payload.items
   Object.assign(planningTotals, payload.totals)
+  const stories = planningItems.value.filter((i) => i.type === 'story')
+  storiesByStatus.todo = stories.filter((s) => (s.status ?? 'todo') === 'todo')
+  storiesByStatus.in_progress = stories.filter((s) => s.status === 'in_progress')
+  storiesByStatus.done = stories.filter((s) => s.status === 'done')
 }
 
 onMounted(async () => {
@@ -339,6 +417,19 @@ const saveMetadata = async () => {
   })
 
   metadataStatus.value = 'Đã lưu metadata'
+}
+
+const onDragStart = (item: PlanningItem) => {
+  draggingPath.value = item.path
+}
+
+const onDrop = async (status: 'todo' | 'in_progress' | 'done', event: DragEvent) => {
+  event.preventDefault()
+  if (!draggingPath.value) return
+  await window.localflow.updatePlanningStatus({ path: draggingPath.value, status })
+  boardStatus.value = 'Đã cập nhật trạng thái'
+  draggingPath.value = null
+  await loadPlanningIndex()
 }
 
 const applyTheme = (mode: 'dark' | 'light') => {

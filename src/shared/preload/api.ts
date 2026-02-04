@@ -77,6 +77,7 @@ export interface LocalflowBridge {
   restoreBackup(payload: BackupRestorePayload): Promise<BackupRestoreResult>
   getSetting(payload: SettingsGetPayload): Promise<SettingsGetResult>
   setSetting(payload: SettingsSetPayload): Promise<SettingsSetResult>
+  updatePlanningStatus(payload: { path: string; status: string }): Promise<{ success: boolean }>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 
