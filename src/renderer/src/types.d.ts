@@ -1,9 +1,8 @@
+import type { LocalflowBridge } from '../../shared/preload/api'
+
 declare global {
   interface Window {
-    localflow: {
-      ping: () => string
-      getVersion: () => Promise<string>
-    }
+    localflow: LocalflowBridge
   }
 }
 
