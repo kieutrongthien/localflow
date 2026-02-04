@@ -2,21 +2,22 @@
 
 **Created:** 2026-02-05  
 **Story:** 004  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Tạo bảng projects/settings/activity (optional), kết nối DB file, helper CRUD.
 
 ## Subtasks
-- [ ] DDL cho projects/settings/activity
-- [ ] Helper CRUD
-- [ ] Config đường dẫn DB
+- [x] DDL cho projects/settings/activity (better-sqlite3, WAL)
+- [x] Helper CRUD (upsert/list projects, active path, activity log)
+- [x] Config đường dẫn DB (app.getPath('userData')/data/localflow.db)
 
 ## Blockers
 None
 
 ## Notes
-DB để trong thư mục dữ liệu ứng dụng, không trộn repo
+- DB nằm trong thư mục dữ liệu ứng dụng (userData/data/localflow.db), tách biệt repo
+- Thêm logActivity cho các thao tác chính (select project, save metadata, backup create/restore)

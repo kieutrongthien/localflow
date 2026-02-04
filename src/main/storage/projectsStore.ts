@@ -4,6 +4,7 @@ import { app } from 'electron'
 import { mkdirSync } from 'node:fs'
 
 let db: Database | null = null
+let dbPathCache: string | null = null
 
 type ProjectMetadataRecord = {
   projectPath: string
@@ -21,6 +22,7 @@ const ensureDatabase = () => {
   const dataDir = path.join(app.getPath('userData'), 'data')
   mkdirSync(dataDir, { recursive: true })
   const dbPath = path.join(dataDir, 'localflow.db')
+  dbPathCache = dbPath
 
   db = new Database(dbPath)
   db.pragma('journal_mode = WAL')
@@ -45,6 +47,13 @@ const ensureDatabase = () => {
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS activity (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      type TEXT NOT NULL,
+      payload TEXT NOT NULL,
+      createdAt INTEGER NOT NULL
+    );
   `)
 
   return db
@@ -59,6 +68,14 @@ export const upsertProjectPath = (projectPath: string) => {
      DO UPDATE SET lastOpened = excluded.lastOpened`
   )
   stmt.run({ path: projectPath, lastOpened: Date.now() })
+}
+
+export const listRecentProjects = (limit = 20): { path: string; lastOpened: number }[] => {
+  const database = ensureDatabase()
+  const stmt = database.prepare(
+    `SELECT path, lastOpened FROM projects ORDER BY lastOpened DESC LIMIT ?`
+  )
+  return stmt.all(limit)
 }
 
 export const saveProjectMetadata = (metadata: ProjectMetadataRecord) => {
@@ -111,4 +128,25 @@ const setSetting = (key: string, value: string) => {
 
 export const setActiveProjectPath = (projectPath: string) => {
   setSetting('activeProjectPath', projectPath)
+}
+
+export const getActiveProjectPath = (): string | null => {
+  const database = ensureDatabase()
+  const row = database.prepare(`SELECT value FROM settings WHERE key = 'activeProjectPath'`).get()
+  return row?.value ?? null
+}
+
+export const logActivity = (type: string, payload: Record<string, unknown>) => {
+  const database = ensureDatabase()
+  const stmt = database.prepare(
+    `INSERT INTO activity (type, payload, createdAt) VALUES (@type, @payload, @createdAt)`
+  )
+  stmt.run({ type, payload: JSON.stringify(payload), createdAt: Date.now() })
+}
+
+export const getDatabasePath = (): string => {
+  if (dbPathCache) return dbPathCache
+  // ensureDatabase will populate cache
+  ensureDatabase()
+  return dbPathCache as string
 }

@@ -11,6 +11,7 @@ import {
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
 import { listBackups, createBackup, restoreBackup } from './backup'
+import { getDatabasePath, logActivity } from './storage/projectsStore'
 import { IPC_EVENTS } from '../shared/preload/api'
 import { watchPlanningForWindow } from './planning/watcher'
 import {
@@ -103,6 +104,7 @@ export const bootIpc = () => {
     upsertProjectPath(projectPath)
 
     setActiveProjectPath(projectPath)
+    logActivity('project.select', { projectPath })
 
     if (browserWindow) {
       watchPlanningForWindow(browserWindow, projectPath, async () => {
@@ -140,6 +142,7 @@ export const bootIpc = () => {
     const targetPath = resolvePlanningReadme(payload.projectPath)
     await mkdir(path.dirname(targetPath), { recursive: true })
     await writeFile(targetPath, payload.content, 'utf-8')
+    logActivity('planning.readme.write', { projectPath: payload.projectPath })
     return { success: true }
   })
 
@@ -171,6 +174,7 @@ export const bootIpc = () => {
 
     upsertProjectPath(data.projectPath)
     setActiveProjectPath(data.projectPath)
+    logActivity('project.metadata.save', { projectPath: data.projectPath })
 
     return { success: true }
   })
@@ -187,15 +191,17 @@ export const bootIpc = () => {
 
   registerIpcHandler(IPC_CHANNELS.BACKUP_CREATE, async (_event, payload) => {
     const planningPath = resolvePlanningDir(payload.projectPath)
-    const dbPath = path.join(payload.projectPath, 'localflow.sqlite')
+    const dbPath = getDatabasePath()
     const result = await createBackup(payload.projectPath, planningPath, dbPath)
+    logActivity('backup.create', { projectPath: payload.projectPath, id: result.id })
     return result
   })
 
   registerIpcHandler(IPC_CHANNELS.BACKUP_RESTORE, async (_event, payload) => {
     const planningPath = resolvePlanningDir(payload.projectPath)
-    const dbPath = path.join(payload.projectPath, 'localflow.sqlite')
+    const dbPath = getDatabasePath()
     const result = await restoreBackup(payload.projectPath, payload.id, planningPath, dbPath)
+    logActivity('backup.restore', { projectPath: payload.projectPath, id: payload.id })
     return result
   })
 }
