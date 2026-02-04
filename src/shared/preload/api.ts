@@ -1,3 +1,5 @@
+import type { PlanningIndexResult } from '../planning/types'
+
 export type SelectProjectRootResult = {
   path: string | null
   planningPath: string | null
@@ -41,6 +43,10 @@ export type SaveProjectMetadataResult = {
   success: boolean
 }
 
+export type PlanningIndexPayload = {
+  projectPath: string
+}
+
 export interface LocalflowBridge {
   ping(): string
   getVersion(): Promise<string>
@@ -49,6 +55,7 @@ export interface LocalflowBridge {
   writePlanningReadme(payload: WritePlanningReadmePayload): Promise<WritePlanningReadmeResult>
   getProjectMetadata(payload: ProjectMetadataPayload): Promise<ProjectMetadataResult>
   saveProjectMetadata(payload: SaveProjectMetadataPayload): Promise<SaveProjectMetadataResult>
+  getPlanningIndex(payload: PlanningIndexPayload): Promise<PlanningIndexResult>
 }
 
 declare global {

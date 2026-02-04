@@ -6,7 +6,8 @@ export const IPC_CHANNELS = {
   READ_PLANNING_README: 'planning:read-readme',
   WRITE_PLANNING_README: 'planning:write-readme',
   GET_PROJECT_METADATA: 'project:get-metadata',
-  SAVE_PROJECT_METADATA: 'project:save-metadata'
+  SAVE_PROJECT_METADATA: 'project:save-metadata',
+  PLANNING_INDEX: 'planning:index'
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]
@@ -31,7 +32,8 @@ const schemaMap = {
     content: z.string()
   }),
   [IPC_CHANNELS.GET_PROJECT_METADATA]: metadataPayload,
-  [IPC_CHANNELS.SAVE_PROJECT_METADATA]: metadataSavePayload
+  [IPC_CHANNELS.SAVE_PROJECT_METADATA]: metadataSavePayload,
+  [IPC_CHANNELS.PLANNING_INDEX]: metadataPayload
 } as const satisfies Record<IpcChannel, z.ZodTypeAny>
 
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
@@ -51,3 +53,4 @@ export const validateIpcPayload = <T extends IpcChannel>(channel: T, payload: un
 export type PayloadFor<T extends IpcChannel> = z.infer<SchemaFor<T>>
 export type GetProjectMetadataPayload = z.infer<typeof metadataPayload>
 export type SaveProjectMetadataPayload = z.infer<typeof metadataSavePayload>
+export type PlanningIndexPayload = z.infer<typeof metadataPayload>

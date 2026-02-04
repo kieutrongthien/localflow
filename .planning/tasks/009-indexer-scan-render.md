@@ -2,21 +2,23 @@
 
 **Created:** 2026-02-05  
 **Story:** 005  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Đọc epics/stories/tasks từ .planning, parse ID + frontmatter, hiển thị trong UI.
 
 ## Subtasks
-- [ ] Quét thư mục epics/stories/tasks
-- [ ] Parse frontmatter + ID
-- [ ] Render list + tổng quan đếm
+- [x] Quét thư mục epics/stories/tasks (buildPlanningIndex + gray-matter)
+- [x] Parse frontmatter + ID (title/status/priority/points/links)
+- [x] Render list + tổng quan đếm (renderer bảng backlog)
 
 ## Blockers
 None
 
 ## Notes
-Chỉ trong thư mục đã import, xử lý lỗi file lệch chuẩn
+- IPC `planning:index` trả về danh sách + totals, tolerant với thư mục thiếu
+- Renderer hiển thị bảng backlog + badges, auto reload sau chọn thư mục
+- npm test & build pass; gray-matter thêm cảnh báo eval (upstream)

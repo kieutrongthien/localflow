@@ -63,12 +63,48 @@
         <button class="primary" @click="saveMetadata">Lưu metadata</button>
         <p class="status" v-if="metadataStatus">{{ metadataStatus }}</p>
       </div>
+
+      <div class="card" v-if="projectPath">
+        <h2>Backlog (.planning)</h2>
+        <div class="totals-row">
+          <span>Epics: {{ planningTotals.epic }}</span>
+          <span>Stories: {{ planningTotals.story }}</span>
+          <span>Tasks: {{ planningTotals.task }}</span>
+          <span>Tổng: {{ planningTotals.all }}</span>
+        </div>
+
+        <p v-if="planningItems.length === 0" class="muted">Chưa tìm thấy file backlog trong .planning.</p>
+
+        <table v-else class="backlog-table">
+          <thead>
+            <tr>
+              <th>Loại</th>
+              <th>ID</th>
+              <th>Tiêu đề</th>
+              <th>Trạng thái</th>
+              <th>Priority</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in planningItems" :key="item.path">
+              <td><span class="badge">{{ item.type }}</span></td>
+              <td>{{ item.id }}</td>
+              <td class="title">{{ item.title }}</td>
+              <td>{{ item.status || '—' }}</td>
+              <td>{{ item.priority || '—' }}</td>
+              <td>{{ item.points ?? '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import type { PlanningItem } from '../../shared/planning/types'
 
 const pingValue = ref('...')
 const version = ref('...')
@@ -79,6 +115,8 @@ const readmeCreated = ref(false)
 const readme = ref('')
 const status = ref('')
 const metadataStatus = ref('')
+const planningItems = ref<PlanningItem[]>([])
+const planningTotals = reactive({ epic: 0, story: 0, task: 0, all: 0 })
 
 const metadata = reactive({
   name: '',
@@ -103,6 +141,14 @@ const resetMetadata = () => {
   metadata.endDate = ''
   metadataStatus.value = ''
   Object.keys(errors).forEach((key) => delete errors[key])
+}
+
+const resetPlanningIndex = () => {
+  planningItems.value = []
+  planningTotals.epic = 0
+  planningTotals.story = 0
+  planningTotals.task = 0
+  planningTotals.all = 0
 }
 
 const applyMetadata = (data: {
@@ -130,6 +176,13 @@ const loadMetadata = async () => {
   if (!projectPath.value) return
   const data = await window.localflow.getProjectMetadata({ projectPath: projectPath.value })
   applyMetadata(data)
+}
+
+const loadPlanningIndex = async () => {
+  if (!projectPath.value) return
+  const result = await window.localflow.getPlanningIndex({ projectPath: projectPath.value })
+  planningItems.value = result.items
+  Object.assign(planningTotals, result.totals)
 }
 
 const validateMetadata = () => {
@@ -173,11 +226,12 @@ const handleSelect = async () => {
 
   if (result.path) {
     status.value = 'Thư mục đã sẵn sàng'
-    await Promise.all([loadReadme(), loadMetadata()])
+    await Promise.all([loadReadme(), loadMetadata(), loadPlanningIndex()])
   } else {
     status.value = 'Chưa chọn thư mục'
     readme.value = ''
     resetMetadata()
+    resetPlanningIndex()
   }
 }
 
@@ -312,6 +366,53 @@ textarea {
   margin: 0;
   font-size: 0.85rem;
   color: #a3a3a3;
+}
+
+.totals-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+.muted {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.backlog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.backlog-table th,
+.backlog-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.backlog-table th {
+  text-align: left;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.backlog-table .title {
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+  text-transform: capitalize;
+  font-size: 0.8rem;
 }
 
 .form-grid {

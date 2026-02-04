@@ -9,6 +9,7 @@ import {
   type SaveProjectMetadataPayload
 } from '../shared/ipc/schemas'
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
+import { buildPlanningIndex } from './planning/indexer'
 import {
   getProjectMetadata,
   saveProjectMetadata,
@@ -155,5 +156,9 @@ export const bootIpc = () => {
     setActiveProjectPath(data.projectPath)
 
     return { success: true }
+  })
+
+  registerIpcHandler(IPC_CHANNELS.PLANNING_INDEX, async (_event, payload) => {
+    return buildPlanningIndex(payload.projectPath)
   })
 }
