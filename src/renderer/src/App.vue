@@ -103,8 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import type { PlanningItem } from '../../shared/planning/types'
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
+import type { PlanningIndexResult, PlanningItem } from '../../shared/planning/types'
 
 const pingValue = ref('...')
 const version = ref('...')
@@ -127,10 +127,22 @@ const metadata = reactive({
 })
 
 const errors = reactive<Record<string, string>>({})
+let unsubscribePlanning: (() => void) | null = null
+
+const applyPlanningIndex = (payload: PlanningIndexResult) => {
+  planningItems.value = payload.items
+  Object.assign(planningTotals, payload.totals)
+}
 
 onMounted(async () => {
   pingValue.value = window.localflow?.ping() ?? 'unavailable'
   version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
+
+  unsubscribePlanning = window.localflow.onPlanningIndexUpdated(applyPlanningIndex)
+})
+
+onBeforeUnmount(() => {
+  unsubscribePlanning?.()
 })
 
 const resetMetadata = () => {
@@ -181,8 +193,7 @@ const loadMetadata = async () => {
 const loadPlanningIndex = async () => {
   if (!projectPath.value) return
   const result = await window.localflow.getPlanningIndex({ projectPath: projectPath.value })
-  planningItems.value = result.items
-  Object.assign(planningTotals, result.totals)
+  applyPlanningIndex(result)
 }
 
 const validateMetadata = () => {

@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron'
+import { disposePlanningWatcher } from './planning/watcher'
 import path from 'node:path'
 import { bootIpc } from './ipc'
 
@@ -22,9 +23,11 @@ const createWindow = async () => {
   } else {
     await mainWindow.loadFile(path.join(__dirname, '../../dist/renderer/index.html'))
   }
-}
+  mainWindow.on('closed', () => {
+    disposePlanningWatcher(mainWindow.id)
+  })
 
-ipcMain.handle('system:getVersion', () => app.getVersion())
+}
 
 app.whenReady().then(() => {
   bootIpc()

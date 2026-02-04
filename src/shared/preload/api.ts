@@ -1,5 +1,9 @@
 import type { PlanningIndexResult } from '../planning/types'
 
+export const IPC_EVENTS = {
+  PLANNING_INDEX_UPDATED: 'planning:index-updated'
+} as const
+
 export type SelectProjectRootResult = {
   path: string | null
   planningPath: string | null
@@ -56,6 +60,7 @@ export interface LocalflowBridge {
   getProjectMetadata(payload: ProjectMetadataPayload): Promise<ProjectMetadataResult>
   saveProjectMetadata(payload: SaveProjectMetadataPayload): Promise<SaveProjectMetadataResult>
   getPlanningIndex(payload: PlanningIndexPayload): Promise<PlanningIndexResult>
+  onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 
 declare global {

@@ -10,6 +10,8 @@ import {
 } from '../shared/ipc/schemas'
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
+import { IPC_EVENTS } from '../shared/preload/api'
+import { watchPlanningForWindow } from './planning/watcher'
 import {
   getProjectMetadata,
   saveProjectMetadata,
@@ -40,6 +42,12 @@ const pathExists = async (target: string) => {
   } catch {
     return false
   }
+}
+
+const emitPlanningIndexUpdate = async (window: BrowserWindow | null, projectPath: string) => {
+  if (!window) return
+  const result = await buildPlanningIndex(projectPath)
+  window.webContents.send(IPC_EVENTS.PLANNING_INDEX_UPDATED, result)
 }
 
 const ensurePlanningStructure = async (projectPath: string) => {
@@ -94,6 +102,14 @@ export const bootIpc = () => {
     upsertProjectPath(projectPath)
 
     setActiveProjectPath(projectPath)
+
+    if (browserWindow) {
+      watchPlanningForWindow(browserWindow, projectPath, async () => {
+        await emitPlanningIndexUpdate(browserWindow, projectPath)
+      })
+
+      await emitPlanningIndexUpdate(browserWindow, projectPath)
+    }
 
     return {
       path: projectPath,
