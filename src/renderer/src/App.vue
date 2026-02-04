@@ -1,6 +1,28 @@
 <template>
-  <main class="app-shell">
-    <section>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./assets/logo.svg" alt="LocalFlow logo" class="logo" />
+        <span>LocalFlow</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active">Overview</button>
+        <button class="nav-item">Backlog</button>
+        <button class="nav-item">Boards</button>
+        <button class="nav-item">Settings</button>
+      </nav>
+    </aside>
+    <main class="content">
+      <header class="content-header">
+        <div class="left">
+          <h1>Local-first backlog planner</h1>
+        </div>
+        <div class="right">
+          <code>Ping: {{ pingValue }}</code>
+          <code>Version: {{ version }}</code>
+        </div>
+      </header>
+      <section>
       <img src="./assets/logo.svg" alt="LocalFlow logo" class="logo" />
       <h1>LocalFlow</h1>
       <p>Local-first backlog planner. Electron + Vue scaffold đang sẵn sàng.</p>
@@ -114,8 +136,9 @@
         <p v-else class="muted">Chưa có backup nào.</p>
         <p class="status" v-if="backupStatus">{{ backupStatus }}</p>
       </div>
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -313,17 +336,59 @@ const saveMetadata = async () => {
 </script>
 
 <style scoped>
-.app-shell {
+
+.layout {
   min-height: 100vh;
   display: grid;
-  place-items: center;
+  grid-template-columns: 260px 1fr;
   background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
   color: #f5f5f5;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  padding: 3rem 1rem;
 }
 
-section {
+.sidebar {
+  border-right: 1px solid rgba(255,255,255,0.08);
+  padding: 1rem;
+  background: rgba(255,255,255,0.03);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.nav-item {
+  width: 100%;
+  text-align: left;
+  background: rgba(255,255,255,0.06);
+}
+
+.nav-item.active {
+  background: linear-gradient(120deg, #34d399, #22d3ee);
+  color: #0f172a;
+}
+
+.content {
+  padding: 2rem;
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.content section {
   width: min(960px, 100%);
   text-align: left;
   padding: 2.5rem;
@@ -333,9 +398,9 @@ section {
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
 }
 
-section > h1,
-section > p,
-section > code {
+.content section > h1,
+.content section > p,
+.content section > code {
   text-align: center;
 }
 
@@ -497,6 +562,15 @@ label {
 .error {
   color: #f87171;
   font-size: 0.8rem;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
