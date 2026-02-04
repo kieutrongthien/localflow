@@ -5,7 +5,7 @@
 **Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** In Progress (2026-02-05 - Colin)
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Tạo backup với timestamp cho .planning và DB; UI khôi phục chọn phiên bản.
