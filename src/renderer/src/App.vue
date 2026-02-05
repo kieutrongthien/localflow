@@ -1,15 +1,30 @@
 <template>
   <div class="min-h-screen grid grid-cols-1 md:grid-cols-[260px_1fr] bg-[radial-gradient(circle_at_top,_#1a1a1a,_#0d0d0d)] text-zinc-100 font-[Inter]">
-    <aside class="hidden md:block border-r border-white/10 p-4 bg-white/5">
-      <div class="flex items-center gap-2 font-bold">
-        <img src="./assets/logo.svg" alt="LocalFlow logo" class="w-10 h-10" />
-        <span>LocalFlow</span>
+    <aside class="hidden md:block border-r border-white/10 p-4 bg-white/5" aria-label="Sidebar navigation">
+      <div class="flex items-center justify-between font-bold">
+        <div class="flex items-center gap-2">
+          <img src="./assets/logo.svg" alt="LocalFlow logo" class="w-10 h-10" />
+          <span v-if="!sidebarCollapsed">LocalFlow</span>
+        </div>
+        <button class="px-2 py-1 rounded bg-white/10 text-xs" @click="toggleSidebar" aria-label="Toggle sidebar">{{ sidebarCollapsed ? '›' : '‹' }}</button>
       </div>
       <nav class="flex flex-col gap-2 mt-4">
-        <RouterLink to="/" class="w-full text-left bg-gradient-to-r from-brand to-brand-secondary text-slate-900 rounded-lg px-3 py-2">Overview</RouterLink>
-        <RouterLink to="/backlog" class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Backlog</RouterLink>
-        <RouterLink to="/boards" class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Boards</RouterLink>
-        <RouterLink to="/settings" class="w-full text-left bg-white/10 rounded-lg px-3 py-2">Settings</RouterLink>
+        <RouterLink to="/" class="w-full text-left bg-gradient-to-r from-brand to-brand-secondary text-slate-900 rounded-lg px-3 py-2 flex items-center gap-2">
+          <svg v-if="sidebarCollapsed" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3l9 8h-3v10H6V11H3z"/></svg>
+          <span v-else>Overview</span>
+        </RouterLink>
+        <RouterLink to="/backlog" class="w-full text-left bg-white/10 rounded-lg px-3 py-2 flex items-center gap-2">
+          <svg v-if="sidebarCollapsed" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6h16v2H4zm0 5h16v2H4zm0 5h10v2H4z"/></svg>
+          <span v-else>Backlog</span>
+        </RouterLink>
+        <RouterLink to="/boards" class="w-full text-left bg-white/10 rounded-lg px-3 py-2 flex items-center gap-2">
+          <svg v-if="sidebarCollapsed" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 4h7v16H3zm11 0h7v10h-7z"/></svg>
+          <span v-else>Boards</span>
+        </RouterLink>
+        <RouterLink to="/settings" class="w-full text-left bg-white/10 rounded-lg px-3 py-2 flex items-center gap-2">
+          <svg v-if="sidebarCollapsed" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.94 4a8.94 8.94 0 01-.5 2.94l2.12 1.64-2 3.46-2.54-1a9.08 9.08 0 01-2.54 1L14 22H10l-.48-2.02a9.08 9.08 0 01-2.54-1l-2.54 1-2-3.46 2.12-1.64A8.94 8.94 0 013.06 12c0-1.02.18-2 .5-2.94L1.44 7.42l2-3.46 2.54 1A9.08 9.08 0 018.52 4L10 2h4l1.48 2.02a9.08 9.08 0 012.54 1l2.54-1 2 3.46-2.12 1.64c.32.94.5 1.92.5 2.94z"/></svg>
+          <span v-else>Settings</span>
+        </RouterLink>
       </nav>
     </aside>
     <main class="p-8">
@@ -326,6 +341,7 @@ const backupStatus = ref('')
 const boardStatus = ref('')
 const draggingPath = ref<string | null>(null)
 const exportStatus = ref('')
+const sidebarCollapsed = ref(false)
 
 const storiesByStatus = reactive<{ todo: PlanningItem[]; in_progress: PlanningItem[]; done: PlanningItem[] }>({
   todo: [],
@@ -395,11 +411,18 @@ onMounted(async () => {
   window.addEventListener('keydown', onKey)
   // Remove on unmount
   onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+
+  try { sidebarCollapsed.value = localStorage.getItem('sidebarCollapsed') === '1' } catch {}
 })
 
 onBeforeUnmount(() => {
   unsubscribePlanning?.()
 })
+
+const toggleSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value
+  try { localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value ? '1' : '0') } catch {}
+}
 
 const resetMetadata = () => {
   metadata.name = ''
