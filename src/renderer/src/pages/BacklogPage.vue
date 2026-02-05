@@ -15,7 +15,7 @@
     <UICard :dark="true" class="overflow-hidden">
       <table class="w-full text-sm">
         <thead>
-          <tr class="bg-white/5">
+          <tr class="bg-white/5 sticky top-0 z-10">
             <th class="text-left px-4 py-2">Type</th>
             <th class="text-left px-4 py-2">Title</th>
             <th class="text-left px-4 py-2">Status</th>
@@ -32,7 +32,7 @@
               <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80" :aria-label="`Open detail for ${it.title}`">{{ it.title }}</RouterLink>
             </td>
             <td class="px-4 py-2">
-              <select class="px-2 py-1 rounded bg-white/10 border border-white/10" aria-label="Inline edit status"
+              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit status"
                       :value="it.status || ''"
                       @change="e => inlineSetStatus(it, (e.target as HTMLSelectElement).value as any)">
                 <option value="">-</option>
@@ -42,7 +42,7 @@
               </select>
             </td>
             <td class="px-4 py-2">
-              <select class="px-2 py-1 rounded bg-white/10 border border-white/10" aria-label="Inline edit priority"
+              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit priority"
                       :value="it.priority || ''"
                       @change="e => inlineSetPriority(it, (e.target as HTMLSelectElement).value)">
                 <option value="">-</option>
@@ -52,7 +52,7 @@
               </select>
             </td>
             <td class="px-4 py-2">
-              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10" aria-label="Inline edit points"
+              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit points"
                      :value="it.points ?? ''"
                      @change="e => inlineSetPoints(it, (e.target as HTMLInputElement).value)" />
             </td>

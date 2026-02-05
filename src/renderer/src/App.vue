@@ -150,7 +150,7 @@
               <div
                 v-for="s in storiesByStatus.todo"
                 :key="s.path"
-                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab focus:outline-none focus:ring-2 focus:ring-brand-secondary/60 hover:bg-white/10"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab focus:outline-none focus:ring-2 focus:ring-indigo-400 hover:bg-white/10 shadow-sm hover:shadow"
                 draggable="true"
                 @dragstart="onDragStart(s)"
                 tabindex="0"
@@ -161,7 +161,7 @@
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
                 <div class="mt-2 flex items-center gap-2 text-xs">
                   <label class="text-zinc-500">Priority</label>
-                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                  <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500"
                           :value="s.priority || ''"
                           @change="e => inlineSetPriority(s, (e.target as HTMLSelectElement).value)">
                     <option value="">-</option>
@@ -170,7 +170,7 @@
                     <option value="High">High</option>
                   </select>
                   <label class="ml-2 text-zinc-500">Status</label>
-                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                  <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500"
                           :value="s.status || 'todo'"
                           @change="e => inlineSetStatus(s, (e.target as HTMLSelectElement).value as any)">
                     <option value="todo">Todo</option>
@@ -272,8 +272,8 @@
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Backup & Restore</h2>
         <div class="flex gap-2">
-          <button class="px-4 py-2 rounded-full bg-white/10" @click="createBackup">Tạo backup</button>
-          <button class="px-4 py-2 rounded-full bg-white/10" @click="loadBackups">Tải danh sách</button>
+          <UIButton variant="secondary" @click="createBackup">Tạo backup</UIButton>
+          <UIButton variant="secondary" @click="loadBackups">Tải danh sách</UIButton>
         </div>
         <ul class="list-none p-0" v-if="backups.length > 0">
           <li class="flex items-center justify-between py-1" v-for="b in backups" :key="b.id">
@@ -288,8 +288,8 @@
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Export / Import</h2>
         <div class="flex gap-2">
-          <button class="px-4 py-2 rounded-full bg-white/10" @click="exportJson" aria-label="Export planning to JSON">Export JSON</button>
-          <button class="px-4 py-2 rounded-full bg-white/10" @click="importJson" aria-label="Import planning from JSON">Import JSON</button>
+          <UIButton variant="secondary" @click="exportJson" aria-label="Export planning to JSON">Export JSON</UIButton>
+          <UIButton variant="secondary" @click="importJson" aria-label="Import planning from JSON">Import JSON</UIButton>
         </div>
         <p class="text-emerald-400 text-sm" v-if="exportStatus">{{ exportStatus }}</p>
       </div>
@@ -301,7 +301,7 @@
             <input type="checkbox" :checked="activityEnabled" @change="toggleActivity($event)" />
             <span>Bật Activity Log (tùy chọn)</span>
           </label>
-          <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="loadActivity">Tải danh sách</button>
+          <UIButton variant="secondary" @click="loadActivity">Tải danh sách</UIButton>
         </div>
         <ul class="list-none p-0 text-sm">
           <li v-for="a in activities" :key="a.id" class="border-t border-white/5 py-1">
