@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen grid grid-cols-1 md:grid-cols-[240px_1fr] bg-[radial-gradient(circle_at_top,_#111,_#0b0b0b)] text-zinc-100">
+  <div class="min-h-screen grid grid-cols-1 md:grid-cols-[240px_1fr] bg-white text-zinc-900 dark:bg-[radial-gradient(circle_at_top,_#111,_#0b0b0b)] dark:text-zinc-100">
     <aside class="hidden md:block border-r border-white/10 p-4 bg-white/5" aria-label="Sidebar navigation">
       <div class="flex items-center justify-between font-semibold">
         <div class="flex items-center gap-2">
