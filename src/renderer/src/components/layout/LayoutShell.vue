@@ -28,7 +28,7 @@
       </nav>
     </aside>
     <div class="flex flex-col">
-      <header class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+      <header class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-white/10 bg-white dark:bg-transparent shadow-sm">
         <div class="flex items-center gap-2">
           <slot name="breadcrumb"></slot>
         </div>
