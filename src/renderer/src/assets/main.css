@@ -1,5 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "./index.html";
+@source "./src/**/*.{vue,ts}";
 
 html, body, #app { height: 100%; width: 100%; margin: 0; }
