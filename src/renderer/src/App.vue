@@ -301,6 +301,14 @@ onMounted(async () => {
   version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
 
   unsubscribePlanning = window.localflow.onPlanningIndexUpdated(applyPlanningIndex)
+  // Watcher error/recovery notifications
+  const { ipcRenderer } = (await import('electron')) as any
+  ipcRenderer.on('planning:watch-error', (_e: any, payload: { message: string }) => {
+    toast.type = 'error'; toast.message = 'Watcher lỗi: ' + (payload?.message || '')
+  })
+  ipcRenderer.on('planning:watch-recovered', () => {
+    toast.type = 'success'; toast.message = 'Watcher đã khôi phục'
+  })
 
   // Load theme preference
   const { value } = await window.localflow.getSetting({ key: 'theme' })

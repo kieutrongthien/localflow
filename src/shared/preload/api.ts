@@ -1,8 +1,12 @@
 import type { PlanningIndexResult } from '../planning/types'
 
 export const IPC_EVENTS = {
-  PLANNING_INDEX_UPDATED: 'planning:index-updated'
+  PLANNING_INDEX_UPDATED: 'planning:index-updated',
+  PLANNING_WATCH_ERROR: 'planning:watch-error',
+  PLANNING_WATCH_RECOVERED: 'planning:watch-recovered'
 } as const
+
+export type PlanningWatchEvent = { message: string; code?: string }
 
 export type SelectProjectRootResult = {
   path: string | null

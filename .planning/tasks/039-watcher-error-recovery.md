@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 010  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Xử lý lỗi quyền/đường dẫn khi theo dõi .planning; retry/backoff; thông báo phù hợp.
 
 ## Subtasks
-- [ ] Phát hiện lỗi
-- [ ] Retry/backoff
-- [ ] Thông báo người dùng
+- [x] Phát hiện lỗi (lắng nghe watcher.on('error'))
+- [x] Retry/backoff (exponential, tối đa 60s)
+- [x] Thông báo người dùng (IPC planning:watch-error/recovered + toast)
 
 ## Blockers
 None
