@@ -2,10 +2,10 @@
 
 **Created:** 2026-02-05  
 **Story:** 006  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** In Progress (2026-02-05 - Colin)
 
 ## Description
 Viết test cho IPC whitelist/validator và parser frontmatter.

@@ -14,7 +14,10 @@ describe('IPC whitelist + validator', () => {
         IPC_CHANNELS.PLANNING_INDEX,
         IPC_CHANNELS.BACKUP_LIST,
         IPC_CHANNELS.BACKUP_CREATE,
-        IPC_CHANNELS.BACKUP_RESTORE
+        IPC_CHANNELS.BACKUP_RESTORE,
+        IPC_CHANNELS.SETTINGS_GET,
+        IPC_CHANNELS.SETTINGS_SET,
+        IPC_CHANNELS.PLANNING_UPDATE_STATUS
       ])
     )
   })
@@ -85,5 +88,18 @@ describe('IPC whitelist + validator', () => {
       validateIpcPayload(IPC_CHANNELS.BACKUP_RESTORE, { projectPath: '/tmp/demo', id: '2026-02-05-12-00' })
     ).not.toThrow()
     expect(() => validateIpcPayload(IPC_CHANNELS.BACKUP_RESTORE, { projectPath: '/tmp/demo' })).toThrow()
+  })
+
+  it('validates settings payloads', () => {
+    expect(() => validateIpcPayload(IPC_CHANNELS.SETTINGS_GET, { key: 'theme' })).not.toThrow()
+    expect(() => validateIpcPayload(IPC_CHANNELS.SETTINGS_GET, {})).toThrow()
+
+    expect(() => validateIpcPayload(IPC_CHANNELS.SETTINGS_SET, { key: 'theme', value: 'dark' })).not.toThrow()
+    expect(() => validateIpcPayload(IPC_CHANNELS.SETTINGS_SET, { key: '' })).toThrow()
+  })
+
+  it('validates planning status update payload', () => {
+    expect(() => validateIpcPayload(IPC_CHANNELS.PLANNING_UPDATE_STATUS, { path: '/tmp/demo/story.md', status: 'done' })).not.toThrow()
+    expect(() => validateIpcPayload(IPC_CHANNELS.PLANNING_UPDATE_STATUS, { path: '', status: '' })).toThrow()
   })
 })
