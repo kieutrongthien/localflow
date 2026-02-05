@@ -18,17 +18,26 @@
     </div>
     <div class="grid md:grid-cols-3 gap-4">
       <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Epics total">
-        <div class="flex items-center gap-2 text-sm text-zinc-400"><span>📦 Epics</span></div>
+        <div class="flex items-center gap-2 text-sm text-zinc-300">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 8l-9-5-9 5 9 5 9-5zm-9 7l-9-5v9l9 5 9-5v-9l-9 5z"/></svg>
+          <span class="font-medium">Epics</span>
+        </div>
         <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
         <div v-else class="text-2xl font-semibold">{{ totals.epic }}</div>
       </div>
       <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Stories total">
-        <div class="flex items-center gap-2 text-sm text-zinc-400"><span>📚 Stories</span></div>
+        <div class="flex items-center gap-2 text-sm text-zinc-300">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h12v2H6zm0 4h12v2H6zm0 4h12v2H6zm0 4h8v2H6z"/></svg>
+          <span class="font-medium">Stories</span>
+        </div>
         <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
         <div v-else class="text-2xl font-semibold">{{ totals.story }}</div>
       </div>
       <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Tasks total">
-        <div class="flex items-center gap-2 text-sm text-zinc-400"><span>🧩 Tasks</span></div>
+        <div class="flex items-center gap-2 text-sm text-zinc-300">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg>
+          <span class="font-medium">Tasks</span>
+        </div>
         <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
         <div v-else class="text-2xl font-semibold">{{ totals.task }}</div>
       </div>
