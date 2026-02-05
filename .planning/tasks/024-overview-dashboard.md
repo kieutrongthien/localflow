@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 005  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Hiển thị tổng quan: số epics/stories/tasks, các mục gần đây; lối tắt vào Backlog/Boards/Settings.
 
 ## Subtasks
-- [ ] Cards thống kê
-- [ ] Recent activity (nếu bật)
-- [ ] Nav shortcuts
+- [x] Cards thống kê
+- [x] Recent activity (nếu bật)
+- [x] Nav shortcuts
 
 ## Blockers
 None

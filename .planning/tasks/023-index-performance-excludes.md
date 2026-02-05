@@ -2,17 +2,17 @@
 
 **Created:** 2026-02-05  
 **Story:** 005  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Thiết lập exclude patterns (node_modules, build) và giới hạn độ sâu quét để tăng tốc.
 
 ## Subtasks
-- [ ] Danh sách exclude
-- [ ] Giới hạn độ sâu quét
+- [x] Danh sách exclude (dotfiles, file tạm)
+- [x] Giới hạn độ sâu quét (top-level)
 - [ ] Benchmark nội bộ
 
 ## Blockers

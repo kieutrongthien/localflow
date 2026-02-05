@@ -15,6 +15,10 @@ const PLANNING_DIRS: Array<{ kind: PlanningKind; folder: string }> = [
   { kind: 'task', folder: 'tasks' }
 ]
 
+// Performance safeguards
+const EXCLUDE_PATTERNS = [/^\./, /~$/] // dotfiles, temp
+const MAX_DEPTH = 0 // only top-level files in each folder
+
 const parsePoints = (value: unknown): number | null => {
   if (typeof value === 'number') return value
   if (typeof value === 'string') {
@@ -42,6 +46,7 @@ const parsePlanningFile = async (filePath: string, kind: PlanningKind): Promise<
   try {
     const raw = await readFile(filePath, 'utf-8')
     const { data, content } = matter(raw)
+    const validated = validateFrontmatter(kind, data)
 
     const filename = path.basename(filePath)
     const [id = ''] = filename.split('-', 1)
@@ -50,14 +55,14 @@ const parsePlanningFile = async (filePath: string, kind: PlanningKind): Promise<
       id: id || filename,
       filename,
       type: kind,
-      title: (validated.title || content.split('\n')[0]?.replace('#', '').trim() || filename).trim(),
-      status: validated.status,
-      priority: validated.priority,
-      points: kind === 'task' || kind === 'story' ? parsePoints(validated.points) : null,
-      links: validated.links,
-      tags: validated.tags,
-      owner: 'owner' in validated ? validated.owner : undefined,
-      assignee: 'assignee' in validated ? validated.assignee : undefined,
+      title: ((validated?.title as string | undefined) || content.split('\n')[0]?.replace('#', '').trim() || filename).trim(),
+      status: (validated?.status as string | undefined),
+      priority: (validated?.priority as string | undefined),
+      points: kind === 'task' || kind === 'story' ? parsePoints(validated?.points) : null,
+      links: (validated?.links as string[] | undefined),
+      tags: (validated?.tags as string[] | undefined),
+      owner: (validated as any)?.owner,
+      assignee: (validated as any)?.assignee,
       path: filePath
     }
   } catch (error) {
@@ -79,6 +84,7 @@ export const buildPlanningIndex = async (projectPath: string): Promise<PlanningI
       const parsed = await Promise.all(
         files
           .filter((filename) => filename.endsWith('.md'))
+          .filter((filename) => !EXCLUDE_PATTERNS.some((re) => re.test(filename)))
           .map((filename) => parsePlanningFile(path.join(dir, filename), entry.kind))
       )
 

@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 004  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Quản lý cấu hình: dark mode, đường dẫn DB, exclude patterns, telemetry (off mặc định).
 
 ## Subtasks
-- [ ] UI Settings (Vue + Tailwind)
-- [ ] CRUD settings (SQLite)
-- [ ] Persist và áp dụng ngay
+- [x] UI Settings (Vue + Tailwind)
+- [x] CRUD settings (SQLite)
+- [x] Persist và áp dụng ngay
 
 ## Blockers
 None

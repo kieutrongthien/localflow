@@ -232,4 +232,8 @@ export const bootIpc = () => {
     const entries = listRecentActivity(payload.limit ?? 10)
     return { entries }
   })
+
+  registerIpcHandler(IPC_CHANNELS.DB_PATH, async () => {
+    return { path: getDatabasePath() }
+  })
 }
