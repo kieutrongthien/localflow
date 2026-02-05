@@ -1,6 +1,6 @@
 <template>
   <div :class="['min-h-screen grid grid-cols-1', collapsed ? 'md:grid-cols-[72px_1fr]' : 'md:grid-cols-[240px_1fr]', 'bg-white text-zinc-900 dark:bg-[radial-gradient(circle_at_top,_#111,_#0b0b0b)] dark:text-zinc-100']">
-    <aside :class="['hidden md:block border-r border-white/10 bg-white/5', collapsed ? 'p-2' : 'p-4']" aria-label="Sidebar navigation">
+    <aside :class="['hidden md:block border-r', collapsed ? 'p-2' : 'p-4', 'bg-gray-50 border-gray-200 dark:bg-white/5 dark:border-white/10']" aria-label="Sidebar navigation" role="navigation">
       <div class="flex items-center justify-between font-semibold">
         <div class="flex items-center gap-2">
           <img :src="logoSrc" alt="LocalFlow logo" class="w-8 h-8" />
@@ -49,10 +49,12 @@ import { onMounted, ref } from 'vue'
 const logoSrc = new URL('../../assets/logo.svg', import.meta.url).href
 const route = useRoute()
 const collapsed = ref(false)
-const linkClass = (to: string) => [
-  'w-full text-left rounded-lg px-3 py-2 flex items-center gap-2 transition-colors',
-  route.path === to ? 'bg-white/10' : 'hover:bg-white/5'
-]
+const linkClass = (to: string) => {
+  const base = 'w-full text-left rounded-lg px-3 py-2 flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400'
+  const inactive = 'hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent'
+  const active = 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-white/10 dark:text-white dark:border-white/10'
+  return [base, route.path === to ? active : inactive]
+}
 const toggle = () => {
   collapsed.value = !collapsed.value
   try { localStorage.setItem('sidebarCollapsed', collapsed.value ? '1' : '0') } catch {}
