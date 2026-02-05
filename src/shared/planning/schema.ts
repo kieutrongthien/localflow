@@ -12,13 +12,15 @@ const baseSchema = z.object({
 const storySchema = baseSchema.extend({
   type: z.literal('story'),
   points: z.number().int().positive().optional(),
-  owner: z.string().optional()
+  owner: z.string().optional(),
+  parentEpicPath: z.string().min(1).optional()
 })
 
 const taskSchema = baseSchema.extend({
   type: z.literal('task'),
   points: z.number().int().positive().optional(),
-  assignee: z.string().optional()
+  assignee: z.string().optional(),
+  linkedStoryPath: z.string().min(1).optional()
 })
 
 const epicSchema = baseSchema.extend({

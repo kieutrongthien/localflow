@@ -12,12 +12,14 @@ export type PlanningStoryFrontmatter = PlanningFrontmatterBase & {
   type: 'story'
   points?: number | null
   owner?: string
+  parentEpicPath?: string
 }
 
 export type PlanningTaskFrontmatter = PlanningFrontmatterBase & {
   type: 'task'
   points?: number | null
   assignee?: string
+  linkedStoryPath?: string
 }
 
 export type PlanningEpicFrontmatter = PlanningFrontmatterBase & {
@@ -42,6 +44,8 @@ export type PlanningItem = {
   tags?: string[]
   owner?: string
   assignee?: string
+  parentEpicPath?: string
+  linkedStoryPath?: string
   path: string
 }
 

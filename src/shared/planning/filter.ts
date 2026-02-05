@@ -28,8 +28,8 @@ export const applyPlanningFilters = (
     const matchesPriority = !priority || normalize(item.priority).includes(priority)
     const matchesEpic =
       !epic ||
-      (item.type === 'story' && item.parentEpicId && normalize(item.parentEpicId).includes(epic)) ||
-      (item.type === 'task' && item.linkedStoryId && normalize(item.linkedStoryId).includes(epic))
+      (item.type === 'story' && item.parentEpicPath && normalize(item.parentEpicPath).includes(epic)) ||
+      (item.type === 'task' && item.linkedStoryPath && normalize(item.linkedStoryPath).includes(epic))
 
     return matchesQuery && matchesStatus && matchesPriority && matchesEpic
   })

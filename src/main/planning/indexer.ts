@@ -63,6 +63,8 @@ const parsePlanningFile = async (filePath: string, kind: PlanningKind): Promise<
       tags: (validated?.tags as string[] | undefined),
       owner: (validated as any)?.owner,
       assignee: (validated as any)?.assignee,
+      parentEpicPath: (validated as any)?.parentEpicPath,
+      linkedStoryPath: (validated as any)?.linkedStoryPath,
       path: filePath
     }
   } catch (error) {

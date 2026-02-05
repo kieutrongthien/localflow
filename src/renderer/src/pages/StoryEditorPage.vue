@@ -29,6 +29,13 @@
           <input v-model="form.priority" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10" />
         </div>
       </div>
+      <div>
+        <label class="block text-sm mb-1">Parent Epic</label>
+        <select v-model="form.parentEpicPath" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10">
+          <option value="">None</option>
+          <option v-for="e in epics" :key="e.path" :value="e.path">{{ e.title }} ({{ e.filename }})</option>
+        </select>
+      </div>
       <div class="grid md:grid-cols-2 gap-3">
         <div>
           <label class="block text-sm mb-1">Points</label>
@@ -57,6 +64,7 @@ import matter from 'gray-matter'
 
 const projectPath = ref('')
 const stories = ref<Array<{ title: string; filename: string; path: string }>>([])
+const epics = ref<Array<{ title: string; filename: string; path: string }>>([])
 const selectedPath = ref('')
 const formVisible = ref(false)
 const status = ref('')
@@ -69,6 +77,7 @@ onMounted(async () => {
   projectPath.value = p
   const idx = await window.localflow.getPlanningIndex({ projectPath: p })
   stories.value = idx.items.filter((i) => i.type === 'story').map((i) => ({ title: i.title, filename: i.filename, path: i.path }))
+  epics.value = idx.items.filter((i) => i.type === 'epic').map((i) => ({ title: i.title, filename: i.filename, path: i.path }))
 })
 
 const loadSelected = async () => {
@@ -84,7 +93,8 @@ const loadSelected = async () => {
       priority: d.priority || '',
       points: d.points ?? null,
       owner: d.owner || '',
-      tags: Array.isArray(d.tags) ? d.tags : []
+      tags: Array.isArray(d.tags) ? d.tags : [],
+      parentEpicPath: d.parentEpicPath || ''
     }
     tagsCsv.value = form.value.tags.join(', ')
   } catch {

@@ -15,6 +15,13 @@
         <label class="block text-sm mb-1">Title</label>
         <input v-model="form.title" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10" />
       </div>
+      <div>
+        <label class="block text-sm mb-1">Linked Story</label>
+        <select v-model="form.linkedStoryPath" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10">
+          <option value="">None</option>
+          <option v-for="s in stories" :key="s.path" :value="s.path">{{ s.title }} ({{ s.filename }})</option>
+        </select>
+      </div>
       <div class="grid md:grid-cols-2 gap-3">
         <div>
           <label class="block text-sm mb-1">Status</label>
@@ -57,6 +64,7 @@ import matter from 'gray-matter'
 
 const projectPath = ref('')
 const tasks = ref<Array<{ title: string; filename: string; path: string }>>([])
+const stories = ref<Array<{ title: string; filename: string; path: string }>>([])
 const selectedPath = ref('')
 const formVisible = ref(false)
 const status = ref('')
@@ -69,6 +77,7 @@ onMounted(async () => {
   projectPath.value = p
   const idx = await window.localflow.getPlanningIndex({ projectPath: p })
   tasks.value = idx.items.filter((i) => i.type === 'task').map((i) => ({ title: i.title, filename: i.filename, path: i.path }))
+  stories.value = idx.items.filter((i) => i.type === 'story').map((i) => ({ title: i.title, filename: i.filename, path: i.path }))
 })
 
 const loadSelected = async () => {
@@ -83,7 +92,8 @@ const loadSelected = async () => {
       priority: d.priority || '',
       points: d.points ?? null,
       assignee: d.assignee || '',
-      tags: Array.isArray(d.tags) ? d.tags : []
+      tags: Array.isArray(d.tags) ? d.tags : [],
+      linkedStoryPath: d.linkedStoryPath || ''
     }
     tagsCsv.value = form.value.tags.join(', ')
   } catch {

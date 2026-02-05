@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 002  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Thêm UI và logic liên kết các thực thể, đảm bảo traceability; cập nhật frontmatter.
 
 ## Subtasks
-- [ ] UI chọn liên kết
-- [ ] Ghi link vào frontmatter
-- [ ] Kiểm tra hiển thị ngược chiều
+- [x] UI chọn liên kết (Story chọn Epic; Task chọn Story)
+- [x] Ghi link vào frontmatter (parentEpicPath, linkedStoryPath)
+- [x] Filter hỗ trợ liên kết (lọc theo epic qua path)
 
 ## Blockers
 None
