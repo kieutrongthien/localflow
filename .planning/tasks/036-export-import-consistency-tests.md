@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 002  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Viết test đảm bảo Export→Import giữ nguyên frontmatter/ID/links; phát hiện xung đột.
 
 ## Subtasks
-- [ ] Case hợp lệ
-- [ ] Case xung đột ID/filename
-- [ ] Báo cáo lỗi rõ ràng
+- [x] Case hợp lệ (giữ title/type qua import)
+- [x] Case xung đột filename (tạo suffix -import-N, trả về conflicts)
+- [x] Báo cáo lỗi rõ ràng (conflicts list)
 
 ## Blockers
 None

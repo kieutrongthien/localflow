@@ -260,7 +260,7 @@ export const bootIpc = () => {
     return { success: true, path: save.filePath }
   })
 
-  // Import JSON: read selected JSON and materialize into .planning
+  // Import JSON: read selected JSON and materialize into .planning (with conflict-safe filenames)
   registerIpcHandler(IPC_CHANNELS.PLANNING_IMPORT_JSON, async (event, payload) => {
     const bw = getWindowFromEvent(event)
     const projectPath = payload.projectPath
@@ -269,29 +269,10 @@ export const bootIpc = () => {
     const file = open.filePaths[0]
     const raw = await readFile(file, 'utf-8')
     const parsed = JSON.parse(raw) as { items: Array<{ type: string; filename?: string; path?: string; title?: string }> }
-    const planningDir = resolvePlanningDir(projectPath)
-    await mkdir(planningDir, { recursive: true })
-    const byType: Record<string, string> = { epic: 'epics', story: 'stories', task: 'tasks' }
-    let count = 0
-    for (const item of parsed.items ?? []) {
-      const folder = byType[item.type]
-      if (!folder) continue
-      const dir = path.join(planningDir, folder)
-      await mkdir(dir, { recursive: true })
-      const base = item.filename ?? path.basename(item.path ?? `${item.type}-${Date.now()}.md`)
-      const target = path.join(dir, base)
-      // Create a simple markdown with frontmatter
-      const fm = {
-        type: item.type,
-        status: 'todo',
-        title: item.title ?? base
-      }
-      const md = (await import('gray-matter')).default.stringify('', fm)
-      await writeFile(target, md, 'utf-8')
-      count++
-    }
-    logActivity('planning.import.json', { projectPath, file, created: count })
-    return { success: true, created: count }
+    const { importFromIndexJson } = await import('./planning/importer')
+    const res = await importFromIndexJson(projectPath, parsed.items || [])
+    logActivity('planning.import.json', { projectPath, file, created: res.created, conflicts: res.conflicts })
+    return { success: true, created: res.created, conflicts: res.conflicts }
   })
 
   // Internal update check via local feed JSON file

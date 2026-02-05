@@ -69,7 +69,7 @@ export type DatabasePathResult = { path: string }
 export type PlanningExportJsonPayload = { projectPath: string }
 export type PlanningExportJsonResult = { success?: boolean; path?: string; canceled?: boolean }
 export type PlanningImportJsonPayload = { projectPath: string }
-export type PlanningImportJsonResult = { success?: boolean; created?: number; canceled?: boolean }
+export type PlanningImportJsonResult = { success?: boolean; created?: number; canceled?: boolean; conflicts?: Array<{ original: string; resolved: string }> }
 export type UpdateCheckPayload = { feedPath?: string }
 export type UpdateCheckResult = { hasUpdate: boolean; currentVersion: string; latestVersion?: string; notes?: string; error?: string }
 
