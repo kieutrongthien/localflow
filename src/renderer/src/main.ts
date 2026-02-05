@@ -17,6 +17,7 @@ const router = createRouter({
     { path: '/story-editor', name: 'story-editor', component: () => import('./pages/StoryEditorPage.vue') }
     ,{ path: '/task-editor', name: 'task-editor', component: () => import('./pages/TaskEditorPage.vue') }
     ,{ path: '/detail', name: 'detail', component: () => import('./pages/BacklogDetailPage.vue') }
+    ,{ path: '/epic-editor', name: 'epic-editor', component: () => import('./pages/EpicEditorPage.vue') }
   ]
 })
 

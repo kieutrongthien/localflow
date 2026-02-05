@@ -25,6 +25,7 @@
         <li v-if="frontmatter.linkedStoryPath"><strong>Story:</strong> <RouterLink :to="linkFor(frontmatter.linkedStoryPath)">Open Story</RouterLink></li>
       </ul>
       <div class="mt-3 flex gap-2">
+        <RouterLink v-if="item?.type==='epic'" to="/epic-editor" class="px-3 py-1 rounded bg-white/10 text-sm">Edit Epic</RouterLink>
         <RouterLink v-if="item?.type==='story'" to="/story-editor" class="px-3 py-1 rounded bg-white/10 text-sm">Edit Story</RouterLink>
         <RouterLink v-if="item?.type==='task'" to="/task-editor" class="px-3 py-1 rounded bg-white/10 text-sm">Edit Task</RouterLink>
       </div>
