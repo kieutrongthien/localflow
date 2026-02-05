@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 008  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 1h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Thêm checklist hướng dẫn lần đầu: chọn thư mục, tạo .planning, wizard metadata, xem Overview.
 
 ## Subtasks
-- [ ] Checklist UI
-- [ ] Theo dõi hoàn thành
-- [ ] Tắt khi hoàn tất
+- [x] Checklist UI (Overview hiển thị trạng thái)
+- [x] Theo dõi hoàn thành (settings onb.* keys)
+- [x] Tắt khi hoàn tất (ẩn khi đủ 4 bước)
 
 ## Blockers
 None

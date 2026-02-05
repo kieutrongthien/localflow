@@ -113,6 +113,7 @@ export const bootIpc = () => {
 
     setActiveProjectPath(projectPath)
     logActivity('project.select', { projectPath })
+    try { setSettingValue('onb.selectProject', 'true') } catch {}
 
     if (browserWindow) {
       watchPlanningForWindow(browserWindow, projectPath, async () => {
@@ -151,6 +152,7 @@ export const bootIpc = () => {
     await mkdir(path.dirname(targetPath), { recursive: true })
     await writeFile(targetPath, payload.content, 'utf-8')
     logActivity('planning.readme.write', { projectPath: payload.projectPath })
+    try { setSettingValue('onb.ensurePlanning', 'true') } catch {}
     return { success: true }
   })
 
@@ -183,6 +185,7 @@ export const bootIpc = () => {
     upsertProjectPath(data.projectPath)
     setActiveProjectPath(data.projectPath)
     logActivity('project.metadata.save', { projectPath: data.projectPath })
+    try { setSettingValue('onb.wizardMetadata', 'true') } catch {}
 
     return { success: true }
   })
