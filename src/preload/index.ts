@@ -3,12 +3,13 @@ import { IPC_CHANNELS, allowedChannels, type IpcChannel, type PayloadFor } from 
 import type {
   LocalflowBridge,
   PlanningIndexPayload,
-  PlanningIndexResult,
   ProjectMetadataPayload,
   ReadPlanningReadmePayload,
   SaveProjectMetadataPayload,
-  WritePlanningReadmePayload
+  WritePlanningReadmePayload,
+  PlanningWatchEvent
 } from '../shared/preload/api'
+import type { PlanningIndexResult } from '../shared/planning/types'
 import { IPC_EVENTS } from '../shared/preload/api'
 
 const invokeSafe = <T extends IpcChannel>(channel: T, payload?: PayloadFor<T>) => {
@@ -45,7 +46,8 @@ const api: LocalflowBridge = {
   setSettings: (payload: { kv: Record<string, string> }) => invokeSafe('settings:set-many' as any, payload),
   updatePlanningStatus: (payload: { path: string; status: string }) =>
     invokeSafe(IPC_CHANNELS.PLANNING_UPDATE_STATUS, payload),
-  listActivity: (payload: { limit?: number } = {}) => invokeSafe(IPC_CHANNELS.ACTIVITY_LIST, payload),
+  listActivity: (payload: { limit?: number } = {}) =>
+    invokeSafe(IPC_CHANNELS.ACTIVITY_LIST, { limit: payload.limit ?? 10 } as PayloadFor<typeof IPC_CHANNELS.ACTIVITY_LIST>),
   getDatabasePath: () => invokeSafe(IPC_CHANNELS.DB_PATH, undefined),
   exportPlanningJson: (payload: { projectPath: string }) =>
     invokeSafe(IPC_CHANNELS.PLANNING_EXPORT_JSON, payload),
@@ -55,6 +57,16 @@ const api: LocalflowBridge = {
   savePlanningItem: (payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }) => invokeSafe('planning:save-item' as any, payload),
   readPlanningFile: (payload: { path: string }) => invokeSafe('planning:read-file' as any, payload),
   generateReleaseNotes: (payload: { projectPath: string; limit?: number }) => invokeSafe('release:notes:generate' as any, payload),
+  onWatchError: (callback: (payload: PlanningWatchEvent) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, payload: PlanningWatchEvent) => callback(payload)
+    ipcRenderer.on('planning:watch-error', listener)
+    return () => ipcRenderer.removeListener('planning:watch-error', listener)
+  },
+  onWatchRecovered: (callback: () => void) => {
+    const listener = () => callback()
+    ipcRenderer.on('planning:watch-recovered', listener)
+    return () => ipcRenderer.removeListener('planning:watch-recovered', listener)
+  },
   onPlanningIndexUpdated: (callback: (payload: PlanningIndexResult) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, payload: PlanningIndexResult) => {
       callback(payload)

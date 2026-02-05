@@ -1,4 +1,5 @@
 import type { PlanningIndexResult } from '../planning/types'
+export type { PlanningIndexResult } from '../planning/types'
 
 export const IPC_EVENTS = {
   PLANNING_INDEX_UPDATED: 'planning:index-updated',
@@ -111,6 +112,8 @@ export interface LocalflowBridge {
   readPlanningFile(payload: PlanningReadFilePayload): Promise<PlanningReadFileResult>
   generateReleaseNotes(payload: ReleaseNotesGeneratePayload): Promise<ReleaseNotesGenerateResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
+  onWatchError?(callback: (payload: PlanningWatchEvent) => void): () => void
+  onWatchRecovered?(callback: () => void): () => void
 }
 
 declare global {

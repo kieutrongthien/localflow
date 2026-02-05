@@ -1,7 +1,14 @@
 import { app, BrowserWindow, globalShortcut } from 'electron'
 import { disposePlanningWatcher } from './planning/watcher'
 import path from 'node:path'
+import { existsSync } from 'node:fs'
 import { bootIpc } from './ipc'
+
+const preloadPath = [
+  path.join(__dirname, '../preload/index.js'),
+  path.join(__dirname, '../preload/index.cjs'),
+  path.join(__dirname, '../preload/index.mjs')
+].find(existsSync) ?? path.join(__dirname, '../preload/index.js')
 
 const createWindow = async () => {
   const mainWindow = new BrowserWindow({
@@ -10,18 +17,19 @@ const createWindow = async () => {
     minWidth: 960,
     minHeight: 640,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js'),
+      preload: preloadPath,
       contextIsolation: true,
       nodeIntegration: false,
-      enableRemoteModule: false,
       sandbox: true
     }
   })
 
-  const isDev = !!process.env.ELECTRON_RENDERER_URL
+  const rendererUrl = process.env.ELECTRON_RENDERER_URL
+  const isDev = !!rendererUrl
 
   if (isDev) {
-    await mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
+    if (!rendererUrl) throw new Error('ELECTRON_RENDERER_URL is not set in development')
+    await mainWindow.loadURL(rendererUrl)
   } else {
     await mainWindow.loadFile(path.join(__dirname, '../../dist/renderer/index.html'))
   }

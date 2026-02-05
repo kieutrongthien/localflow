@@ -30,6 +30,11 @@ const config = {
       from: 'build',
       to: 'resources',
       filter: ['**/*.png', '**/*.icns', '**/*.ico']
+    },
+    {
+      from: 'node_modules/better-sqlite3/build/Release',
+      to: 'resources',
+      filter: ['better_sqlite3.node']
     }
   ],
   asar: true,
