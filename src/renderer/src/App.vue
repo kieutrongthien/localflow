@@ -329,6 +329,8 @@ const exportStatus = ref('')
 const activityEnabled = ref(false)
 const activities = ref<Array<{ id: number; type: string; payload: unknown; createdAt: number }>>([])
 const toast = reactive<{ type?: 'success' | 'error' | 'info'; title?: string; message: string; duration?: number }>({ message: '' })
+let offWatchError: (() => void) | undefined
+let offWatchRecovered: (() => void) | undefined
 
 const storiesByStatus = reactive<{ todo: PlanningItem[]; in_progress: PlanningItem[]; done: PlanningItem[] }>({
   todo: [],
@@ -363,10 +365,10 @@ onMounted(async () => {
 
   unsubscribePlanning = window.localflow.onPlanningIndexUpdated(applyPlanningIndex)
   // Watcher error/recovery notifications via preload-exposed helpers
-  const offWatchError = window.localflow.onWatchError?.((payload) => {
+  offWatchError = window.localflow.onWatchError?.((payload) => {
     toast.type = 'error'; toast.message = 'Watcher lỗi: ' + (payload?.message || '')
   })
-  const offWatchRecovered = window.localflow.onWatchRecovered?.(() => {
+  offWatchRecovered = window.localflow.onWatchRecovered?.(() => {
     toast.type = 'success'; toast.message = 'Watcher đã khôi phục'
   })
 

@@ -6,6 +6,7 @@ import { bootIpc } from './ipc'
 
 const preloadPath = [
   path.join(__dirname, '../preload/index.js'),
+  path.join(__dirname, '../preload/index.cjs'),
   path.join(__dirname, '../preload/index.mjs')
 ].find(existsSync) ?? path.join(__dirname, '../preload/index.js')
 
@@ -19,15 +20,16 @@ const createWindow = async () => {
       preload: preloadPath,
       contextIsolation: true,
       nodeIntegration: false,
-      enableRemoteModule: false,
       sandbox: true
     }
   })
 
-  const isDev = !!process.env.ELECTRON_RENDERER_URL
+  const rendererUrl = process.env.ELECTRON_RENDERER_URL
+  const isDev = !!rendererUrl
 
   if (isDev) {
-    await mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
+    if (!rendererUrl) throw new Error('ELECTRON_RENDERER_URL is not set in development')
+    await mainWindow.loadURL(rendererUrl)
   } else {
     await mainWindow.loadFile(path.join(__dirname, '../../dist/renderer/index.html'))
   }
