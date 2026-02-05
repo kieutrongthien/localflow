@@ -33,8 +33,8 @@
             </td>
             <td class="px-4 py-2">
               <div class="flex items-center gap-2">
-                <UIPill color="indigo">{{ it.status || '-' }}</UIPill>
-                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit status"
+                <UIPill color="blue">{{ it.status || '-' }}</UIPill>
+                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500" aria-label="Inline edit status"
                       :value="it.status || ''"
                       @change="e => inlineSetStatus(it, (e.target as HTMLSelectElement).value as any)">
                  <option value="">-</option>
@@ -46,8 +46,8 @@
             </td>
             <td class="px-4 py-2">
               <div class="flex items-center gap-2">
-                <UIPill color="indigo">{{ it.priority || '-' }}</UIPill>
-                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit priority"
+                <UIPill color="blue">{{ it.priority || '-' }}</UIPill>
+                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500" aria-label="Inline edit priority"
                       :value="it.priority || ''"
                       @change="e => inlineSetPriority(it, (e.target as HTMLSelectElement).value)">
                  <option value="">-</option>
@@ -58,7 +58,7 @@
               </div>
             </td>
             <td class="px-4 py-2">
-              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit points"
+              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500" aria-label="Inline edit points"
                      :value="it.points ?? ''"
                      @change="e => inlineSetPoints(it, (e.target as HTMLInputElement).value)" />
             </td>
