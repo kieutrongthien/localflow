@@ -93,6 +93,10 @@ export const saveItemPayload = z.object({
 export const PLANNING_READ_FILE = 'planning:read-file' as const
 export const planningReadFilePayload = z.object({ path: z.string().min(1) })
 
+// Release notes generate
+export const RELEASE_NOTES_GENERATE = 'release:notes:generate' as const
+export const releaseNotesPayload = z.object({ projectPath: z.string().min(1), limit: z.number().int().positive().max(200).optional() })
+
 // Settings helpers (batch)
 export const SETTINGS_CHANNELS = {
   SETTINGS_GET_MANY: 'settings:get-many',

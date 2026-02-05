@@ -349,7 +349,7 @@ const compareSemver = (a: string, b: string) => {
   return 0
 }
 import { statusUpdateLock } from './utils/locks'
-import { planningReadFilePayload, PLANNING_READ_FILE } from '../shared/ipc/schemas'
+import { planningReadFilePayload, PLANNING_READ_FILE, RELEASE_NOTES_GENERATE, releaseNotesPayload } from '../shared/ipc/schemas'
 
 // Safe read planning file content (only under .planning)
 if (!ipcMain.listenerCount(PLANNING_READ_FILE)) {
@@ -364,5 +364,48 @@ if (!ipcMain.listenerCount(PLANNING_READ_FILE)) {
     } catch {
       return { content: '' }
     }
+  })
+}
+
+// Release notes: gather recent activity + planning totals, write Markdown via save dialog
+if (!ipcMain.listenerCount(RELEASE_NOTES_GENERATE)) {
+  ipcMain.handle(RELEASE_NOTES_GENERATE, async (event, payload: { projectPath: string; limit?: number }) => {
+    const parsed = releaseNotesPayload.safeParse(payload)
+    if (!parsed.success) return { success: false }
+    const bw = getWindowFromEvent(event)
+    const projectPath = parsed.data.projectPath
+    const limit = parsed.data.limit ?? 50
+    const idx = await buildPlanningIndex(projectPath)
+    const activities = listRecentActivity(limit)
+    const lines: string[] = []
+    lines.push(`# Release Notes\n`)
+    lines.push(`Project: ${projectPath}`)
+    lines.push('')
+    lines.push('## Totals')
+    lines.push(`- Epics: ${idx.totals.epic}`)
+    lines.push(`- Stories: ${idx.totals.story}`)
+    lines.push(`- Tasks: ${idx.totals.task}`)
+    lines.push(`- All: ${idx.totals.all}`)
+    lines.push('')
+    if (activities.length) {
+      lines.push('## Recent Activity')
+      for (const a of activities) {
+        const ts = new Date(a.createdAt).toLocaleString()
+        let payloadStr = ''
+        try { payloadStr = JSON.stringify(a.payload) } catch {}
+        lines.push(`- [${ts}] ${a.type}${payloadStr ? ` — ${payloadStr}` : ''}`)
+      }
+      lines.push('')
+    }
+    const data = lines.join('\n')
+    const save = await dialog.showSaveDialog(bw ?? undefined, {
+      title: 'Lưu Release Notes',
+      defaultPath: path.join(projectPath, 'RELEASE_NOTES.md'),
+      filters: [{ name: 'Markdown', extensions: ['md'] }]
+    })
+    if (save.canceled || !save.filePath) return { success: false }
+    await writeFile(save.filePath, data, 'utf-8')
+    logActivity('release.notes.generate', { projectPath, file: save.filePath })
+    return { success: true, path: save.filePath }
   })
 }

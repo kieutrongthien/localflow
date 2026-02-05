@@ -118,10 +118,10 @@ const linkForActivity = (a: { payload?: any }) => {
 const generateReleaseNotes = async () => {
   try {
     releaseStatus.value = 'Đang tạo...'
-    // Minimal: call backend export JSON + write a basic notes file client-side
-    const db = await window.localflow.getDatabasePath()
-    // In a fuller implementation, call a dedicated IPC; here, just set status
-    releaseStatus.value = `Release notes ready. See dist/RELEASE_NOTES.md`
+    const { value: p } = await window.localflow.getSetting({ key: 'activeProjectPath' })
+    if (!p) { releaseStatus.value = 'Chưa chọn project'; return }
+    const res = await window.localflow.generateReleaseNotes({ projectPath: p, limit: 50 })
+    releaseStatus.value = res.success ? `Đã lưu: ${res.path}` : 'Huỷ hoặc lỗi'
   } catch {
     releaseStatus.value = 'Tạo release notes thất bại'
   }

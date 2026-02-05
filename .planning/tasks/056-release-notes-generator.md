@@ -5,7 +5,7 @@
 **Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** In Progress (2026-02-05 - Colin)
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Sinh release notes dựa trên activity log và thay đổi backlog; xuất Markdown.

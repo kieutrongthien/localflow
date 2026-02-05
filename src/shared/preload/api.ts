@@ -82,6 +82,8 @@ export type UpdateCheckPayload = { feedPath?: string }
 export type UpdateCheckResult = { hasUpdate: boolean; currentVersion: string; latestVersion?: string; notes?: string; error?: string }
 export type PlanningReadFilePayload = { path: string }
 export type PlanningReadFileResult = { content: string }
+export type ReleaseNotesGeneratePayload = { projectPath: string; limit?: number }
+export type ReleaseNotesGenerateResult = { success: boolean; path?: string }
 
 export interface LocalflowBridge {
   ping(): string
@@ -107,6 +109,7 @@ export interface LocalflowBridge {
   checkUpdate(payload: UpdateCheckPayload): Promise<UpdateCheckResult>
   savePlanningItem(payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }): Promise<{ success: boolean }>
   readPlanningFile(payload: PlanningReadFilePayload): Promise<PlanningReadFileResult>
+  generateReleaseNotes(payload: ReleaseNotesGeneratePayload): Promise<ReleaseNotesGenerateResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 

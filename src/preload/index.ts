@@ -54,6 +54,7 @@ const api: LocalflowBridge = {
   checkUpdate: (payload: { feedPath?: string }) => invokeSafe('update:check' as any, payload),
   savePlanningItem: (payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }) => invokeSafe('planning:save-item' as any, payload),
   readPlanningFile: (payload: { path: string }) => invokeSafe('planning:read-file' as any, payload),
+  generateReleaseNotes: (payload: { projectPath: string; limit?: number }) => invokeSafe('release:notes:generate' as any, payload),
   onPlanningIndexUpdated: (callback: (payload: PlanningIndexResult) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, payload: PlanningIndexResult) => {
       callback(payload)
