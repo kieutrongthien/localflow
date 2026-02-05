@@ -1,53 +1,55 @@
 <template>
   <div class="space-y-4">
-    <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+    <UICard :dark="true" class="p-4">
       <h3 class="mb-2">Giao diện</h3>
-      <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="toggleTheme" aria-label="Toggle theme">{{ themeLabel }}</button>
-    </div>
+      <UIButton variant="secondary" @click="toggleTheme" aria-label="Toggle theme">{{ themeLabel }}</UIButton>
+    </UICard>
 
-    <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+    <UICard :dark="true" class="p-4">
       <h3 class="mb-2">Activity Log</h3>
       <label class="flex items-center gap-2 text-sm">
         <input type="checkbox" :checked="activityEnabled" @change="toggleActivity($event)" aria-label="Enable activity log" />
         <span>Bật Activity Log (tùy chọn)</span>
       </label>
-    </div>
+    </UICard>
 
-    <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+    <UICard :dark="true" class="p-4">
       <h3 class="mb-2">Indexer</h3>
       <label class="block text-sm mb-1">Exclude patterns (csv)</label>
       <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="excludes" placeholder="*.tmp, .DS_Store" aria-label="Indexer exclude patterns" />
-      <button class="mt-2 px-3 py-1 rounded bg-white/10 text-sm" @click="saveExcludes" aria-label="Save index excludes">Lưu</button>
-    </div>
+      <UIButton class="mt-2" variant="secondary" @click="saveExcludes" aria-label="Save index excludes">Lưu</UIButton>
+    </UICard>
 
-    <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+    <UICard :dark="true" class="p-4">
       <h3 class="mb-2">Database</h3>
       <p class="text-sm text-zinc-400">Path: {{ dbPath }}</p>
-  </div>
+  </UICard>
 
-  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+  <UICard :dark="true" class="p-4">
     <h3 class="mb-2">Cập nhật nội bộ</h3>
       <label class="block text-sm mb-1">Đường dẫn feed JSON</label>
       <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="updateFeedPath" placeholder="/path/to/update.json" aria-label="Update feed JSON path" />
       <div class="mt-2 flex items-center gap-2">
-        <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="saveUpdateFeed" aria-label="Save update feed path">Lưu</button>
-        <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="checkUpdate" aria-label="Check for updates">Kiểm tra</button>
+        <UIButton variant="secondary" @click="saveUpdateFeed" aria-label="Save update feed path">Lưu</UIButton>
+        <UIButton variant="secondary" @click="checkUpdate" aria-label="Check for updates">Kiểm tra</UIButton>
         <span class="text-sm" v-if="updateStatus">{{ updateStatus }}</span>
       </div>
-    </div>
+    </UICard>
   </div>
 
-  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+  <UICard :dark="true" class="p-4">
     <h3 class="mb-2">Backup</h3>
     <label class="block text-sm mb-1">Backup directory (absolute)</label>
     <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="backupDirPath" placeholder="/path/to/backups" aria-label="Backup directory path" />
-    <button class="mt-2 px-3 py-1 rounded bg-white/10 text-sm" @click="saveBackupDir" aria-label="Save backup directory">Lưu</button>
+    <UIButton class="mt-2" variant="secondary" @click="saveBackupDir" aria-label="Save backup directory">Lưu</UIButton>
     <p class="mt-2 text-xs text-zinc-500">Nếu trống, ứng dụng dùng mặc định: {project}/.localflow_backups</p>
-  </div>
+  </UICard>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import UIButton from '../components/UI/Button.vue'
+import UICard from '../components/UI/Card.vue'
 
 const themeLabel = ref('Dark mode')
 const activityEnabled = ref(false)

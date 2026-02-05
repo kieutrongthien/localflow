@@ -78,7 +78,7 @@
   <div class="rounded-xl border border-white/10 bg-white/5 p-4 mt-4">
     <h3 class="mb-2">Release Notes (Internal)</h3>
     <div class="flex items-center gap-2">
-      <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="generateReleaseNotes" aria-label="Generate release notes">Generate</button>
+      <UIButton variant="secondary" @click="generateReleaseNotes" aria-label="Generate release notes">Generate</UIButton>
       <span class="text-sm text-zinc-400" v-if="releaseStatus">{{ releaseStatus }}</span>
     </div>
   </div>
@@ -86,6 +86,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
+import UIButton from '../components/UI/Button.vue'
 import { RouterLink, useRouter } from 'vue-router'
 
 const totals = reactive({ epic: 0, story: 0, task: 0 })

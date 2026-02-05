@@ -8,11 +8,11 @@
         <option value="in_progress">In Progress</option>
         <option value="done">Done</option>
       </select>
-      <button class="px-3 py-2 rounded bg-white/10" @click="reload" aria-label="Reload backlog">Reload</button>
+      <UIButton variant="secondary" @click="reload" aria-label="Reload backlog">Reload</UIButton>
       <span class="text-sm text-zinc-400 ml-auto">{{ items.length }} items</span>
     </div>
 
-    <div class="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+    <UICard :dark="true" class="overflow-hidden">
       <table class="w-full text-sm">
         <thead>
           <tr class="bg-white/5">
@@ -64,12 +64,14 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </UICard>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref, computed } from 'vue'
+import UIButton from '../components/UI/Button.vue'
+import UICard from '../components/UI/Card.vue'
 import { applyPlanningFilters } from '../../../shared/planning/filter'
 
 const items = ref<Array<{ type: string; title: string; status?: string; priority?: string; points?: number | null; assignee?: string; filename: string; path: string }>>([])
