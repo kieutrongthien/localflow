@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 004  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 1h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Thêm cấu hình đường dẫn backup và exclude patterns; lưu SQLite.
 
 ## Subtasks
-- [ ] UI fields
-- [ ] CRUD settings
-- [ ] Áp dụng cho backup/indexer
+- [x] UI fields (Settings → Backup directory)
+- [x] CRUD settings (backupDirPath get/set)
+- [x] Áp dụng cho backup (list/create/restore dùng path cấu hình)
 
 ## Blockers
 None

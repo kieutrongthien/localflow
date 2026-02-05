@@ -1,7 +1,17 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { getSetting } from './storage/projectsStore'
 
 const BACKUP_DIRNAME = '.localflow_backups'
+
+const getBackupRoot = (projectPath: string) => {
+  const configured = getSetting('backupDirPath') || ''
+  if (configured && configured.trim().length > 0) {
+    // Use configured absolute path; fall back if not absolute
+    if (path.isAbsolute(configured)) return configured
+  }
+  return path.join(projectPath, BACKUP_DIRNAME)
+}
 
 const ensureDir = async (dir: string) => {
   await mkdir(dir, { recursive: true })
@@ -31,7 +41,7 @@ export type BackupEntry = {
 }
 
 export const listBackups = async (projectPath: string): Promise<BackupEntry[]> => {
-  const root = path.join(projectPath, BACKUP_DIRNAME)
+  const root = getBackupRoot(projectPath)
   try {
     const names = await readdir(root)
     const entries: BackupEntry[] = []
@@ -50,7 +60,7 @@ export const listBackups = async (projectPath: string): Promise<BackupEntry[]> =
 }
 
 export const createBackup = async (projectPath: string, planningDir: string, dbPath?: string | null) => {
-  const root = path.join(projectPath, BACKUP_DIRNAME)
+  const root = getBackupRoot(projectPath)
   await ensureDir(root)
   const id = new Date().toISOString().replace(/[:.]/g, '-')
   const target = path.join(root, id)
@@ -68,7 +78,7 @@ export const createBackup = async (projectPath: string, planningDir: string, dbP
 }
 
 export const restoreBackup = async (projectPath: string, id: string, planningDir: string, dbPath?: string | null) => {
-  const root = path.join(projectPath, BACKUP_DIRNAME)
+  const root = getBackupRoot(projectPath)
   const source = path.join(root, id)
   const sourcePlanning = path.join(source, 'planning')
   await rm(planningDir, { recursive: true, force: true })
@@ -84,4 +94,3 @@ export const restoreBackup = async (projectPath: string, id: string, planningDir
   }
   return { success: true }
 }
-
