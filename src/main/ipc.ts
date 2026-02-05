@@ -342,3 +342,20 @@ const compareSemver = (a: string, b: string) => {
   return 0
 }
 import { statusUpdateLock } from './utils/locks'
+import { planningReadFilePayload, PLANNING_READ_FILE } from '../shared/ipc/schemas'
+
+// Safe read planning file content (only under .planning)
+if (!ipcMain.listenerCount(PLANNING_READ_FILE)) {
+  ipcMain.handle(PLANNING_READ_FILE, async (_event, payload: { path: string }) => {
+    const parsed = planningReadFilePayload.safeParse(payload)
+    if (!parsed.success) return { content: '' }
+    const p = parsed.data.path
+    if (!p.includes(`${path.sep}.planning${path.sep}`)) return { content: '' }
+    try {
+      const raw = await readFile(p, 'utf-8')
+      return { content: raw }
+    } catch {
+      return { content: '' }
+    }
+  })
+}

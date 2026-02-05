@@ -80,6 +80,8 @@ export type PlanningImportJsonPayload = { projectPath: string }
 export type PlanningImportJsonResult = { success?: boolean; created?: number; canceled?: boolean; conflicts?: Array<{ original: string; resolved: string }> }
 export type UpdateCheckPayload = { feedPath?: string }
 export type UpdateCheckResult = { hasUpdate: boolean; currentVersion: string; latestVersion?: string; notes?: string; error?: string }
+export type PlanningReadFilePayload = { path: string }
+export type PlanningReadFileResult = { content: string }
 
 export interface LocalflowBridge {
   ping(): string
@@ -104,6 +106,7 @@ export interface LocalflowBridge {
   importPlanningJson(payload: PlanningImportJsonPayload): Promise<PlanningImportJsonResult>
   checkUpdate(payload: UpdateCheckPayload): Promise<UpdateCheckResult>
   savePlanningItem(payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }): Promise<{ success: boolean }>
+  readPlanningFile(payload: PlanningReadFilePayload): Promise<PlanningReadFileResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 

@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 011  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Trang chi tiết cho Epic/Story/Task: hiển thị frontmatter, nội dung, links, và actions.
 
 ## Subtasks
-- [ ] View chi tiết (render Markdown + frontmatter)
-- [ ] Hiển thị links (epic↔story↔task)
-- [ ] Actions edit/open trong editor
+- [x] View chi tiết (render Markdown + frontmatter)
+- [x] Hiển thị links (epic↔story↔task)
+- [x] Actions edit/open trong editor
 
 ## Blockers
 None

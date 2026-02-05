@@ -89,6 +89,10 @@ export const saveItemPayload = z.object({
   })
 })
 
+// Planning file read (safe)
+export const PLANNING_READ_FILE = 'planning:read-file' as const
+export const planningReadFilePayload = z.object({ path: z.string().min(1) })
+
 // Settings helpers (batch)
 export const SETTINGS_CHANNELS = {
   SETTINGS_GET_MANY: 'settings:get-many',

@@ -16,6 +16,7 @@ const router = createRouter({
     { path: '/settings', name: 'settings', component: SettingsPage },
     { path: '/story-editor', name: 'story-editor', component: () => import('./pages/StoryEditorPage.vue') }
     ,{ path: '/task-editor', name: 'task-editor', component: () => import('./pages/TaskEditorPage.vue') }
+    ,{ path: '/detail', name: 'detail', component: () => import('./pages/BacklogDetailPage.vue') }
   ]
 })
 

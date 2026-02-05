@@ -25,7 +25,9 @@
         <tbody>
           <tr v-for="it in filtered" :key="it.path" class="border-t border-white/10">
             <td class="px-4 py-2 capitalize">{{ it.type }}</td>
-            <td class="px-4 py-2">{{ it.title }}</td>
+            <td class="px-4 py-2">
+              <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80">{{ it.title }}</RouterLink>
+            </td>
             <td class="px-4 py-2">{{ it.status || '-' }}</td>
             <td class="px-4 py-2 text-zinc-400">{{ it.filename }}</td>
           </tr>
