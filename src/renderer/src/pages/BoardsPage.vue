@@ -12,7 +12,7 @@
             <div class="text-xs text-zinc-400">{{ s.id }}</div>
             <div class="mt-2 flex items-center gap-2 text-xs">
               <label class="text-zinc-500">Priority</label>
-              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500"
+              <select class="px-2 py-1 rounded-full bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-white/10 dark:text-white dark:border-white/10"
                       :value="s.priority || ''" @change="e => inlineSetPriority(s, (e.target as HTMLSelectElement).value)">
                 <option value="">-</option>
                 <option value="Low">Low</option>
@@ -20,7 +20,7 @@
                 <option value="High">High</option>
               </select>
               <label class="ml-2 text-zinc-500">Status</label>
-              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500"
+              <select class="px-2 py-1 rounded-full bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-white/10 dark:text-white dark:border-white/10"
                       :value="s.status || 'todo'" @change="e => inlineSetStatus(s, (e.target as HTMLSelectElement).value as any)">
                 <option value="todo">Todo</option>
                 <option value="in_progress">In Progress</option>
@@ -42,7 +42,7 @@
             <div class="text-xs text-zinc-400">{{ s.id }}</div>
             <div class="mt-2 flex items-center gap-2 text-xs">
               <label class="text-zinc-500">Priority</label>
-              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500"
+              <select class="px-2 py-1 rounded-full bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-white/10 dark:text-white dark:border-white/10"
                       :value="s.priority || ''" @change="e => inlineSetPriority(s, (e.target as HTMLSelectElement).value)">
                 <option value="">-</option>
                 <option value="Low">Low</option>

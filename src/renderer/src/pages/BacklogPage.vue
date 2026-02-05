@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-4">
     <div class="flex gap-2 items-center">
-      <input v-model="filters.query" placeholder="Search..." aria-label="Search backlog" class="px-3 py-2 rounded bg-white/10 border border-white/10 w-64" />
-      <select v-model="filters.status" aria-label="Filter by status" class="px-3 py-2 rounded bg-white/10 border border-white/10">
+      <input v-model="filters.query" placeholder="Search..." aria-label="Search backlog" class="px-3 py-2 rounded-md w-64 bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-white/10 dark:text-white dark:border-white/10" />
+      <select v-model="filters.status" aria-label="Filter by status" class="px-3 py-2 rounded-md bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-white/10 dark:text-white dark:border-white/10">
         <option value="">All status</option>
         <option value="todo">Todo</option>
         <option value="in_progress">In Progress</option>
@@ -34,7 +34,7 @@
             <td class="px-4 py-2">
               <div class="flex items-center gap-2">
                 <UIPill color="blue">{{ it.status || '-' }}</UIPill>
-                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500" aria-label="Inline edit status"
+                <select class="px-2 py-1 rounded-full bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-white/10 dark:text-white dark:border-white/10" aria-label="Inline edit status"
                       :value="it.status || ''"
                       @change="e => inlineSetStatus(it, (e.target as HTMLSelectElement).value as any)">
                  <option value="">-</option>
@@ -47,7 +47,7 @@
             <td class="px-4 py-2">
               <div class="flex items-center gap-2">
                 <UIPill color="blue">{{ it.priority || '-' }}</UIPill>
-                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500" aria-label="Inline edit priority"
+                <select class="px-2 py-1 rounded-full bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-white/10 dark:text-white dark:border-white/10" aria-label="Inline edit priority"
                       :value="it.priority || ''"
                       @change="e => inlineSetPriority(it, (e.target as HTMLSelectElement).value)">
                  <option value="">-</option>
@@ -58,7 +58,7 @@
               </div>
             </td>
             <td class="px-4 py-2">
-              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10 focus:ring-2 focus:ring-blue-500" aria-label="Inline edit points"
+              <input type="number" class="w-20 px-2 py-1 rounded-md bg-white text-zinc-900 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-white/10 dark:text-white dark:border-white/10" aria-label="Inline edit points"
                      :value="it.points ?? ''"
                      @change="e => inlineSetPoints(it, (e.target as HTMLInputElement).value)" />
             </td>
