@@ -32,24 +32,30 @@
               <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80" :aria-label="`Open detail for ${it.title}`">{{ it.title }}</RouterLink>
             </td>
             <td class="px-4 py-2">
-              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit status"
+              <div class="flex items-center gap-2">
+                <UIPill color="indigo">{{ it.status || '-' }}</UIPill>
+                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit status"
                       :value="it.status || ''"
                       @change="e => inlineSetStatus(it, (e.target as HTMLSelectElement).value as any)">
-                <option value="">-</option>
-                <option value="todo">Todo</option>
-                <option value="in_progress">In Progress</option>
-                <option value="done">Done</option>
-              </select>
+                 <option value="">-</option>
+                 <option value="todo">Todo</option>
+                 <option value="in_progress">In Progress</option>
+                 <option value="done">Done</option>
+               </select>
+              </div>
             </td>
             <td class="px-4 py-2">
-              <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit priority"
+              <div class="flex items-center gap-2">
+                <UIPill color="indigo">{{ it.priority || '-' }}</UIPill>
+                <select class="px-2 py-1 rounded-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit priority"
                       :value="it.priority || ''"
                       @change="e => inlineSetPriority(it, (e.target as HTMLSelectElement).value)">
-                <option value="">-</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
+                 <option value="">-</option>
+                 <option value="Low">Low</option>
+                 <option value="Medium">Medium</option>
+                 <option value="High">High</option>
+               </select>
+              </div>
             </td>
             <td class="px-4 py-2">
               <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500" aria-label="Inline edit points"
@@ -60,7 +66,9 @@
             <td class="px-4 py-2 text-zinc-400">{{ it.filename }}</td>
           </tr>
           <tr v-if="filtered.length === 0">
-            <td colspan="4" class="px-4 py-6 text-center text-zinc-400">No items</td>
+            <td colspan="7" class="px-4 py-6">
+              <UIEmptyState :dark="true">No items</UIEmptyState>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -72,6 +80,8 @@
 import { onMounted, reactive, ref, computed } from 'vue'
 import UIButton from '../components/UI/Button.vue'
 import UICard from '../components/UI/Card.vue'
+import UIPill from '../components/UI/Pill.vue'
+import UIEmptyState from '../components/UI/EmptyState.vue'
 import { applyPlanningFilters } from '../../../shared/planning/filter'
 
 const items = ref<Array<{ type: string; title: string; status?: string; priority?: string; points?: number | null; assignee?: string; filename: string; path: string }>>([])

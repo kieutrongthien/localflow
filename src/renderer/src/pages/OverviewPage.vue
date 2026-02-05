@@ -49,12 +49,12 @@
       <RouterLink class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20" to="/settings" aria-label="Open Settings">Settings</RouterLink>
     </div>
 
-    <div v-if="!loadingIndex && !projectPath && emptyMessage" class="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-400">
+    <UIEmptyState v-if="!loadingIndex && !projectPath && emptyMessage" :dark="true">
       {{ emptyMessage }}
-    </div>
-    <div v-else-if="!loadingIndex && totals.epic + totals.story + totals.task === 0" class="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-400">
+    </UIEmptyState>
+    <UIEmptyState v-else-if="!loadingIndex && totals.epic + totals.story + totals.task === 0" :dark="true">
       Chưa có dữ liệu trong .planning — hãy tạo Epic/Story/Task từ editors hoặc import JSON.
-    </div>
+    </UIEmptyState>
 
     <div v-if="activityEnabled" class="rounded-xl border border-white/10 bg-white/5 p-4">
       <h3 class="mb-2">Activity gần đây</h3>
@@ -95,6 +95,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
+import UIEmptyState from '../components/UI/EmptyState.vue'
 import UIButton from '../components/UI/Button.vue'
 import { RouterLink, useRouter } from 'vue-router'
 
