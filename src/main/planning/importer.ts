@@ -35,10 +35,11 @@ const uniquePath = async (dir: string, base: string) => {
 export const importFromIndexJson = async (projectPath: string, items: IndexItem[]) => {
   const planningDir = resolvePlanningDir(projectPath)
   const conflicts: Array<{ original: string; resolved: string }> = []
+  const errors: Array<{ item?: IndexItem; reason: string }> = []
   let created = 0
   for (const item of items ?? []) {
     const folderName = byType[item.type]
-    if (!folderName) continue
+    if (!folderName) { errors.push({ item, reason: 'invalid_type' }); continue }
     const dir = path.join(planningDir, folderName)
     await ensureDir(dir)
     const base = item.filename ?? path.basename(item.path ?? `${item.type}-${Date.now()}.md`)
@@ -47,12 +48,15 @@ export const importFromIndexJson = async (projectPath: string, items: IndexItem[
     const fm = {
       type: item.type,
       status: 'todo',
-      title: item.title ?? base
+      title: (item.title && String(item.title).trim()) || base
     }
     const md = (await import('gray-matter')).default.stringify('', fm)
-    await writeFile(up.path, md, 'utf-8')
-    created++
+    try {
+      await writeFile(up.path, md, 'utf-8')
+      created++
+    } catch (e) {
+      errors.push({ item, reason: 'write_failed' })
+    }
   }
-  return { created, conflicts }
+  return { created, conflicts, errors }
 }
-

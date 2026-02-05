@@ -654,9 +654,15 @@ const exportJson = async () => {
 const importJson = async () => {
   if (!projectPath.value) return
   const res = await window.localflow.importPlanningJson({ projectPath: projectPath.value })
-  exportStatus.value = res.success ? `Đã import ${res.created} mục` : 'Đã huỷ'
-  toast.type = res.success ? 'success' : 'info'
-  toast.message = res.success ? `Import ${res.created} mục` : 'Đã huỷ import'
+  if (res.success) {
+    const conflicts = (res.conflicts?.length ?? 0)
+    const errors = (res.errors?.length ?? 0)
+    exportStatus.value = `Import: ${res.created} mục. Conflicts: ${conflicts}. Errors: ${errors}.`
+    toast.type = 'success'; toast.message = 'Import JSON hoàn tất'; toast.duration = 2500
+  } else {
+    exportStatus.value = 'Đã huỷ'
+    toast.type = 'info'; toast.message = 'Đã huỷ import'
+  }
   await loadPlanningIndex()
 }
 </script>

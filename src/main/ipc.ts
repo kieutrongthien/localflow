@@ -286,8 +286,8 @@ export const bootIpc = () => {
     const parsed = JSON.parse(raw) as { items: Array<{ type: string; filename?: string; path?: string; title?: string }> }
     const { importFromIndexJson } = await import('./planning/importer')
     const res = await importFromIndexJson(projectPath, parsed.items || [])
-    logActivity('planning.import.json', { projectPath, file, created: res.created, conflicts: res.conflicts })
-    return { success: true, created: res.created, conflicts: res.conflicts }
+    logActivity('planning.import.json', { projectPath, file, created: res.created, conflicts: res.conflicts, errors: res.errors })
+    return { success: true, created: res.created, conflicts: res.conflicts, errors: res.errors?.map((e) => ({ reason: e.reason })) }
   })
 
   // Internal update check via local feed JSON file

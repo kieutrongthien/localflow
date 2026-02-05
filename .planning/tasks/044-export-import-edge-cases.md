@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 002  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Xử lý xung đột ID/filename, thiếu/không hợp lệ frontmatter; báo cáo rõ ràng.
 
 ## Subtasks
-- [ ] Detect xung đột + đề xuất giải pháp
-- [ ] Normalize dữ liệu thiếu
-- [ ] Báo cáo lỗi + log chi tiết
+- [x] Detect xung đột + đề xuất giải pháp (suffix -import-N, trả conflicts)
+- [x] Normalize dữ liệu thiếu (title fallback, skip invalid type)
+- [x] Báo cáo lỗi + log chi tiết (errors list + activity log; UI hiển thị tổng conflicts/errors)
 
 ## Blockers
 None
