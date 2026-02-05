@@ -233,12 +233,14 @@
       </section>
       <RouterView />
     </main>
+    <Toast v-if="toast.message" :type="toast.type" :message="toast.message" :title="toast.title" :duration="toast.duration" @hidden="toast.message = ''" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
+import Toast from './components/Toast.vue'
 import type { PlanningIndexResult, PlanningItem } from '../../shared/planning/types'
 
 const pingValue = ref('...')
@@ -408,7 +410,8 @@ const validateMetadata = () => {
 }
 
 const handleSelect = async () => {
-  const result = await window.localflow.selectProjectRoot()
+  try {
+    const result = await window.localflow.selectProjectRoot()
   projectPath.value = result.path
   planningPath.value = result.planningPath
   planningCreated.value = result.planningCreated
@@ -417,18 +420,28 @@ const handleSelect = async () => {
   if (result.path) {
     status.value = 'Thư mục đã sẵn sàng'
     await Promise.all([loadReadme(), loadMetadata(), loadPlanningIndex()])
+    toast.type = 'success'; toast.message = 'Đã chọn thư mục dự án'; toast.duration = 2500
   } else {
     status.value = 'Chưa chọn thư mục'
     readme.value = ''
     resetMetadata()
     resetPlanningIndex()
+    toast.type = 'info'; toast.message = 'Chưa chọn thư mục'; toast.duration = 2500
+  }
+  } catch (e) {
+    toast.type = 'error'; toast.message = 'Không thể chọn thư mục'; toast.duration = 3000
   }
 }
 
 const saveReadme = async () => {
   if (!projectPath.value) return
-  await window.localflow.writePlanningReadme({ projectPath: projectPath.value, content: readme.value })
-  status.value = 'Đã lưu README'
+  try {
+    await window.localflow.writePlanningReadme({ projectPath: projectPath.value, content: readme.value })
+    status.value = 'Đã lưu README'
+    toast.type = 'success'; toast.message = 'Lưu README thành công'
+  } catch {
+    toast.type = 'error'; toast.message = 'Lưu README thất bại'
+  }
 }
 
 const saveMetadata = async () => {
@@ -440,7 +453,8 @@ const saveMetadata = async () => {
     .map((member) => member.trim())
     .filter(Boolean)
 
-  await window.localflow.saveProjectMetadata({
+  try {
+    await window.localflow.saveProjectMetadata({
     projectPath: projectPath.value,
     name: metadata.name.trim(),
     description: metadata.description.trim(),
@@ -450,6 +464,10 @@ const saveMetadata = async () => {
   })
 
   metadataStatus.value = 'Đã lưu metadata'
+    toast.type = 'success'; toast.message = 'Đã lưu metadata'
+  } catch {
+    toast.type = 'error'; toast.message = 'Lưu metadata thất bại'
+  }
 }
 
 const onDragStart = (item: PlanningItem) => {
@@ -502,12 +520,16 @@ const exportJson = async () => {
   if (!projectPath.value) return
   const res = await window.localflow.exportPlanningJson({ projectPath: projectPath.value })
   exportStatus.value = res.success ? `Đã export: ${res.path}` : 'Đã huỷ'
+  toast.type = res.success ? 'success' : 'info'
+  toast.message = res.success ? 'Export JSON thành công' : 'Đã huỷ export'
 }
 
 const importJson = async () => {
   if (!projectPath.value) return
   const res = await window.localflow.importPlanningJson({ projectPath: projectPath.value })
   exportStatus.value = res.success ? `Đã import ${res.created} mục` : 'Đã huỷ'
+  toast.type = res.success ? 'success' : 'info'
+  toast.message = res.success ? `Import ${res.created} mục` : 'Đã huỷ import'
   await loadPlanningIndex()
 }
 </script>
@@ -516,3 +538,4 @@ const importJson = async () => {
 /* migrated most styles to Tailwind utility classes */
 </style>
  
+const toast = reactive<{ type?: 'success' | 'error' | 'info'; title?: string; message: string; duration?: number }>({ message: '' })

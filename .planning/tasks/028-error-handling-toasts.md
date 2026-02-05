@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 008  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 1h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Chuẩn hoá thông báo lỗi/thành công cho import, index, CRUD; UX gọn gàng.
 
 ## Subtasks
-- [ ] Toast component
-- [ ] Mapping lỗi thường gặp
-- [ ] Log nội bộ (optional)
+- [x] Toast component (success/error/info)
+- [x] Mapping lỗi thường gặp (select folder, save README/metadata, export/import)
+- [x] Log nội bộ (optional: dùng activity log nếu bật)
 
 ## Blockers
 None
