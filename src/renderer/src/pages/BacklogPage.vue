@@ -67,7 +67,7 @@
           </tr>
           <tr v-if="filtered.length === 0">
             <td colspan="7" class="px-4 py-6">
-              <UIEmptyState :dark="true">No items</UIEmptyState>
+              <UIEmptyState>No items</UIEmptyState>
             </td>
           </tr>
         </tbody>
