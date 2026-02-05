@@ -28,8 +28,10 @@
       </nav>
     </aside>
     <div class="flex flex-col">
-      <header class="flex items-center justify-between p-3 border-b border-white/10">
-        <div class="text-sm text-zinc-400">Local-first backlog planner</div>
+      <header class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <slot name="breadcrumb"></slot>
+        </div>
         <slot name="actions"></slot>
       </header>
       <main class="p-6 overflow-auto">

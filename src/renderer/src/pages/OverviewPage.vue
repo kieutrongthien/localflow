@@ -17,30 +17,21 @@
       </div>
     </div>
     <div class="grid md:grid-cols-3 gap-4">
-      <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Epics total">
-        <div class="flex items-center gap-2 text-sm text-zinc-300">
+      <StatCard :dark="true" label="Epics" :value="loadingIndex ? 0 : totals.epic" sublabel="Tổng mục epic">
+        <template #icon>
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 8l-9-5-9 5 9 5 9-5zm-9 7l-9-5v9l9 5 9-5v-9l-9 5z"/></svg>
-          <span class="font-medium">Epics</span>
-        </div>
-        <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
-        <div v-else class="text-2xl font-semibold">{{ totals.epic }}</div>
-      </div>
-      <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Stories total">
-        <div class="flex items-center gap-2 text-sm text-zinc-300">
+        </template>
+      </StatCard>
+      <StatCard :dark="true" label="Stories" :value="loadingIndex ? 0 : totals.story" sublabel="Tổng mục story">
+        <template #icon>
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h12v2H6zm0 4h12v2H6zm0 4h12v2H6zm0 4h8v2H6z"/></svg>
-          <span class="font-medium">Stories</span>
-        </div>
-        <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
-        <div v-else class="text-2xl font-semibold">{{ totals.story }}</div>
-      </div>
-      <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Tasks total">
-        <div class="flex items-center gap-2 text-sm text-zinc-300">
+        </template>
+      </StatCard>
+      <StatCard :dark="true" label="Tasks" :value="loadingIndex ? 0 : totals.task" sublabel="Tổng mục task">
+        <template #icon>
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg>
-          <span class="font-medium">Tasks</span>
-        </div>
-        <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
-        <div v-else class="text-2xl font-semibold">{{ totals.task }}</div>
-      </div>
+        </template>
+      </StatCard>
     </div>
 
     <div class="flex gap-2">
@@ -98,6 +89,7 @@ import { onMounted, reactive, ref } from 'vue'
 import UIEmptyState from '../components/UI/EmptyState.vue'
 import UIButton from '../components/UI/Button.vue'
 import { RouterLink, useRouter } from 'vue-router'
+import StatCard from '../components/dashboard/StatCard.vue'
 
 const totals = reactive({ epic: 0, story: 0, task: 0 })
 const activities = ref<Array<{ id: number; type: string; createdAt: number; payload?: any }>>([])
