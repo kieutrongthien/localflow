@@ -273,8 +273,8 @@
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
         <h2>Export / Import</h2>
         <div class="flex gap-2">
-          <button class="px-4 py-2 rounded-full bg-white/10" @click="exportJson">Export JSON</button>
-          <button class="px-4 py-2 rounded-full bg-white/10" @click="importJson">Import JSON</button>
+          <button class="px-4 py-2 rounded-full bg-white/10" @click="exportJson" aria-label="Export planning to JSON">Export JSON</button>
+          <button class="px-4 py-2 rounded-full bg-white/10" @click="importJson" aria-label="Import planning from JSON">Import JSON</button>
         </div>
         <p class="text-emerald-400 text-sm" v-if="exportStatus">{{ exportStatus }}</p>
       </div>

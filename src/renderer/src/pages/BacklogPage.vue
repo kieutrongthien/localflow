@@ -1,14 +1,14 @@
 <template>
   <div class="space-y-4">
     <div class="flex gap-2 items-center">
-      <input v-model="filters.query" placeholder="Search..." class="px-3 py-2 rounded bg-white/10 border border-white/10 w-64" />
-      <select v-model="filters.status" class="px-3 py-2 rounded bg-white/10 border border-white/10">
+      <input v-model="filters.query" placeholder="Search..." aria-label="Search backlog" class="px-3 py-2 rounded bg-white/10 border border-white/10 w-64" />
+      <select v-model="filters.status" aria-label="Filter by status" class="px-3 py-2 rounded bg-white/10 border border-white/10">
         <option value="">All status</option>
         <option value="todo">Todo</option>
         <option value="in_progress">In Progress</option>
         <option value="done">Done</option>
       </select>
-      <button class="px-3 py-2 rounded bg-white/10" @click="reload">Reload</button>
+      <button class="px-3 py-2 rounded bg-white/10" @click="reload" aria-label="Reload backlog">Reload</button>
       <span class="text-sm text-zinc-400 ml-auto">{{ items.length }} items</span>
     </div>
 
@@ -29,10 +29,10 @@
           <tr v-for="it in filtered" :key="it.path" class="border-t border-white/10">
             <td class="px-4 py-2 capitalize">{{ it.type }}</td>
             <td class="px-4 py-2">
-              <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80">{{ it.title }}</RouterLink>
+              <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80" :aria-label="`Open detail for ${it.title}`">{{ it.title }}</RouterLink>
             </td>
             <td class="px-4 py-2">
-              <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+              <select class="px-2 py-1 rounded bg-white/10 border border-white/10" aria-label="Inline edit status"
                       :value="it.status || ''"
                       @change="e => inlineSetStatus(it, (e.target as HTMLSelectElement).value as any)">
                 <option value="">-</option>
@@ -42,7 +42,7 @@
               </select>
             </td>
             <td class="px-4 py-2">
-              <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+              <select class="px-2 py-1 rounded bg-white/10 border border-white/10" aria-label="Inline edit priority"
                       :value="it.priority || ''"
                       @change="e => inlineSetPriority(it, (e.target as HTMLSelectElement).value)">
                 <option value="">-</option>
@@ -52,7 +52,7 @@
               </select>
             </td>
             <td class="px-4 py-2">
-              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10"
+              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10" aria-label="Inline edit points"
                      :value="it.points ?? ''"
                      @change="e => inlineSetPoints(it, (e.target as HTMLInputElement).value)" />
             </td>

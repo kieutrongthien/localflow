@@ -2,13 +2,13 @@
   <div class="space-y-4">
     <div class="rounded-xl border border-white/10 bg-white/5 p-4">
       <h3 class="mb-2">Giao diện</h3>
-      <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="toggleTheme">{{ themeLabel }}</button>
+      <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="toggleTheme" aria-label="Toggle theme">{{ themeLabel }}</button>
     </div>
 
     <div class="rounded-xl border border-white/10 bg-white/5 p-4">
       <h3 class="mb-2">Activity Log</h3>
       <label class="flex items-center gap-2 text-sm">
-        <input type="checkbox" :checked="activityEnabled" @change="toggleActivity($event)" />
+        <input type="checkbox" :checked="activityEnabled" @change="toggleActivity($event)" aria-label="Enable activity log" />
         <span>Bật Activity Log (tùy chọn)</span>
       </label>
     </div>
@@ -16,8 +16,8 @@
     <div class="rounded-xl border border-white/10 bg-white/5 p-4">
       <h3 class="mb-2">Indexer</h3>
       <label class="block text-sm mb-1">Exclude patterns (csv)</label>
-      <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="excludes" placeholder="*.tmp, .DS_Store" />
-      <button class="mt-2 px-3 py-1 rounded bg-white/10 text-sm" @click="saveExcludes">Lưu</button>
+      <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="excludes" placeholder="*.tmp, .DS_Store" aria-label="Indexer exclude patterns" />
+      <button class="mt-2 px-3 py-1 rounded bg-white/10 text-sm" @click="saveExcludes" aria-label="Save index excludes">Lưu</button>
     </div>
 
     <div class="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -28,10 +28,10 @@
   <div class="rounded-xl border border-white/10 bg-white/5 p-4">
     <h3 class="mb-2">Cập nhật nội bộ</h3>
       <label class="block text-sm mb-1">Đường dẫn feed JSON</label>
-      <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="updateFeedPath" placeholder="/path/to/update.json" />
+      <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="updateFeedPath" placeholder="/path/to/update.json" aria-label="Update feed JSON path" />
       <div class="mt-2 flex items-center gap-2">
-        <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="saveUpdateFeed">Lưu</button>
-        <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="checkUpdate">Kiểm tra</button>
+        <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="saveUpdateFeed" aria-label="Save update feed path">Lưu</button>
+        <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="checkUpdate" aria-label="Check for updates">Kiểm tra</button>
         <span class="text-sm" v-if="updateStatus">{{ updateStatus }}</span>
       </div>
     </div>
@@ -40,8 +40,8 @@
   <div class="rounded-xl border border-white/10 bg-white/5 p-4">
     <h3 class="mb-2">Backup</h3>
     <label class="block text-sm mb-1">Backup directory (absolute)</label>
-    <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="backupDirPath" placeholder="/path/to/backups" />
-    <button class="mt-2 px-3 py-1 rounded bg-white/10 text-sm" @click="saveBackupDir">Lưu</button>
+    <input class="w-full rounded px-3 py-2 bg-white/10 border border-white/10" v-model="backupDirPath" placeholder="/path/to/backups" aria-label="Backup directory path" />
+    <button class="mt-2 px-3 py-1 rounded bg-white/10 text-sm" @click="saveBackupDir" aria-label="Save backup directory">Lưu</button>
     <p class="mt-2 text-xs text-zinc-500">Nếu trống, ứng dụng dùng mặc định: {project}/.localflow_backups</p>
   </div>
 </template>

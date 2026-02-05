@@ -1,17 +1,17 @@
 <template>
   <div class="space-y-4">
     <div class="grid md:grid-cols-3 gap-4">
-      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Epics total">
         <div class="flex items-center gap-2 text-sm text-zinc-400"><span>📦 Epics</span></div>
         <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
         <div v-else class="text-2xl font-semibold">{{ totals.epic }}</div>
       </div>
-      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Stories total">
         <div class="flex items-center gap-2 text-sm text-zinc-400"><span>📚 Stories</span></div>
         <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
         <div v-else class="text-2xl font-semibold">{{ totals.story }}</div>
       </div>
-      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4" aria-label="Tasks total">
         <div class="flex items-center gap-2 text-sm text-zinc-400"><span>🧩 Tasks</span></div>
         <div v-if="loadingIndex" class="h-6 w-16 rounded bg-white/10 animate-pulse"></div>
         <div v-else class="text-2xl font-semibold">{{ totals.task }}</div>
@@ -19,9 +19,9 @@
     </div>
 
     <div class="flex gap-2">
-      <RouterLink :class="['px-4 py-2 rounded-full', canNavigate ? 'bg-white/10 hover:bg-white/20' : 'bg-white/5 opacity-60 cursor-not-allowed']" to="/backlog" aria-disabled="{{!canNavigate}}">Backlog</RouterLink>
-      <RouterLink :class="['px-4 py-2 rounded-full', canNavigate ? 'bg-white/10 hover:bg-white/20' : 'bg-white/5 opacity-60 cursor-not-allowed']" to="/boards" aria-disabled="{{!canNavigate}}">Boards</RouterLink>
-      <RouterLink class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20" to="/settings">Settings</RouterLink>
+      <RouterLink :class="['px-4 py-2 rounded-full', canNavigate ? 'bg-white/10 hover:bg-white/20' : 'bg-white/5 opacity-60 cursor-not-allowed']" to="/backlog" :aria-disabled="!canNavigate" aria-label="Open Backlog">Backlog</RouterLink>
+      <RouterLink :class="['px-4 py-2 rounded-full', canNavigate ? 'bg-white/10 hover:bg-white/20' : 'bg-white/5 opacity-60 cursor-not-allowed']" to="/boards" :aria-disabled="!canNavigate" aria-label="Open Boards">Boards</RouterLink>
+      <RouterLink class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20" to="/settings" aria-label="Open Settings">Settings</RouterLink>
     </div>
 
     <div v-if="!loadingIndex && !projectPath && emptyMessage" class="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-400">
@@ -33,7 +33,7 @@
 
     <div v-if="activityEnabled" class="rounded-xl border border-white/10 bg-white/5 p-4">
       <h3 class="mb-2">Activity gần đây</h3>
-      <ul v-if="activities.length" class="list-none p-0 text-sm">
+      <ul v-if="activities.length" class="list-none p-0 text-sm" aria-label="Recent activity list">
         <li v-for="a in activities" :key="a.id" class="border-t border-white/5 py-1 flex items-center gap-2">
           <span class="text-zinc-400">{{ new Date(a.createdAt).toLocaleString() }}</span>
           <span class="font-medium">{{ a.type }}</span>
