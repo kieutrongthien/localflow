@@ -2,10 +2,10 @@
 
 **Created:** 2026-02-05  
 **Story:** 004  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Ghi lại sự kiện import, tạo/sửa/xoá để hiển thị gần đây; có thể tắt.

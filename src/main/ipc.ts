@@ -11,7 +11,7 @@ import {
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
 import { listBackups, createBackup, restoreBackup } from './backup'
-import { getDatabasePath, logActivity, getSetting, setSettingValue } from './storage/projectsStore'
+import { getDatabasePath, logActivity, getSetting, setSettingValue, listRecentActivity } from './storage/projectsStore'
 import { IPC_EVENTS } from '../shared/preload/api'
 import { watchPlanningForWindow } from './planning/watcher'
 import {
@@ -226,5 +226,10 @@ export const bootIpc = () => {
     setSettingValue(payload.key, payload.value)
     logActivity('settings.set', { key: payload.key })
     return { success: true }
+  })
+
+  registerIpcHandler(IPC_CHANNELS.ACTIVITY_LIST, async (_event, payload) => {
+    const entries = listRecentActivity(payload.limit ?? 10)
+    return { entries }
   })
 }

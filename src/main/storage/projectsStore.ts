@@ -138,10 +138,24 @@ export const getActiveProjectPath = (): string | null => {
 
 export const logActivity = (type: string, payload: Record<string, unknown>) => {
   const database = ensureDatabase()
+  // Optional toggle; default off if not set
+  const enabled = getSetting('activityEnabled') === 'true'
+  if (!enabled) return
   const stmt = database.prepare(
     `INSERT INTO activity (type, payload, createdAt) VALUES (@type, @payload, @createdAt)`
   )
-  stmt.run({ type, payload: JSON.stringify(payload), createdAt: Date.now() })
+  stmt.run({ type, payload: JSON.stringify(payload ?? {}), createdAt: Date.now() })
+}
+
+export const listRecentActivity = (limit = 10): Array<{ id: number; type: string; payload: unknown; createdAt: number }> => {
+  const database = ensureDatabase()
+  const stmt = database.prepare(`SELECT id, type, payload, createdAt FROM activity ORDER BY createdAt DESC LIMIT ?`)
+  const rows = stmt.all(limit)
+  return rows.map((r) => ({ id: r.id, type: r.type, payload: safeParse(r.payload), createdAt: r.createdAt }))
+}
+
+const safeParse = (s: string) => {
+  try { return JSON.parse(s) } catch { return s }
 }
 
 export const getDatabasePath = (): string => {

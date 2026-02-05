@@ -203,6 +203,24 @@
         <p v-else class="text-zinc-400 text-sm">Chưa có backup nào.</p>
         <p class="text-brand text-sm" v-if="backupStatus">{{ backupStatus }}</p>
       </div>
+
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3">
+        <h2>Activity gần đây</h2>
+        <div class="flex items-center gap-2">
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" :checked="activityEnabled" @change="toggleActivity($event)" />
+            <span>Bật Activity Log (tùy chọn)</span>
+          </label>
+          <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="loadActivity">Tải danh sách</button>
+        </div>
+        <ul class="list-none p-0 text-sm">
+          <li v-for="a in activities" :key="a.id" class="border-t border-white/5 py-1">
+            <span class="text-zinc-400 mr-2">{{ new Date(a.createdAt).toLocaleString() }}</span>
+            <span class="font-medium">{{ a.type }}</span>
+            <code class="ml-2 px-2 py-0.5 rounded bg-white/5">{{ formatPayload(a.payload) }}</code>
+          </li>
+        </ul>
+      </div>
       </section>
       <RouterView />
     </main>
@@ -267,6 +285,9 @@ onMounted(async () => {
   const { value } = await window.localflow.getSetting({ key: 'theme' })
   const pref = value === 'light' ? 'light' : 'dark'
   applyTheme(pref)
+
+  const { value: act } = await window.localflow.getSetting({ key: 'activityEnabled' })
+  activityEnabled.value = act === 'true'
 })
 
 onBeforeUnmount(() => {
@@ -451,8 +472,24 @@ const toggleTheme = async () => {
   applyTheme(next as 'dark' | 'light')
   await window.localflow.setSetting({ key: 'theme', value: next })
 }
+
+const loadActivity = async () => {
+  const res = await window.localflow.listActivity({ limit: 20 })
+  activities.value = res.entries
+}
+
+const toggleActivity = async (e: Event) => {
+  const checked = (e.target as HTMLInputElement).checked
+  activityEnabled.value = checked
+  await window.localflow.setSetting({ key: 'activityEnabled', value: checked ? 'true' : 'false' })
+}
+
+const formatPayload = (p: unknown) => {
+  try { return JSON.stringify(p) } catch { return String(p) }
+}
 </script>
 
 <style scoped>
 /* migrated most styles to Tailwind utility classes */
 </style>
+ 

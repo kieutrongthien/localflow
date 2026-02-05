@@ -62,6 +62,9 @@ export type SettingsGetPayload = { key: string }
 export type SettingsGetResult = { value: string | null }
 export type SettingsSetPayload = { key: string; value: string }
 export type SettingsSetResult = { success: boolean }
+export type ActivityListPayload = { limit?: number }
+export type ActivityEntry = { id: number; type: string; payload: unknown; createdAt: number }
+export type ActivityListResult = { entries: ActivityEntry[] }
 
 export interface LocalflowBridge {
   ping(): string
@@ -78,6 +81,7 @@ export interface LocalflowBridge {
   getSetting(payload: SettingsGetPayload): Promise<SettingsGetResult>
   setSetting(payload: SettingsSetPayload): Promise<SettingsSetResult>
   updatePlanningStatus(payload: { path: string; status: string }): Promise<{ success: boolean }>
+  listActivity(payload: ActivityListPayload): Promise<ActivityListResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 

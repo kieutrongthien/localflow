@@ -13,7 +13,8 @@ export const IPC_CHANNELS = {
   BACKUP_CREATE: 'backup:create',
   BACKUP_RESTORE: 'backup:restore',
   SETTINGS_GET: 'settings:get',
-  SETTINGS_SET: 'settings:set'
+  SETTINGS_SET: 'settings:set',
+  ACTIVITY_LIST: 'activity:list'
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]
@@ -45,7 +46,8 @@ const schemaMap = {
   [IPC_CHANNELS.BACKUP_CREATE]: metadataPayload,
   [IPC_CHANNELS.BACKUP_RESTORE]: metadataPayload.extend({ id: z.string().min(1) }),
   [IPC_CHANNELS.SETTINGS_GET]: z.object({ key: z.string().min(1) }),
-  [IPC_CHANNELS.SETTINGS_SET]: z.object({ key: z.string().min(1), value: z.string() })
+  [IPC_CHANNELS.SETTINGS_SET]: z.object({ key: z.string().min(1), value: z.string() }),
+  [IPC_CHANNELS.ACTIVITY_LIST]: z.object({ limit: z.number().min(1).max(100).default(10) })
 } as const satisfies Record<IpcChannel, z.ZodTypeAny>
 
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
