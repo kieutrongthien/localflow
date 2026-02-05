@@ -126,18 +126,21 @@
         <h2 class="mb-3">Boards (Stories)</h2>
         <div class="grid md:grid-cols-3 gap-4">
           <div
-            class="rounded-lg border border-white/10 p-3 min-h-[240px]"
+            class="rounded-lg border border-white/10 p-3 min-h-[240px] transition-colors"
             @dragover.prevent
             @drop="onDrop('todo', $event)"
           >
-            <h3 class="text-sm text-zinc-400 mb-2">Todo</h3>
+            <h3 class="text-sm text-zinc-400 mb-2">Todo <span class="ml-1 text-xs text-zinc-500">({{ storiesByStatus.todo.length }})</span></h3>
             <div class="space-y-2">
               <div
                 v-for="s in storiesByStatus.todo"
                 :key="s.path"
-                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab focus:outline-none focus:ring-2 focus:ring-brand-secondary/60 hover:bg-white/10"
                 draggable="true"
                 @dragstart="onDragStart(s)"
+                tabindex="0"
+                @keydown.left.prevent="keyboardMove(s, 'left')"
+                @keydown.right.prevent="keyboardMove(s, 'right')"
               >
                 <div class="text-sm font-medium truncate">{{ s.title }}</div>
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
@@ -146,18 +149,21 @@
           </div>
 
           <div
-            class="rounded-lg border border-white/10 p-3 min-h-[240px]"
+            class="rounded-lg border border-white/10 p-3 min-h-[240px] transition-colors"
             @dragover.prevent
             @drop="onDrop('in_progress', $event)"
           >
-            <h3 class="text-sm text-zinc-400 mb-2">In Progress</h3>
+            <h3 class="text-sm text-zinc-400 mb-2">In Progress <span class="ml-1 text-xs text-zinc-500">({{ storiesByStatus.in_progress.length }})</span></h3>
             <div class="space-y-2">
               <div
                 v-for="s in storiesByStatus.in_progress"
                 :key="s.path"
-                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab focus:outline-none focus:ring-2 focus:ring-brand-secondary/60 hover:bg-white/10"
                 draggable="true"
                 @dragstart="onDragStart(s)"
+                tabindex="0"
+                @keydown.left.prevent="keyboardMove(s, 'left')"
+                @keydown.right.prevent="keyboardMove(s, 'right')"
               >
                 <div class="text-sm font-medium truncate">{{ s.title }}</div>
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
@@ -166,18 +172,21 @@
           </div>
 
           <div
-            class="rounded-lg border border-white/10 p-3 min-h-[240px]"
+            class="rounded-lg border border-white/10 p-3 min-h-[240px] transition-colors"
             @dragover.prevent
             @drop="onDrop('done', $event)"
           >
-            <h3 class="text-sm text-zinc-400 mb-2">Done</h3>
+            <h3 class="text-sm text-zinc-400 mb-2">Done <span class="ml-1 text-xs text-zinc-500">({{ storiesByStatus.done.length }})</span></h3>
             <div class="space-y-2">
               <div
                 v-for="s in storiesByStatus.done"
                 :key="s.path"
-                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab"
+                class="rounded bg-white/5 border border-white/10 p-2 cursor-grab focus:outline-none focus:ring-2 focus:ring-brand-secondary/60 hover:bg-white/10"
                 draggable="true"
                 @dragstart="onDragStart(s)"
+                tabindex="0"
+                @keydown.left.prevent="keyboardMove(s, 'left')"
+                @keydown.right.prevent="keyboardMove(s, 'right')"
               >
                 <div class="text-sm font-medium truncate">{{ s.title }}</div>
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
@@ -477,9 +486,38 @@ const onDragStart = (item: PlanningItem) => {
 const onDrop = async (status: 'todo' | 'in_progress' | 'done', event: DragEvent) => {
   event.preventDefault()
   if (!draggingPath.value) return
+  if (status === 'done') {
+    const ok = window.confirm('Chuyển sang Done?')
+    if (!ok) { draggingPath.value = null; return }
+  }
   await window.localflow.updatePlanningStatus({ path: draggingPath.value, status })
-  boardStatus.value = 'Đã cập nhật trạng thái'
+  boardStatus.value = `Đã chuyển sang ${status}`
+  toast.type = 'success'; toast.message = 'Cập nhật trạng thái thành công'; toast.duration = 2000
   draggingPath.value = null
+  await loadPlanningIndex()
+}
+
+const nextStatus = (current?: string): 'todo' | 'in_progress' | 'done' => {
+  if (current === 'todo') return 'in_progress'
+  if (current === 'in_progress') return 'done'
+  return 'todo'
+}
+
+const prevStatus = (current?: string): 'todo' | 'in_progress' | 'done' => {
+  if (current === 'done') return 'in_progress'
+  if (current === 'in_progress') return 'todo'
+  return 'done'
+}
+
+const keyboardMove = async (item: PlanningItem, dir: 'left' | 'right') => {
+  const target = dir === 'right' ? nextStatus(item.status) : prevStatus(item.status)
+  if (target === 'done') {
+    const ok = window.confirm('Chuyển sang Done?')
+    if (!ok) return
+  }
+  await window.localflow.updatePlanningStatus({ path: item.path, status: target })
+  boardStatus.value = `Đã chuyển sang ${target}`
+  toast.type = 'success'; toast.message = 'Cập nhật trạng thái thành công'; toast.duration = 2000
   await loadPlanningIndex()
 }
 
