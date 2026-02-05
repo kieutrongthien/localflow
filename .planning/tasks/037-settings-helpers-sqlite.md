@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 004  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Xây lớp tiện ích đọc/ghi Settings từ SQLite, cache nhẹ; áp dụng cho UI Settings.
 
 ## Subtasks
-- [ ] Helper CRUD settings
-- [ ] Cache đơn giản
-- [ ] Áp dụng trong Settings page
+- [x] Helper CRUD settings (settingsHelper.ts)
+- [x] Cache đơn giản (Map trong main)
+- [x] Áp dụng trong Settings page (batch getSettings)
 
 ## Blockers
 None

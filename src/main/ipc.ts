@@ -16,6 +16,7 @@ import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
 import { listBackups, createBackup, restoreBackup } from './backup'
 import { getDatabasePath, logActivity, getSetting, setSettingValue, listRecentActivity } from './storage/projectsStore'
+import { settingsGetMany, settingsSetMany } from './storage/settingsHelper'
 import { IPC_EVENTS } from '../shared/preload/api'
 import { watchPlanningForWindow } from './planning/watcher'
 import {
@@ -233,6 +234,20 @@ export const bootIpc = () => {
     logActivity('settings.set', { key: payload.key })
     return { success: true }
   })
+
+  // Batch settings helpers
+  if (!ipcMain.listenerCount('settings:get-many')) {
+    ipcMain.handle('settings:get-many', async (_event, payload: { keys: string[] }) => {
+      const values = settingsGetMany(payload.keys || [])
+      return { values }
+    })
+  }
+  if (!ipcMain.listenerCount('settings:set-many')) {
+    ipcMain.handle('settings:set-many', async (_event, payload: { kv: Record<string, string> }) => {
+      settingsSetMany(payload.kv || {})
+      return { success: true }
+    })
+  }
 
   registerIpcHandler(IPC_CHANNELS.ACTIVITY_LIST, async (_event, payload) => {
     const entries = listRecentActivity(payload.limit ?? 10)

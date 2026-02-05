@@ -89,6 +89,20 @@ export const saveItemPayload = z.object({
   })
 })
 
+// Settings helpers (batch)
+export const SETTINGS_CHANNELS = {
+  SETTINGS_GET_MANY: 'settings:get-many',
+  SETTINGS_SET_MANY: 'settings:set-many'
+} as const
+
+export type SettingsChannel = (typeof SETTINGS_CHANNELS)[keyof typeof SETTINGS_CHANNELS]
+
+export const settingsGetManyPayload = z.object({ keys: z.array(z.string().min(1)) })
+export const settingsGetManyResult = z.object({ values: z.record(z.string(), z.string().nullable()) })
+
+export const settingsSetManyPayload = z.object({ kv: z.record(z.string(), z.string()) })
+export const settingsSetManyResult = z.object({ success: z.boolean() })
+
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
 
 export const allowedChannels = Object.values(IPC_CHANNELS)

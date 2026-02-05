@@ -62,6 +62,10 @@ export type SettingsGetPayload = { key: string }
 export type SettingsGetResult = { value: string | null }
 export type SettingsSetPayload = { key: string; value: string }
 export type SettingsSetResult = { success: boolean }
+export type SettingsGetManyPayload = { keys: string[] }
+export type SettingsGetManyResult = { values: Record<string, string | null> }
+export type SettingsSetManyPayload = { kv: Record<string, string> }
+export type SettingsSetManyResult = { success: boolean }
 export type ActivityListPayload = { limit?: number }
 export type ActivityEntry = { id: number; type: string; payload: unknown; createdAt: number }
 export type ActivityListResult = { entries: ActivityEntry[] }
@@ -87,6 +91,8 @@ export interface LocalflowBridge {
   restoreBackup(payload: BackupRestorePayload): Promise<BackupRestoreResult>
   getSetting(payload: SettingsGetPayload): Promise<SettingsGetResult>
   setSetting(payload: SettingsSetPayload): Promise<SettingsSetResult>
+  getSettings(payload: SettingsGetManyPayload): Promise<SettingsGetManyResult>
+  setSettings(payload: SettingsSetManyPayload): Promise<SettingsSetManyResult>
   updatePlanningStatus(payload: { path: string; status: string }): Promise<{ success: boolean }>
   listActivity(payload: ActivityListPayload): Promise<ActivityListResult>
   getDatabasePath(): Promise<DatabasePathResult>

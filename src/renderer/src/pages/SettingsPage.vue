@@ -49,20 +49,14 @@ const updateFeedPath = ref('')
 const updateStatus = ref('')
 
 onMounted(async () => {
-  const { value } = await window.localflow.getSetting({ key: 'theme' })
-  applyTheme(value === 'light' ? 'light' : 'dark')
-
-  const { value: act } = await window.localflow.getSetting({ key: 'activityEnabled' })
-  activityEnabled.value = act === 'true'
-
-  const { value: ex } = await window.localflow.getSetting({ key: 'indexExcludes' })
-  excludes.value = ex || ''
+  const batch = await window.localflow.getSettings({ keys: ['theme', 'activityEnabled', 'indexExcludes', 'updateFeedPath'] })
+  applyTheme(batch.values.theme === 'light' ? 'light' : 'dark')
+  activityEnabled.value = (batch.values.activityEnabled || '') === 'true'
+  excludes.value = batch.values.indexExcludes || ''
+  updateFeedPath.value = batch.values.updateFeedPath || ''
 
   const res = await window.localflow.getDatabasePath()
   dbPath.value = res.path
-
-  const { value: feed } = await window.localflow.getSetting({ key: 'updateFeedPath' })
-  updateFeedPath.value = feed || ''
 })
 
 const applyTheme = (mode: 'dark' | 'light') => {
