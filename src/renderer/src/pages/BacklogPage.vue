@@ -19,6 +19,7 @@
             <th class="text-left px-4 py-2">Type</th>
             <th class="text-left px-4 py-2">Title</th>
             <th class="text-left px-4 py-2">Status</th>
+            <th class="text-left px-4 py-2">Assignee</th>
             <th class="text-left px-4 py-2">Filename</th>
           </tr>
         </thead>
@@ -29,6 +30,7 @@
               <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80">{{ it.title }}</RouterLink>
             </td>
             <td class="px-4 py-2">{{ it.status || '-' }}</td>
+            <td class="px-4 py-2">{{ it.assignee || '-' }}</td>
             <td class="px-4 py-2 text-zinc-400">{{ it.filename }}</td>
           </tr>
           <tr v-if="filtered.length === 0">

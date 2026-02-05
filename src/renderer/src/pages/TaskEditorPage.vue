@@ -46,6 +46,19 @@
           <input v-model="form.assignee" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10" />
         </div>
       </div>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm mb-1">Owner</label>
+          <input v-model="form.owner" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10" />
+        </div>
+        <div>
+          <label class="block text-sm mb-1">Assign from team</label>
+          <select v-model="form.assignee" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10">
+            <option value="">(none)</option>
+            <option v-for="m in team" :key="m" :value="m">{{ m }}</option>
+          </select>
+        </div>
+      </div>
       <div>
         <label class="block text-sm mb-1">Tags (CSV)</label>
         <input v-model="tagsCsv" class="w-full px-3 py-2 rounded bg-white/10 border border-white/10" />
@@ -65,6 +78,7 @@ import matter from 'gray-matter'
 const projectPath = ref('')
 const tasks = ref<Array<{ title: string; filename: string; path: string }>>([])
 const stories = ref<Array<{ title: string; filename: string; path: string }>>([])
+const team = ref<string[]>([])
 const selectedPath = ref('')
 const formVisible = ref(false)
 const status = ref('')
@@ -78,6 +92,8 @@ onMounted(async () => {
   const idx = await window.localflow.getPlanningIndex({ projectPath: p })
   tasks.value = idx.items.filter((i) => i.type === 'task').map((i) => ({ title: i.title, filename: i.filename, path: i.path }))
   stories.value = idx.items.filter((i) => i.type === 'story').map((i) => ({ title: i.title, filename: i.filename, path: i.path }))
+  const meta = await window.localflow.getProjectMetadata({ projectPath: p })
+  team.value = meta.team || []
 })
 
 const loadSelected = async () => {
@@ -92,6 +108,7 @@ const loadSelected = async () => {
       priority: d.priority || '',
       points: d.points ?? null,
       assignee: d.assignee || '',
+      owner: d.owner || '',
       tags: Array.isArray(d.tags) ? d.tags : [],
       linkedStoryPath: d.linkedStoryPath || ''
     }

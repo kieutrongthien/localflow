@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 009  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Bổ sung trường assignee/owner vào frontmatter Task; UI chọn/đổi; validate.
 
 ## Subtasks
-- [ ] Cập nhật schema frontmatter
-- [ ] UI chọn assignee/owner
-- [ ] Validator + hiển thị ở Backlog/Kanban
+- [x] Cập nhật schema frontmatter (Task: assignee, owner)
+- [x] UI chọn assignee/owner (TaskEditorPage: input + chọn từ team)
+- [x] Validator + hiển thị ở Backlog (cột Assignee)
 
 ## Blockers
 None

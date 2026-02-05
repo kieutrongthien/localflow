@@ -20,6 +20,7 @@ const taskSchema = baseSchema.extend({
   type: z.literal('task'),
   points: z.number().int().positive().optional(),
   assignee: z.string().optional(),
+  owner: z.string().optional(),
   linkedStoryPath: z.string().min(1).optional()
 })
 
