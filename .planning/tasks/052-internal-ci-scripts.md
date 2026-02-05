@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 001  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Thêm script build nội bộ và chạy e2e smoke; báo cáo kết quả.
 
 ## Subtasks
-- [ ] Script build đa nền tảng
-- [ ] Chạy e2e smoke
-- [ ] Thu thập báo cáo
+- [x] Script build đa nền tảng (Node script: tests + build; package non-blocking)
+- [x] Chạy e2e smoke (vitest suite hiện tại)
+- [x] Thu thập báo cáo (dist/ci-report.json + console summary)
 
 ## Blockers
 None

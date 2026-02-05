@@ -10,7 +10,7 @@
     "preview": "electron-vite preview",
     "lint": "eslint .",
     "test": "vitest run",
-    "e2e:smoke": "node ./scripts/e2e-smoke.js",
+    "ci:smoke": "node ./scripts/ci-smoke.js",
     "package": "npm run build && electron-builder --config electron-builder.config.cjs --linux AppImage",
     "package:all": "npm run build && electron-builder --config electron-builder.config.cjs -mwl"
   },
