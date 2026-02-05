@@ -50,7 +50,8 @@ onMounted(async () => {
   })
 
   const { value } = await window.localflow.getSetting({ key: 'theme' })
-  applyTheme(value === 'light' ? 'light' : 'dark')
+  // Default to light when unset
+  applyTheme(value === 'dark' ? 'dark' : 'light')
 
   // Keyboard shortcuts (dev/prod internal)
   const onKey = (e: KeyboardEvent) => {
