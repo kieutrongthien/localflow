@@ -50,6 +50,7 @@ const api: LocalflowBridge = {
   importPlanningJson: (payload: { projectPath: string }) =>
     invokeSafe(IPC_CHANNELS.PLANNING_IMPORT_JSON, payload),
   checkUpdate: (payload: { feedPath?: string }) => invokeSafe('update:check' as any, payload),
+  savePlanningItem: (payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }) => invokeSafe('planning:save-item' as any, payload),
   onPlanningIndexUpdated: (callback: (payload: PlanningIndexResult) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, payload: PlanningIndexResult) => {
       callback(payload)

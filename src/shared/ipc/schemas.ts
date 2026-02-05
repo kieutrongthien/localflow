@@ -69,6 +69,26 @@ const updateSchemaMap = {
 
 export type UpdatePayloadFor<T extends UpdateChannel> = z.infer<(typeof updateSchemaMap)[T]>
 
+// Save planning item (frontmatter write)
+export const EDIT_CHANNELS = {
+  PLANNING_SAVE_ITEM: 'planning:save-item'
+} as const
+
+export type EditChannel = (typeof EDIT_CHANNELS)[keyof typeof EDIT_CHANNELS]
+
+export const saveItemPayload = z.object({
+  path: z.string(),
+  data: z.object({
+    title: z.string().min(1),
+    status: z.string().optional(),
+    priority: z.string().optional(),
+    points: z.number().nullable().optional(),
+    owner: z.string().optional(),
+    assignee: z.string().optional(),
+    tags: z.array(z.string()).optional()
+  })
+})
+
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
 
 export const allowedChannels = Object.values(IPC_CHANNELS)

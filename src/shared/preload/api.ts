@@ -93,6 +93,7 @@ export interface LocalflowBridge {
   exportPlanningJson(payload: PlanningExportJsonPayload): Promise<PlanningExportJsonResult>
   importPlanningJson(payload: PlanningImportJsonPayload): Promise<PlanningImportJsonResult>
   checkUpdate(payload: UpdateCheckPayload): Promise<UpdateCheckResult>
+  savePlanningItem(payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }): Promise<{ success: boolean }>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 

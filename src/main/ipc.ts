@@ -8,7 +8,9 @@ import {
   validateIpcPayload,
   type SaveProjectMetadataPayload,
   UPDATE_CHANNELS,
-  type UpdatePayloadFor
+  type UpdatePayloadFor,
+  EDIT_CHANNELS,
+  saveItemPayload
 } from '../shared/ipc/schemas'
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
@@ -307,8 +309,28 @@ export const bootIpc = () => {
       } catch (e) {
         return { hasUpdate: false, currentVersion: current, error: 'invalid_feed' }
       }
+  })
+
+  // Save planning item frontmatter
+  if (!ipcMain.listenerCount(EDIT_CHANNELS.PLANNING_SAVE_ITEM)) {
+    ipcMain.handle(EDIT_CHANNELS.PLANNING_SAVE_ITEM, async (_event, payload) => {
+      const parsed = saveItemPayload.safeParse(payload)
+      if (!parsed.success) return { success: false, error: 'invalid_payload' }
+      const p = parsed.data
+      return statusUpdateLock.acquire(p.path, async () => {
+        const { readFile, writeFile } = await import('node:fs/promises')
+        const matter = (await import('gray-matter')).default
+        const raw = await readFile(p.path, 'utf-8')
+        const doc = matter(raw)
+        const fm = { ...doc.data, ...p.data }
+        const updated = matter.stringify(doc.content, fm)
+        await writeFile(p.path, updated, 'utf-8')
+        logActivity('planning.item.save', { path: p.path, fields: Object.keys(p.data) })
+        return { success: true }
+      })
     })
   }
+}
 }
 
 // naive semver compare: returns 1 if a>b, -1 if a<b, 0 equal

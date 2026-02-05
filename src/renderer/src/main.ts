@@ -13,7 +13,8 @@ const router = createRouter({
     { path: '/', name: 'overview', component: OverviewPage },
     { path: '/backlog', name: 'backlog', component: BacklogPage },
     { path: '/boards', name: 'boards', component: BoardsPage },
-    { path: '/settings', name: 'settings', component: SettingsPage }
+    { path: '/settings', name: 'settings', component: SettingsPage },
+    { path: '/story-editor', name: 'story-editor', component: () => import('./pages/StoryEditorPage.vue') }
   ]
 })
 
