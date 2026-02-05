@@ -12,7 +12,7 @@
       <span class="text-sm text-zinc-400 ml-auto">{{ items.length }} items</span>
     </div>
 
-    <UICard :dark="true" class="overflow-hidden shadow-sm">
+    <UICard class="overflow-hidden shadow-sm">
       <table class="w-full text-sm">
         <thead>
           <tr class="bg-white/5 sticky top-0 z-10">

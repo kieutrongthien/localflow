@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
     <div class="grid md:grid-cols-3 gap-4">
-      <UICard :dark="true" class="p-3 min-h-[280px] shadow-sm" @dragover.prevent @drop="(e:any)=>onDrop('todo', e)">
+      <UICard class="p-3 min-h-[280px] shadow-sm" @dragover.prevent @drop="(e:any)=>onDrop('todo', e)">
         <h3 class="text-sm text-zinc-400 mb-2">Todo <span class="ml-1 text-xs text-zinc-500">({{ storiesByStatus.todo.length }})</span></h3>
         <div class="space-y-2">
           <div v-for="s in storiesByStatus.todo" :key="s.path"
@@ -31,7 +31,7 @@
         </div>
       </UICard>
 
-      <UICard :dark="true" class="p-3 min-h-[280px] shadow-sm" @dragover.prevent @drop="(e:any)=>onDrop('in_progress', e)">
+      <UICard class="p-3 min-h-[280px] shadow-sm" @dragover.prevent @drop="(e:any)=>onDrop('in_progress', e)">
         <h3 class="text-sm text-zinc-400 mb-2">In Progress <span class="ml-1 text-xs text-zinc-500">({{ storiesByStatus.in_progress.length }})</span></h3>
         <div class="space-y-2">
           <div v-for="s in storiesByStatus.in_progress" :key="s.path"
@@ -61,7 +61,7 @@
         </div>
       </UICard>
 
-      <UICard :dark="true" class="p-3 min-h-[280px] shadow-sm" @dragover.prevent @drop="(e:any)=>onDrop('done', e)">
+      <UICard class="p-3 min-h-[280px] shadow-sm" @dragover.prevent @drop="(e:any)=>onDrop('done', e)">
         <h3 class="text-sm text-zinc-400 mb-2">Done <span class="ml-1 text-xs text-zinc-500">({{ storiesByStatus.done.length }})</span></h3>
         <div class="space-y-2">
           <div v-for="s in storiesByStatus.done" :key="s.path"

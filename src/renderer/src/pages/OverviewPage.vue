@@ -17,17 +17,17 @@
       </div>
     </div>
     <div class="grid md:grid-cols-3 gap-4">
-      <StatCard :dark="true" label="Epics" :value="loadingIndex ? 0 : totals.epic" sublabel="Tổng mục epic">
+      <StatCard label="Epics" :value="loadingIndex ? 0 : totals.epic" sublabel="Tổng mục epic">
         <template #icon>
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 8l-9-5-9 5 9 5 9-5zm-9 7l-9-5v9l9 5 9-5v-9l-9 5z"/></svg>
         </template>
       </StatCard>
-      <StatCard :dark="true" label="Stories" :value="loadingIndex ? 0 : totals.story" sublabel="Tổng mục story">
+      <StatCard label="Stories" :value="loadingIndex ? 0 : totals.story" sublabel="Tổng mục story">
         <template #icon>
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h12v2H6zm0 4h12v2H6zm0 4h12v2H6zm0 4h8v2H6z"/></svg>
         </template>
       </StatCard>
-      <StatCard :dark="true" label="Tasks" :value="loadingIndex ? 0 : totals.task" sublabel="Tổng mục task">
+      <StatCard label="Tasks" :value="loadingIndex ? 0 : totals.task" sublabel="Tổng mục task">
         <template #icon>
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg>
         </template>
@@ -40,10 +40,10 @@
       <RouterLink class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20" to="/settings" aria-label="Open Settings">Settings</RouterLink>
     </div>
 
-    <UIEmptyState v-if="!loadingIndex && !projectPath && emptyMessage" :dark="true">
+    <UIEmptyState v-if="!loadingIndex && !projectPath && emptyMessage">
       {{ emptyMessage }}
     </UIEmptyState>
-    <UIEmptyState v-else-if="!loadingIndex && totals.epic + totals.story + totals.task === 0" :dark="true">
+    <UIEmptyState v-else-if="!loadingIndex && totals.epic + totals.story + totals.task === 0">
       Chưa có dữ liệu trong .planning — hãy tạo Epic/Story/Task từ editors hoặc import JSON.
     </UIEmptyState>
 

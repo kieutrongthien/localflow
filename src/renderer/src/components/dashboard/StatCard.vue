@@ -1,5 +1,5 @@
 <template>
-  <div :class="['rounded-xl border p-4 transition-colors shadow-sm', dark ? 'border-white/10 bg-white/5 hover:bg-white/10' : 'border-gray-200 bg-white hover:bg-gray-50']" aria-label="Statistic card">
+  <div class="rounded-xl border p-4 transition-colors shadow-sm bg-white hover:bg-gray-50 border-gray-200 dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10" aria-label="Statistic card">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
         <slot name="icon"></slot>
@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ label: string; sublabel?: string; value: number | string; dark?: boolean }>()
+defineProps<{ label: string; sublabel?: string; value: number | string }>()
 </script>
