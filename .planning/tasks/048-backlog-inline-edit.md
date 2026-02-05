@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 011  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Cho phép sửa nhanh status/priority/points trên Backlog table; ghi về file.
 
 ## Subtasks
-- [ ] Inline edit cell
-- [ ] Validation + ghi frontmatter
-- [ ] Refresh và feedback
+- [x] Inline edit cell (Status/Priority/Points trực tiếp)
+- [x] Validation + ghi frontmatter (savePlanningItem/updatePlanningStatus)
+- [x] Refresh và feedback (reload sau mỗi cập nhật)
 
 ## Blockers
 None

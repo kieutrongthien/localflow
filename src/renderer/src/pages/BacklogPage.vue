@@ -19,6 +19,8 @@
             <th class="text-left px-4 py-2">Type</th>
             <th class="text-left px-4 py-2">Title</th>
             <th class="text-left px-4 py-2">Status</th>
+            <th class="text-left px-4 py-2">Priority</th>
+            <th class="text-left px-4 py-2">Points</th>
             <th class="text-left px-4 py-2">Assignee</th>
             <th class="text-left px-4 py-2">Filename</th>
           </tr>
@@ -29,7 +31,31 @@
             <td class="px-4 py-2">
               <RouterLink :to="`/detail?path=${encodeURIComponent(it.path)}`" class="underline hover:opacity-80">{{ it.title }}</RouterLink>
             </td>
-            <td class="px-4 py-2">{{ it.status || '-' }}</td>
+            <td class="px-4 py-2">
+              <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                      :value="it.status || ''"
+                      @change="e => inlineSetStatus(it, (e.target as HTMLSelectElement).value as any)">
+                <option value="">-</option>
+                <option value="todo">Todo</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+            </td>
+            <td class="px-4 py-2">
+              <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                      :value="it.priority || ''"
+                      @change="e => inlineSetPriority(it, (e.target as HTMLSelectElement).value)">
+                <option value="">-</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </td>
+            <td class="px-4 py-2">
+              <input type="number" class="w-20 px-2 py-1 rounded bg-white/10 border border-white/10"
+                     :value="it.points ?? ''"
+                     @change="e => inlineSetPoints(it, (e.target as HTMLInputElement).value)" />
+            </td>
             <td class="px-4 py-2">{{ it.assignee || '-' }}</td>
             <td class="px-4 py-2 text-zinc-400">{{ it.filename }}</td>
           </tr>
@@ -46,7 +72,7 @@
 import { onMounted, reactive, ref, computed } from 'vue'
 import { applyPlanningFilters } from '../../../shared/planning/filter'
 
-const items = ref<Array<{ type: string; title: string; status?: string; filename: string; path: string }>>([])
+const items = ref<Array<{ type: string; title: string; status?: string; priority?: string; points?: number | null; assignee?: string; filename: string; path: string }>>([])
 const projectPath = ref<string>('')
 const filters = reactive<{ query: string; status: string }>({ query: '', status: '' })
 const filtered = computed(() => applyPlanningFilters(items.value as any, filters as any))
@@ -69,4 +95,34 @@ const reload = async () => {
 }
 
 onMounted(load)
+
+const inlineSetPriority = async (item: any, priority: string) => {
+  try {
+    await window.localflow.savePlanningItem({ path: item.path, data: { title: item.title, priority } })
+  } catch {}
+  await reload()
+}
+
+const inlineSetStatus = async (item: any, status: 'todo' | 'in_progress' | 'done' | '') => {
+  try {
+    if (status === 'done') {
+      const ok = window.confirm('Chuyển sang Done?')
+      if (!ok) return
+    }
+    if (status) {
+      await window.localflow.updatePlanningStatus({ path: item.path, status })
+    } else {
+      await window.localflow.savePlanningItem({ path: item.path, data: { title: item.title, status: '' } })
+    }
+  } catch {}
+  await reload()
+}
+
+const inlineSetPoints = async (item: any, value: string) => {
+  const num = value === '' ? null : Number(value)
+  try {
+    await window.localflow.savePlanningItem({ path: item.path, data: { title: item.title, points: Number.isFinite(num as number) ? (num as number) : null } })
+  } catch {}
+  await reload()
+}
 </script>
