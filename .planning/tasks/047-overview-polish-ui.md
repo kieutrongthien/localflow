@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 005  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Cải thiện UI Overview: cards, trạng thái trống, loading skeleton, phân quyền thao tác.
 
 ## Subtasks
-- [ ] Empty/loading states
-- [ ] Cards polish + icons
-- [ ] Quick actions hợp lý
+- [x] Empty/loading states (skeleton + empty message)
+- [x] Cards polish + icons (📦📚🧩)
+- [x] Quick actions hợp lý (disable khi chưa chọn project)
 
 ## Blockers
 None
