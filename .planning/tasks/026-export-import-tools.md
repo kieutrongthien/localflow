@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 002  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 3h  
 **Priority:** High  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Xuất backlog ra Markdown/JSON và nhập vào dự án mới; validator dựa trên frontmatter chuẩn.
 
 ## Subtasks
-- [ ] Export Markdown/JSON
-- [ ] Import & validate
-- [ ] UI chọn tệp
+- [x] Export JSON (index dump + save dialog)
+- [x] Import & validate tối thiểu (type + title), tạo file với frontmatter chuẩn
+- [x] UI chọn tệp (Export/Import section)
 
 ## Blockers
 None

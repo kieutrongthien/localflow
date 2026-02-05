@@ -66,6 +66,10 @@ export type ActivityListPayload = { limit?: number }
 export type ActivityEntry = { id: number; type: string; payload: unknown; createdAt: number }
 export type ActivityListResult = { entries: ActivityEntry[] }
 export type DatabasePathResult = { path: string }
+export type PlanningExportJsonPayload = { projectPath: string }
+export type PlanningExportJsonResult = { success?: boolean; path?: string; canceled?: boolean }
+export type PlanningImportJsonPayload = { projectPath: string }
+export type PlanningImportJsonResult = { success?: boolean; created?: number; canceled?: boolean }
 
 export interface LocalflowBridge {
   ping(): string
@@ -84,6 +88,8 @@ export interface LocalflowBridge {
   updatePlanningStatus(payload: { path: string; status: string }): Promise<{ success: boolean }>
   listActivity(payload: ActivityListPayload): Promise<ActivityListResult>
   getDatabasePath(): Promise<DatabasePathResult>
+  exportPlanningJson(payload: PlanningExportJsonPayload): Promise<PlanningExportJsonResult>
+  importPlanningJson(payload: PlanningImportJsonPayload): Promise<PlanningImportJsonResult>
   onPlanningIndexUpdated(callback: (payload: PlanningIndexResult) => void): () => void
 }
 

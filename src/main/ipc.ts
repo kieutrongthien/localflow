@@ -236,4 +236,55 @@ export const bootIpc = () => {
   registerIpcHandler(IPC_CHANNELS.DB_PATH, async () => {
     return { path: getDatabasePath() }
   })
+
+  // Export JSON: dump planning index to a selected JSON file
+  registerIpcHandler(IPC_CHANNELS.PLANNING_EXPORT_JSON, async (event, payload) => {
+    const bw = getWindowFromEvent(event)
+    const projectPath = payload.projectPath
+    const index = await buildPlanningIndex(projectPath)
+    const save = await dialog.showSaveDialog(bw ?? undefined, {
+      title: 'Chọn nơi lưu JSON',
+      defaultPath: path.join(projectPath, 'planning-export.json'),
+      filters: [{ name: 'JSON', extensions: ['json'] }]
+    })
+    if (save.canceled || !save.filePath) return { canceled: true }
+    const data = JSON.stringify(index, null, 2)
+    await writeFile(save.filePath, data, 'utf-8')
+    logActivity('planning.export.json', { projectPath, file: save.filePath })
+    return { success: true, path: save.filePath }
+  })
+
+  // Import JSON: read selected JSON and materialize into .planning
+  registerIpcHandler(IPC_CHANNELS.PLANNING_IMPORT_JSON, async (event, payload) => {
+    const bw = getWindowFromEvent(event)
+    const projectPath = payload.projectPath
+    const open = await dialog.showOpenDialog(bw ?? undefined)
+    if (open.canceled || open.filePaths.length === 0) return { canceled: true }
+    const file = open.filePaths[0]
+    const raw = await readFile(file, 'utf-8')
+    const parsed = JSON.parse(raw) as { items: Array<{ type: string; filename?: string; path?: string; title?: string }> }
+    const planningDir = resolvePlanningDir(projectPath)
+    await mkdir(planningDir, { recursive: true })
+    const byType: Record<string, string> = { epic: 'epics', story: 'stories', task: 'tasks' }
+    let count = 0
+    for (const item of parsed.items ?? []) {
+      const folder = byType[item.type]
+      if (!folder) continue
+      const dir = path.join(planningDir, folder)
+      await mkdir(dir, { recursive: true })
+      const base = item.filename ?? path.basename(item.path ?? `${item.type}-${Date.now()}.md`)
+      const target = path.join(dir, base)
+      // Create a simple markdown with frontmatter
+      const fm = {
+        type: item.type,
+        status: 'todo',
+        title: item.title ?? base
+      }
+      const md = (await import('gray-matter')).default.stringify('', fm)
+      await writeFile(target, md, 'utf-8')
+      count++
+    }
+    logActivity('planning.import.json', { projectPath, file, created: count })
+    return { success: true, created: count }
+  })
 }

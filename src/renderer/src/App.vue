@@ -204,6 +204,15 @@
         <p class="text-brand text-sm" v-if="backupStatus">{{ backupStatus }}</p>
       </div>
 
+      <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3" v-if="projectPath">
+        <h2>Export / Import</h2>
+        <div class="flex gap-2">
+          <button class="px-4 py-2 rounded-full bg-white/10" @click="exportJson">Export JSON</button>
+          <button class="px-4 py-2 rounded-full bg-white/10" @click="importJson">Import JSON</button>
+        </div>
+        <p class="text-emerald-400 text-sm" v-if="exportStatus">{{ exportStatus }}</p>
+      </div>
+
       <div class="mt-8 p-6 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3">
         <h2>Activity gần đây</h2>
         <div class="flex items-center gap-2">
@@ -248,6 +257,7 @@ const backups = ref<Array<{ id: string; createdAt: number }>>([])
 const backupStatus = ref('')
 const boardStatus = ref('')
 const draggingPath = ref<string | null>(null)
+const exportStatus = ref('')
 
 const storiesByStatus = reactive<{ todo: PlanningItem[]; in_progress: PlanningItem[]; done: PlanningItem[] }>({
   todo: [],
@@ -486,6 +496,19 @@ const toggleActivity = async (e: Event) => {
 
 const formatPayload = (p: unknown) => {
   try { return JSON.stringify(p) } catch { return String(p) }
+}
+
+const exportJson = async () => {
+  if (!projectPath.value) return
+  const res = await window.localflow.exportPlanningJson({ projectPath: projectPath.value })
+  exportStatus.value = res.success ? `Đã export: ${res.path}` : 'Đã huỷ'
+}
+
+const importJson = async () => {
+  if (!projectPath.value) return
+  const res = await window.localflow.importPlanningJson({ projectPath: projectPath.value })
+  exportStatus.value = res.success ? `Đã import ${res.created} mục` : 'Đã huỷ'
+  await loadPlanningIndex()
 }
 </script>
 

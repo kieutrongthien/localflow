@@ -11,9 +11,9 @@
 Ghi lại sự kiện import, tạo/sửa/xoá để hiển thị gần đây; có thể tắt.
 
 ## Subtasks
-- [ ] Model hoá activity (SQLite)
-- [ ] Ghi sự kiện chính
-- [ ] UI hiển thị danh sách gần đây
+- [x] Model hoá activity (SQLite)
+- [x] Ghi sự kiện chính
+- [x] UI hiển thị danh sách gần đây
 
 ## Blockers
 None
