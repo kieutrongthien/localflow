@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 005  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 1h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Viết hướng dẫn sử dụng: import dự án, xem/chỉnh Backlog, thao tác Boards; FAQ lỗi thường gặp.
 
 ## Subtasks
-- [ ] Hướng dẫn import + .planning
-- [ ] Backlog/Boards usage
-- [ ] FAQ & troubleshooting
+- [x] Hướng dẫn import + .planning
+- [x] Backlog/Boards usage
+- [x] FAQ & troubleshooting
 
 ## Blockers
 None
