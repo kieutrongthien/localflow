@@ -8,6 +8,18 @@
     </UICard>
 
     <UICard class="p-4">
+      <h3 class="mb-2">Project</h3>
+      <div class="flex items-center gap-2">
+        <span class="text-sm text-zinc-500">Đang chọn:</span>
+        <span class="text-sm">{{ projectPath || 'Chưa chọn' }}</span>
+      </div>
+      <div class="mt-2 flex items-center gap-2">
+        <UIButton variant="primary" @click="pickProject" aria-label="Select project folder">Chọn thư mục dự án</UIButton>
+        <UIButton variant="secondary" @click="clearProject" aria-label="Clear project">Bỏ chọn</UIButton>
+      </div>
+    </UICard>
+
+    <UICard class="p-4">
       <h3 class="mb-2">Activity Log</h3>
       <label class="flex items-center gap-2 text-sm">
         <input
@@ -101,6 +113,7 @@ const dbPath = ref("");
 const updateFeedPath = ref("");
 const updateStatus = ref("");
 const backupDirPath = ref("");
+const projectPath = ref("");
 
 onMounted(async () => {
   const batch = await window.localflow.getSettings({
@@ -112,11 +125,14 @@ onMounted(async () => {
       "backupDirPath",
     ],
   });
-  applyTheme(batch.values.theme === "light" ? "light" : "dark");
+  applyTheme(batch.values.theme === "dark" ? "dark" : "light");
   activityEnabled.value = (batch.values.activityEnabled || "") === "true";
   excludes.value = batch.values.indexExcludes || "";
   updateFeedPath.value = batch.values.updateFeedPath || "";
   backupDirPath.value = batch.values.backupDirPath || "";
+
+  const { value: p } = await window.localflow.getSetting({ key: 'activeProjectPath' })
+  projectPath.value = p || ''
 
   const res = await window.localflow.getDatabasePath();
   dbPath.value = res.path;
@@ -139,6 +155,19 @@ const toggleTheme = async () => {
   applyTheme(next);
   await window.localflow.setSetting({ key: "theme", value: next });
 };
+
+const pickProject = async () => {
+  const res = await window.localflow.selectProjectRoot()
+  if (res?.path) {
+    projectPath.value = res.path
+    await window.localflow.setSetting({ key: 'activeProjectPath', value: res.path })
+  }
+}
+
+const clearProject = async () => {
+  projectPath.value = ''
+  await window.localflow.setSetting({ key: 'activeProjectPath', value: '' })
+}
 
 const toggleActivity = async (e: Event) => {
   const checked = (e.target as HTMLInputElement).checked;
