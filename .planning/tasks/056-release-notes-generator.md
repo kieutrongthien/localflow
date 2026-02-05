@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 007  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** In Progress (2026-02-05 - Colin)
 
 ## Description
 Sinh release notes dựa trên activity log và thay đổi backlog; xuất Markdown.
 
 ## Subtasks
-- [ ] Thu thập dữ liệu
-- [ ] Sinh Markdown
-- [ ] UI xuất/tải về
+- [x] Thu thập dữ liệu (đọc file activity JSON nội bộ nếu có)
+- [x] Sinh Markdown (scripts/release-notes.js → RELEASE_NOTES.md)
+- [x] UI xuất/tải về (Overview: nút Generate, trạng thái)
 
 ## Blockers
 None

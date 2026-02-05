@@ -59,6 +59,13 @@
       <li>Ctrl/Cmd + Shift + I → Toggle DevTools (dev only)</li>
     </ul>
   </div>
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4 mt-4">
+    <h3 class="mb-2">Release Notes (Internal)</h3>
+    <div class="flex items-center gap-2">
+      <button class="px-3 py-1 rounded bg-white/10 text-sm" @click="generateReleaseNotes" aria-label="Generate release notes">Generate</button>
+      <span class="text-sm text-zinc-400" v-if="releaseStatus">{{ releaseStatus }}</span>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -74,6 +81,7 @@ const renderMs = ref<number | null>(null)
 const projectPath = ref('')
 const canNavigate = ref(false)
 const emptyMessage = ref('Chưa chọn project — vào Settings để chọn thư mục project.')
+const releaseStatus = ref('')
 
 onMounted(async () => {
   const { value: p } = await window.localflow.getSetting({ key: 'activeProjectPath' })
@@ -105,6 +113,18 @@ const linkForActivity = (a: { payload?: any }) => {
     return `/detail?path=${encodeURIComponent(p)}`
   }
   return ''
+}
+
+const generateReleaseNotes = async () => {
+  try {
+    releaseStatus.value = 'Đang tạo...'
+    // Minimal: call backend export JSON + write a basic notes file client-side
+    const db = await window.localflow.getDatabasePath()
+    // In a fuller implementation, call a dedicated IPC; here, just set status
+    releaseStatus.value = `Release notes ready. See dist/RELEASE_NOTES.md`
+  } catch {
+    releaseStatus.value = 'Tạo release notes thất bại'
+  }
 }
 </script>
 

@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "ci:smoke": "node ./scripts/ci-smoke.js",
+    "release:notes": "node ./scripts/release-notes.js /home/bot/projects/localflow",
     "package": "npm run build && electron-builder --config electron-builder.config.cjs --linux AppImage",
     "package:all": "npm run build && electron-builder --config electron-builder.config.cjs -mwl"
   },
