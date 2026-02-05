@@ -43,6 +43,18 @@
       <div v-else class="text-sm text-zinc-400">Chưa có activity nào.</div>
     </div>
   </div>
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4 mt-4">
+    <h3 class="mb-2">Keyboard Shortcuts</h3>
+    <ul class="text-sm list-disc pl-5 text-zinc-300">
+      <li>Ctrl/Cmd + 1 → Overview</li>
+      <li>Ctrl/Cmd + 2 → Backlog</li>
+      <li>Ctrl/Cmd + 3 → Boards</li>
+      <li>Ctrl/Cmd + 4 → Settings</li>
+      <li>Ctrl/Cmd + Shift + B → Create Backup</li>
+      <li>Ctrl/Cmd + Shift + E → Export Planning to JSON</li>
+      <li>Ctrl/Cmd + Shift + I → Toggle DevTools (dev only)</li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">

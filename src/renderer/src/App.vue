@@ -304,7 +304,7 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import Toast from './components/Toast.vue'
 import type { PlanningIndexResult, PlanningItem } from '../../shared/planning/types'
@@ -343,6 +343,7 @@ const metadata = reactive({
 
 const errors = reactive<Record<string, string>>({})
 let unsubscribePlanning: (() => void) | null = null
+const router = useRouter()
 
 const applyPlanningIndex = (payload: PlanningIndexResult) => {
   planningItems.value = payload.items
@@ -374,6 +375,26 @@ onMounted(async () => {
 
   const { value: act } = await window.localflow.getSetting({ key: 'activityEnabled' })
   activityEnabled.value = act === 'true'
+
+  // Keyboard shortcuts (dev/prod internal)
+  const onKey = (e: KeyboardEvent) => {
+    // Skip form fields
+    const tag = (e.target as HTMLElement)?.tagName
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target as HTMLElement)?.isContentEditable) return
+    const ctrl = e.ctrlKey || e.metaKey
+    if (!ctrl) return
+    // Navigation: Ctrl+1..4
+    if (e.key === '1') { e.preventDefault(); router.push('/') }
+    else if (e.key === '2') { e.preventDefault(); router.push('/backlog') }
+    else if (e.key === '3') { e.preventDefault(); router.push('/boards') }
+    else if (e.key === '4') { e.preventDefault(); router.push('/settings') }
+    // Actions: Ctrl+Shift+B backup, Ctrl+Shift+E export
+    else if (e.shiftKey && (e.key.toLowerCase() === 'b')) { e.preventDefault(); createBackup() }
+    else if (e.shiftKey && (e.key.toLowerCase() === 'e')) { e.preventDefault(); exportJson() }
+  }
+  window.addEventListener('keydown', onKey)
+  // Remove on unmount
+  onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 })
 
 onBeforeUnmount(() => {
