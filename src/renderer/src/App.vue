@@ -51,7 +51,8 @@ onMounted(async () => {
 
   const { value } = await window.localflow.getSetting({ key: 'theme' })
   // Default to light when unset
-  applyTheme(value === 'dark' ? 'dark' : 'light')
+  const pref = value === 'dark' ? 'dark' : 'light'
+  applyTheme(pref)
 
   // Keyboard shortcuts (dev/prod internal)
   const onKey = (e: KeyboardEvent) => {
@@ -94,7 +95,7 @@ const exportJson = async () => {
   try {
     const { value: p } = await window.localflow.getSetting({ key: 'activeProjectPath' })
     if (!p) { toast.type = 'error'; toast.message = 'Chưa chọn project'; return }
-    const res = await window.localflow.exportPlanningToJson({ projectPath: p })
+    const res = await window.localflow.exportPlanningJson({ projectPath: p })
     toast.type = res.success ? 'success' : 'error'
     toast.message = res.success ? 'Đã export JSON' : 'Export thất bại'
     srLive.value = toast.message
@@ -105,7 +106,7 @@ const importJson = async () => {
   try {
     const { value: p } = await window.localflow.getSetting({ key: 'activeProjectPath' })
     if (!p) { toast.type = 'error'; toast.message = 'Chưa chọn project'; return }
-    const res = await window.localflow.importPlanningFromJson({ projectPath: p })
+    const res = await window.localflow.importPlanningJson({ projectPath: p })
     toast.type = res.success ? 'success' : 'error'
     toast.message = res.success ? 'Đã import JSON' : 'Import thất bại'
     srLive.value = toast.message
@@ -117,8 +118,8 @@ const createBackup = async () => {
     const { value: p } = await window.localflow.getSetting({ key: 'activeProjectPath' })
     if (!p) { toast.type = 'error'; toast.message = 'Chưa chọn project'; return }
     const res = await window.localflow.createBackup({ projectPath: p })
-    toast.type = res.success ? 'success' : 'error'
-    toast.message = res.success ? 'Đã tạo backup' : 'Backup thất bại'
+    toast.type = res.id ? 'success' : 'error'
+    toast.message = res.id ? 'Đã tạo backup' : 'Backup thất bại'
     srLive.value = toast.message
   } catch (e) { toast.type = 'error'; toast.message = 'Backup lỗi' }
 }
