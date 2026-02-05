@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen grid grid-cols-1 md:grid-cols-[240px_1fr] bg-white text-zinc-900 dark:bg-[radial-gradient(circle_at_top,_#111,_#0b0b0b)] dark:text-zinc-100">
-    <aside class="hidden md:block border-r border-white/10 p-4 bg-white/5" aria-label="Sidebar navigation">
+  <div :class="['min-h-screen grid grid-cols-1', collapsed ? 'md:grid-cols-[72px_1fr]' : 'md:grid-cols-[240px_1fr]', 'bg-white text-zinc-900 dark:bg-[radial-gradient(circle_at_top,_#111,_#0b0b0b)] dark:text-zinc-100']">
+    <aside :class="['hidden md:block border-r border-white/10 bg-white/5', collapsed ? 'p-2' : 'p-4']" aria-label="Sidebar navigation">
       <div class="flex items-center justify-between font-semibold">
         <div class="flex items-center gap-2">
           <img :src="logoSrc" alt="LocalFlow logo" class="w-8 h-8" />
@@ -8,7 +8,7 @@
         </div>
         <button class="px-2 py-1 rounded bg-white/10 text-xs" @click="toggle" aria-label="Toggle sidebar">{{ collapsed ? '›' : '‹' }}</button>
       </div>
-      <nav class="flex flex-col gap-2 mt-4">
+      <nav :class="['flex flex-col gap-2 mt-4', collapsed ? 'items-center' : '']">
         <RouterLink to="/" :class="linkClass('/')">
           <svg v-if="collapsed" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3l9 8h-3v10H6V11H3z"/></svg>
           <span v-else>Overview</span>
