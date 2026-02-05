@@ -1,16 +1,15 @@
 # Localflow
 
-Local-first backlog manager (Electron + Vue + SQLite). Nội bộ, không phụ thuộc internet công khai.
+Local-first backlog manager built with Electron, Vue, and SQLite. Designed for internal use, without reliance on public internet services.
 
 ## Developer Setup
 
-Xem docs/DEVELOPER_SETUP.md để cài đặt môi trường, chạy dev, build và packaging.
+See docs/DEVELOPER_SETUP.md for environment setup, development, build, and packaging instructions.
 
 ## Contributing
 
-Xem CONTRIBUTING.md để biết quy tắc đóng góp mã nguồn, quy trình commit theo Task, và tiêu chuẩn bảo mật.
+See CONTRIBUTING.md for contribution guidelines, Task-based commit workflow, and security standards.
 
 ## License
 
 MIT
-

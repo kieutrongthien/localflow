@@ -1,49 +1,49 @@
 # Developer Setup
 
-## Yêu cầu môi trường
-- Node.js >= 20 (đã test trên 22)
+## Requirements
+- Node.js >= 20 (tested on 22)
 - npm >= 9
-- OS: Linux/macOS/Windows (packaging tuỳ platform)
+- OS: Linux/macOS/Windows (packaging varies by platform)
 
-## Cài đặt
+## Install
 ```bash
 npm install
 ```
 
-## Chạy dev
+## Development
 ```bash
 npm run dev
 ```
 - Renderer: Vite HMR
 - Main/Preload: electron-vite dev server
-- DevTools: phím tắt trong dev (Ctrl/Cmd+Shift+I, F12)
+- DevTools: dev-only shortcuts (Ctrl/Cmd+Shift+I, F12)
 
 ## Build
 ```bash
 npm run build
 ```
-- Đầu ra: dist/renderer, out/main, out/preload
+- Outputs: dist/renderer, out/main, out/preload
 
 ## Packaging
 ```bash
 npm run package       # Linux AppImage
 npm run package:all   # macOS/Windows/Linux
 ```
-Cấu hình: electron-builder.config.cjs
+Configuration: electron-builder.config.cjs
 
-## Test
+## Tests
 ```bash
 npm test
 ```
-- Vitest cho shared/main logic
+- Vitest for shared/main logic
 - E2E smoke: `npm run e2e:smoke`
 
-## Cấu hình nội bộ
-- DB path: Settings → hiển thị
-- Activity log: có thể bật/tắt
-- Indexer excludes: CSV trong Settings
-- Update feed nội bộ: JSON file path trong Settings
+## Internal configuration
+- Database path: shown in Settings
+- Activity log: optional toggle in Settings
+- Indexer excludes: CSV in Settings
+- Internal update feed: JSON file path in Settings
 
-## Quy tắc commit
-- Mỗi task: `git add .` và commit theo mẫu: `Task/<ID>-<slug>: <mô tả ngắn>`
-- Không push tự động; review và push do người dùng thực hiện
+## Commit rules
+- For each task: `git add .` and commit in the format `Task/<ID>-<slug>: <short description>`
+- Do not push automatically; the user will review and push

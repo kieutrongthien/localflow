@@ -1,24 +1,23 @@
 # Contributing
 
-## Quy tắc chung
-- Bảo mật: contextIsolation bật, preload API qua IPC whitelist + zod validate.
-- Không dùng network công khai cho backup/update.
-- Hoạt động theo Local-first.
+## General principles
+- Security: contextIsolation enabled; preload API communicates via IPC with zod-validated whitelists.
+- No public network use for backup/update.
+- Local-first operation by design.
 
-## Quy trình làm việc
-- Mỗi task trong `.planning/tasks` có Status rõ ràng.
-- Khi hoàn tất task: `git add .` và commit theo mẫu `Task/<ID>-<slug>: <mô tả ngắn>`.
-- Không push: người dùng sẽ review và push.
+## Workflow
+- Each task in `.planning/tasks` has a clear Status.
+- When completing a task: run `git add .` and commit with the format `Task/<ID>-<slug>: <short description>`.
+- Do not push automatically; the user will review and push changes.
 
 ## Code style
-- TypeScript strict, lint theo eslint config.
-- Renderer: Tailwind utility-first, tránh CSS nặng.
-- Test: Vitest (unit), scripts E2E smoke.
+- TypeScript (strict). Lint according to the project eslint config.
+- Renderer: Tailwind (utility-first). Avoid heavy custom CSS.
+- Tests: Vitest for unit tests; E2E smoke via scripts.
 
-## Kiến trúc
+## Architecture
 - Electron + Vite + Vue 3.
-- Main: IPC handlers được whitelist/validate.
-- Preload: bridge API typed.
-- Renderer: Vue Router pages (Overview/Backlog/Boards/Settings).
-- Storage: better-sqlite3 + activity optional.
-
+- Main process: IPC handlers are whitelisted and validated.
+- Preload: typed bridge API.
+- Renderer: Vue Router pages (Overview, Backlog, Boards, Settings).
+- Storage: better-sqlite3 with optional activity logging.
