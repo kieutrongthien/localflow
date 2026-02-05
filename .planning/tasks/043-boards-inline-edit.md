@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 012  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Cho phép chỉnh trạng thái/priority trực tiếp trên thẻ; ghi về file.
 
 ## Subtasks
-- [ ] Inline edit UI
-- [ ] Ghi frontmatter và refresh
-- [ ] Edge case khi watcher đang chạy
+- [x] Inline edit UI (dropdown Priority/Status trên thẻ)
+- [x] Ghi frontmatter và refresh (savePlanningItem / updatePlanningStatus + reload)
+- [x] Edge case watcher: dùng AsyncLock per-path, toast feedback
 
 ## Blockers
 None

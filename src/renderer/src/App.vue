@@ -144,6 +144,25 @@
               >
                 <div class="text-sm font-medium truncate">{{ s.title }}</div>
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
+                <div class="mt-2 flex items-center gap-2 text-xs">
+                  <label class="text-zinc-500">Priority</label>
+                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                          :value="s.priority || ''"
+                          @change="e => inlineSetPriority(s, (e.target as HTMLSelectElement).value)">
+                    <option value="">-</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                  <label class="ml-2 text-zinc-500">Status</label>
+                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                          :value="s.status || 'todo'"
+                          @change="e => inlineSetStatus(s, (e.target as HTMLSelectElement).value as any)">
+                    <option value="todo">Todo</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -167,6 +186,25 @@
               >
                 <div class="text-sm font-medium truncate">{{ s.title }}</div>
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
+                <div class="mt-2 flex items-center gap-2 text-xs">
+                  <label class="text-zinc-500">Priority</label>
+                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                          :value="s.priority || ''"
+                          @change="e => inlineSetPriority(s, (e.target as HTMLSelectElement).value)">
+                    <option value="">-</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                  <label class="ml-2 text-zinc-500">Status</label>
+                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                          :value="s.status || 'in_progress'"
+                          @change="e => inlineSetStatus(s, (e.target as HTMLSelectElement).value as any)">
+                    <option value="todo">Todo</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -190,6 +228,25 @@
               >
                 <div class="text-sm font-medium truncate">{{ s.title }}</div>
                 <div class="text-xs text-zinc-400">{{ s.id }}</div>
+                <div class="mt-2 flex items-center gap-2 text-xs">
+                  <label class="text-zinc-500">Priority</label>
+                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                          :value="s.priority || ''"
+                          @change="e => inlineSetPriority(s, (e.target as HTMLSelectElement).value)">
+                    <option value="">-</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                  <label class="ml-2 text-zinc-500">Status</label>
+                  <select class="px-2 py-1 rounded bg-white/10 border border-white/10"
+                          :value="s.status || 'done'"
+                          @change="e => inlineSetStatus(s, (e.target as HTMLSelectElement).value as any)">
+                    <option value="todo">Todo</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -527,6 +584,30 @@ const keyboardMove = async (item: PlanningItem, dir: 'left' | 'right') => {
   boardStatus.value = `Đã chuyển sang ${target}`
   toast.type = 'success'; toast.message = 'Cập nhật trạng thái thành công'; toast.duration = 2000
   await loadPlanningIndex()
+}
+
+const inlineSetPriority = async (item: PlanningItem, priority: string) => {
+  try {
+    await window.localflow.savePlanningItem({ path: item.path, data: { title: item.title, priority } })
+    toast.type = 'success'; toast.message = 'Đã cập nhật priority'; toast.duration = 1500
+    await loadPlanningIndex()
+  } catch {
+    toast.type = 'error'; toast.message = 'Cập nhật priority thất bại'
+  }
+}
+
+const inlineSetStatus = async (item: PlanningItem, status: 'todo' | 'in_progress' | 'done') => {
+  try {
+    if (status === 'done') {
+      const ok = window.confirm('Chuyển sang Done?')
+      if (!ok) return
+    }
+    await window.localflow.updatePlanningStatus({ path: item.path, status })
+    toast.type = 'success'; toast.message = 'Đã cập nhật status'; toast.duration = 1500
+    await loadPlanningIndex()
+  } catch {
+    toast.type = 'error'; toast.message = 'Cập nhật status thất bại'
+  }
 }
 
 const applyTheme = (mode: 'dark' | 'light') => {
