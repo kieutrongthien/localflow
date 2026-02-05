@@ -326,6 +326,9 @@ const backupStatus = ref('')
 const boardStatus = ref('')
 const draggingPath = ref<string | null>(null)
 const exportStatus = ref('')
+const activityEnabled = ref(false)
+const activities = ref<Array<{ id: number; type: string; payload: unknown; createdAt: number }>>([])
+const toast = reactive<{ type?: 'success' | 'error' | 'info'; title?: string; message: string; duration?: number }>({ message: '' })
 
 const storiesByStatus = reactive<{ todo: PlanningItem[]; in_progress: PlanningItem[]; done: PlanningItem[] }>({
   todo: [],
@@ -359,12 +362,11 @@ onMounted(async () => {
   version.value = (await window.localflow?.getVersion?.()) ?? 'n/a'
 
   unsubscribePlanning = window.localflow.onPlanningIndexUpdated(applyPlanningIndex)
-  // Watcher error/recovery notifications
-  const { ipcRenderer } = (await import('electron')) as any
-  ipcRenderer.on('planning:watch-error', (_e: any, payload: { message: string }) => {
+  // Watcher error/recovery notifications via preload-exposed helpers
+  const offWatchError = window.localflow.onWatchError?.((payload) => {
     toast.type = 'error'; toast.message = 'Watcher lỗi: ' + (payload?.message || '')
   })
-  ipcRenderer.on('planning:watch-recovered', () => {
+  const offWatchRecovered = window.localflow.onWatchRecovered?.(() => {
     toast.type = 'success'; toast.message = 'Watcher đã khôi phục'
   })
 
@@ -399,6 +401,8 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   unsubscribePlanning?.()
+  offWatchError?.()
+  offWatchRecovered?.()
 })
 
 const resetMetadata = () => {
@@ -691,5 +695,3 @@ const importJson = async () => {
 <style scoped>
 /* migrated most styles to Tailwind utility classes */
 </style>
- 
-const toast = reactive<{ type?: 'success' | 'error' | 'info'; title?: string; message: string; duration?: number }>({ message: '' })

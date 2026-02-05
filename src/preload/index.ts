@@ -55,6 +55,16 @@ const api: LocalflowBridge = {
   savePlanningItem: (payload: { path: string; data: { title: string; status?: string; priority?: string; points?: number | null; owner?: string; assignee?: string; tags?: string[] } }) => invokeSafe('planning:save-item' as any, payload),
   readPlanningFile: (payload: { path: string }) => invokeSafe('planning:read-file' as any, payload),
   generateReleaseNotes: (payload: { projectPath: string; limit?: number }) => invokeSafe('release:notes:generate' as any, payload),
+  onWatchError: (callback: (payload: { message: string }) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, payload: { message: string }) => callback(payload)
+    ipcRenderer.on('planning:watch-error', listener)
+    return () => ipcRenderer.removeListener('planning:watch-error', listener)
+  },
+  onWatchRecovered: (callback: () => void) => {
+    const listener = () => callback()
+    ipcRenderer.on('planning:watch-recovered', listener)
+    return () => ipcRenderer.removeListener('planning:watch-recovered', listener)
+  },
   onPlanningIndexUpdated: (callback: (payload: PlanningIndexResult) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, payload: PlanningIndexResult) => {
       callback(payload)

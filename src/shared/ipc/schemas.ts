@@ -113,7 +113,14 @@ export const settingsSetManyResult = z.object({ success: z.boolean() })
 
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
 
-export const allowedChannels = Object.values(IPC_CHANNELS)
+export const allowedChannels = [
+  ...Object.values(IPC_CHANNELS),
+  ...Object.values(SETTINGS_CHANNELS),
+  PLANNING_READ_FILE,
+  RELEASE_NOTES_GENERATE,
+  EDIT_CHANNELS.PLANNING_SAVE_ITEM,
+  UPDATE_CHANNELS.UPDATE_CHECK
+]
 
 export const validateIpcPayload = <T extends IpcChannel>(channel: T, payload: unknown) => {
   const schema = schemaMap[channel]
