@@ -42,6 +42,10 @@
       </ul>
       <div v-else class="text-sm text-zinc-400">Chưa có activity nào.</div>
     </div>
+    <div v-if="indexerMs !== null || renderMs !== null" class="text-xs text-zinc-500">
+      <span v-if="indexerMs !== null">Index: {{ indexerMs }} ms</span>
+      <span v-if="renderMs !== null" class="ml-2">Render: {{ renderMs }} ms</span>
+    </div>
   </div>
   <div class="rounded-xl border border-white/10 bg-white/5 p-4 mt-4">
     <h3 class="mb-2">Keyboard Shortcuts</h3>
@@ -65,6 +69,8 @@ const totals = reactive({ epic: 0, story: 0, task: 0 })
 const activities = ref<Array<{ id: number; type: string; createdAt: number; payload?: any }>>([])
 const activityEnabled = ref(false)
 const loadingIndex = ref(true)
+const indexerMs = ref<number | null>(null)
+const renderMs = ref<number | null>(null)
 const projectPath = ref('')
 const canNavigate = ref(false)
 const emptyMessage = ref('Chưa chọn project — vào Settings để chọn thư mục project.')
@@ -74,10 +80,14 @@ onMounted(async () => {
   projectPath.value = p || ''
   canNavigate.value = !!projectPath.value
   if (projectPath.value) {
+    const t0 = performance.now()
     const idx = await window.localflow.getPlanningIndex({ projectPath: projectPath.value })
+    indexerMs.value = Math.round(performance.now() - t0)
+    const r0 = performance.now()
     totals.epic = idx.totals.epic
     totals.story = idx.totals.story
     totals.task = idx.totals.task
+    renderMs.value = Math.round(performance.now() - r0)
   }
   loadingIndex.value = false
 
@@ -97,3 +107,5 @@ const linkForActivity = (a: { payload?: any }) => {
   return ''
 }
 </script>
+
+ 

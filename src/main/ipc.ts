@@ -53,7 +53,10 @@ const pathExists = async (target: string) => {
 
 const emitPlanningIndexUpdate = async (window: BrowserWindow | null, projectPath: string) => {
   if (!window) return
+  const t0 = Date.now()
   const result = await buildPlanningIndex(projectPath)
+  const ms = Date.now() - t0
+  try { logActivity('perf.indexer', { projectPath, ms, totals: result.totals }) } catch {}
   window.webContents.send(IPC_EVENTS.PLANNING_INDEX_UPDATED, result)
 }
 
@@ -185,7 +188,11 @@ export const bootIpc = () => {
   })
 
   registerIpcHandler(IPC_CHANNELS.PLANNING_INDEX, async (_event, payload) => {
-    return buildPlanningIndex(payload.projectPath)
+    const t0 = Date.now()
+    const res = await buildPlanningIndex(payload.projectPath)
+    const ms = Date.now() - t0
+    try { logActivity('perf.indexer', { projectPath: payload.projectPath, ms, totals: res.totals }) } catch {}
+    return res
   })
 
   registerIpcHandler(IPC_CHANNELS.PLANNING_UPDATE_STATUS, async (_event, payload) => {

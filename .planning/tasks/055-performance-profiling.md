@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 005  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Đo hiệu năng indexer và render UI; tối ưu debounce, pagination/lazy load nếu cần.
 
 ## Subtasks
-- [ ] Benchmark indexer
-- [ ] UI render profiling
-- [ ] Đề xuất tối ưu
+- [x] Benchmark indexer (logActivity perf.indexer + ms)
+- [x] UI render profiling (Overview hiển thị Index ms + Render ms)
+- [x] Đề xuất tối ưu (debounce watcher đã có; cân nhắc pagination nếu danh sách lớn)
 
 ## Blockers
 None
