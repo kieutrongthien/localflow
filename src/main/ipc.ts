@@ -6,7 +6,9 @@ import {
   type IpcChannel,
   type PayloadFor,
   validateIpcPayload,
-  type SaveProjectMetadataPayload
+  type SaveProjectMetadataPayload,
+  UPDATE_CHANNELS,
+  type UpdatePayloadFor
 } from '../shared/ipc/schemas'
 import { buildPlanningReadme } from '../shared/planning/readmeTemplate'
 import { buildPlanningIndex } from './planning/indexer'
@@ -287,4 +289,35 @@ export const bootIpc = () => {
     logActivity('planning.import.json', { projectPath, file, created: count })
     return { success: true, created: count }
   })
+
+  // Internal update check via local feed JSON file
+  if (!ipcMain.listenerCount(UPDATE_CHANNELS.UPDATE_CHECK)) {
+    ipcMain.handle(UPDATE_CHANNELS.UPDATE_CHECK, async (_event, payload: UpdatePayloadFor<typeof UPDATE_CHANNELS.UPDATE_CHECK>) => {
+      const current = app.getVersion()
+      const feedPath = payload.feedPath || getSetting('updateFeedPath') || ''
+      if (!feedPath) return { hasUpdate: false, currentVersion: current }
+      try {
+        const raw = await readFile(feedPath, 'utf-8')
+        const parsed = JSON.parse(raw) as { version: string; notes?: string }
+        const latest = parsed.version
+        const hasUpdate = compareSemver(latest, current) > 0
+        return { hasUpdate, currentVersion: current, latestVersion: latest, notes: parsed.notes }
+      } catch (e) {
+        return { hasUpdate: false, currentVersion: current, error: 'invalid_feed' }
+      }
+    })
+  }
+}
+
+// naive semver compare: returns 1 if a>b, -1 if a<b, 0 equal
+const compareSemver = (a: string, b: string) => {
+  const pa = a.split('.').map((x) => parseInt(x, 10))
+  const pb = b.split('.').map((x) => parseInt(x, 10))
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const ai = pa[i] ?? 0
+    const bi = pb[i] ?? 0
+    if (ai > bi) return 1
+    if (ai < bi) return -1
+  }
+  return 0
 }

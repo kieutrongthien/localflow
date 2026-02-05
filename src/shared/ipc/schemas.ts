@@ -56,6 +56,19 @@ const schemaMap = {
   [IPC_CHANNELS.PLANNING_IMPORT_JSON]: metadataPayload
 } as const satisfies Record<IpcChannel, z.ZodTypeAny>
 
+// Update feed (internal)
+export const UPDATE_CHANNELS = {
+  UPDATE_CHECK: 'update:check'
+} as const
+
+export type UpdateChannel = (typeof UPDATE_CHANNELS)[keyof typeof UPDATE_CHANNELS]
+
+const updateSchemaMap = {
+  [UPDATE_CHANNELS.UPDATE_CHECK]: z.object({ feedPath: z.string().optional() })
+} as const satisfies Record<UpdateChannel, z.ZodTypeAny>
+
+export type UpdatePayloadFor<T extends UpdateChannel> = z.infer<(typeof updateSchemaMap)[T]>
+
 type SchemaFor<T extends IpcChannel> = (typeof schemaMap)[T]
 
 export const allowedChannels = Object.values(IPC_CHANNELS)
