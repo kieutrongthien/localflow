@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 002  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Thêm UI điều hướng nhanh giữa các thực thể liên kết; breadcrumbs/relational links.
 
 ## Subtasks
-- [ ] Hiển thị liên kết hai chiều
-- [ ] Breadcrumbs trên detail view
-- [ ] Kiểm tra đồng bộ khi đổi liên kết
+- [x] Hiển thị liên kết hai chiều (Related trên detail: Epic↔Story↔Task)
+- [x] Breadcrumbs trên detail view (chuỗi Epic → Story → Task)
+- [x] Kiểm tra đồng bộ khi đổi liên kết (dựa trên index mới, link cập nhật phản ánh ngay)
 
 ## Blockers
 None
