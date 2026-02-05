@@ -2,18 +2,18 @@
 
 **Created:** 2026-02-05  
 **Story:** 012  
-**Assignee:** TBD  
+**Assignee:** Colin  
 **Estimate:** 2h  
 **Priority:** Medium  
-**Status:** To Do
+**Status:** Done (2026-02-05 - Colin)
 
 ## Description
 Kiểm thử drag-drop trên Boards, cập nhật trạng thái, và CRUD stories/tasks cơ bản.
 
 ## Subtasks
-- [ ] Kịch bản drag-drop
-- [ ] CRUD stories/tasks
-- [ ] Báo cáo kết quả e2e
+- [x] Kịch bản drag-drop (status todo → in_progress)
+- [x] CRUD stories/tasks (create/update/delete + linked task)
+- [x] Báo cáo kết quả e2e (Vitest test file)
 
 ## Blockers
 None
